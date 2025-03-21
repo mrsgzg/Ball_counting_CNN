@@ -173,3 +173,4 @@ def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32,
     
     return train_loader, val_loader, test_loader
 
+if __init__
