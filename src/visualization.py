@@ -351,35 +351,43 @@ def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000)
         for img, lbl in dataloader:
             img = img.to(device)
             
-            # Get features from penultimate layer
+            # Get features from penultimate layer - simplified approach
             if hasattr(model, 'forward'):
+                # Use the model's built-in feature extraction
                 feature_dict = model(img, return_features=True)
                 batch_features = feature_dict['penultimate'].cpu().numpy()
             else:
-                # Fallback for models without a return_features option
-                batch_features = model.fc1(torch.flatten(model.pool4(
-                    F.relu(model.bn4_2(model.conv4_2(
-                        F.relu(model.bn4_1(model.conv4_1(
-                            model.dropout3(model.pool3(
-                                F.relu(model.bn3_2(model.conv3_2(
-                                    F.relu(model.bn3_1(model.conv3_1(
-                                        model.dropout2(model.pool2(
-                                            F.relu(model.bn2_2(model.conv2_2(
-                                                F.relu(model.bn2_1(model.conv2_1(
-                                                    model.dropout1(model.pool1(
-                                                        F.relu(model.bn1_2(model.conv1_2(
-                                                            F.relu(model.bn1_1(model.conv1_1(img)))
-                                                        )))
-                                                    )))
-                                                )))
-                                            )))
-                                        )))
-                                    )))
-                                )))
-                            )))
-                        )))
-                    )))
-                ))).cpu().numpy()
+                # For models without return_features, use a step-by-step approach
+                # This replaces the complex nested function call with more readable code
+                x = img
+                
+                # Block 1
+                x = F.relu(model.bn1_1(model.conv1_1(x)))
+                x = F.relu(model.bn1_2(model.conv1_2(x)))
+                x = model.pool1(x)
+                x = model.dropout1(x)
+                
+                # Block 2
+                x = F.relu(model.bn2_1(model.conv2_1(x)))
+                x = F.relu(model.bn2_2(model.conv2_2(x)))
+                x = model.pool2(x)
+                x = model.dropout2(x)
+                
+                # Block 3
+                x = F.relu(model.bn3_1(model.conv3_1(x)))
+                x = F.relu(model.bn3_2(model.conv3_2(x)))
+                x = model.pool3(x)
+                x = model.dropout3(x)
+                
+                # Block 4
+                x = F.relu(model.bn4_1(model.conv4_1(x)))
+                x = F.relu(model.bn4_2(model.conv4_2(x)))
+                x = model.pool4(x)
+                
+                # Flatten and get features from fc1
+                x = torch.flatten(x, 1)
+                x = model.fc1(x)
+                batch_features = x.cpu().numpy()
             
             features.append(batch_features)
             labels.append(lbl.numpy())

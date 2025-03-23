@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 class BallDataset(Dataset):
     """Ball counter dataset for loading and preprocessing images"""
     
-    def __init__(self, image_paths, labels, transform=None, binary=True):
+    def __init__(self, image_paths, labels, transform=None, binary=True, lower_threshold=200, upper_threshold=255):
         """
         Args:
             image_paths: List of image file paths
@@ -23,7 +23,9 @@ class BallDataset(Dataset):
         self.labels = labels
         self.transform = transform
         self.binary = binary
-        
+        self.lower_threshold = lower_threshold
+        self.upper_threshold = upper_threshold
+
     def __len__(self):
         return len(self.image_paths)
     
@@ -32,6 +34,28 @@ class BallDataset(Dataset):
         img_path = self.image_paths[idx]
         image = cv2.imread(img_path)
         
+         # Convert to grayscale
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        
+        # Resize to target size (320, 240)
+        gray = cv2.resize(gray, (320, 240))
+        
+        # Convert to binary if needed
+        if self.binary:
+            # Apply thresholding to isolate white objects
+            _, binary = cv2.threshold(gray, self.lower_threshold, self.upper_threshold, cv2.THRESH_BINARY)
+            
+            # Clean up the binary image using morphological operations
+            kernel = np.ones((3, 3), np.uint8)
+            binary = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=1)
+            
+            # Use the binary image for further processing
+            image = binary
+        else:
+            image = gray
+
+
+        '''
         # Convert to grayscale
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         
@@ -45,7 +69,7 @@ class BallDataset(Dataset):
                 image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
                 cv2.THRESH_BINARY, 11, 2
             )
-        
+        '''
         # Convert to PIL Image for torchvision transforms
         image = Image.fromarray(image)
         
@@ -82,9 +106,18 @@ def load_dataset(data_dir, num_samples_per_class=500):
             raise ValueError(f"Class directory {class_dir} not found")
         
         # Get list of image files in this class folder
-        files = [f for f in os.listdir(class_dir) 
-                if os.path.isfile(os.path.join(class_dir, f)) and 
-                f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+        files = []
+        for root, dirs, files_names in os.walk(class_dir):
+            for file_name in files_names:
+                if file_name.lower().endswith(('.png', '.jpg', '.jpeg')):
+                    files.append(os.path.join(root, file_name)) 
+                    #print(f"Adding file{file_name}")
+                    #print(f"Adding root{root}")
+
+
+        #files = [f for f in os.listdir(class_dir) 
+        #        if os.path.isfile(os.path.join(class_dir, f)) and 
+        #        f.lower().endswith(('.png', '.jpg', '.jpeg'))]
         
         # Sample files randomly
         if len(files) >= num_samples_per_class:
@@ -94,8 +127,8 @@ def load_dataset(data_dir, num_samples_per_class=500):
             print(f"Warning: Class {class_idx} has only {len(files)} images (requested {num_samples_per_class})")
         
         # Add selected files to dataset
-        for file_name in selected_files:
-            img_path = os.path.join(class_dir, file_name)
+        for img_path in selected_files:
+           
             image_paths.append(img_path)
             labels.append(class_idx - 1)  # Use 0-based indexing for classes
     
@@ -141,8 +174,8 @@ def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32,
     
     # Define transforms
     train_transform = transforms.Compose([
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomRotation(15),
+        #transforms.RandomHorizontalFlip(),
+        #transforms.RandomRotation(15),
         transforms.ToTensor(),
     ])
     
