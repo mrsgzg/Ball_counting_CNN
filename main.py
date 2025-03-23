@@ -4,7 +4,7 @@ import os
 import random
 import numpy as np
 from datetime import datetime
-
+import json
 from src.dataset import get_data_loaders
 from src.model import BallCounterCNN, SimplerBallCounterCNN
 from src.train import train_model, evaluate_model, setup_training
@@ -16,6 +16,13 @@ from src.visualization import (
     visualize_feature_maps,
     visualize_tsne
 )
+def save_args_to_json(args, filename='args.json',path=None):
+    """Save command line arguments to a JSON file"""
+    filename = filename if path is None else os.path.join(path,filename)
+    with open(filename, 'w') as f:
+        json.dump(vars(args), f, indent=4)
+    
+    print(f"Arguments saved to {filename}")
 
 def main():
     # Parse command line arguments
@@ -105,11 +112,13 @@ def main():
         f.write(f"Test Accuracy: {test_acc:.4f}\n")
     
     # Plot training history
-    plot_training_history(history)
+    plot_sav_path = save_dir+"/"
+    plot_training_history(history,path=plot_sav_path)
     
     # Plot confusion matrix
-    plot_confusion_matrix(all_labels, all_preds)
-    
+    plot_confusion_matrix(all_labels, all_preds,path=plot_sav_path)
+    save_args_to_json(args,path=plot_sav_path)
+
     # Generate visualizations if requested
     if args.visualize:
         print("Generating visualizations...")
@@ -120,13 +129,13 @@ def main():
         # Visualize filters from first layer
         print("Visualizing filters...")
         if args.model_type == 'simple':
-            visualize_filters(model, layer_name='conv1')
+            visualize_filters(model, layer_name='conv1',path=plot_sav_path)
         else:
-            visualize_filters(model, layer_name='conv1_1')
+            visualize_filters(model, layer_name='conv1_1',path=plot_sav_path)
         
         # Visualize feature maps
         print("Visualizing feature maps...")
-        visualize_feature_maps(model, images[0].unsqueeze(0), device=args.device)
+        visualize_feature_maps(model, images[0].unsqueeze(0), device=args.device,path=plot_sav_path)
         
         # Visualize grad-CAM for multiple samples
         print("Visualizing Grad-CAM...")
@@ -135,12 +144,13 @@ def main():
             dataloader=test_loader,
             num_samples=5,
             layer_name='block3' if args.model_type == 'simple' else 'block4',
-            device=args.device
+            device=args.device,
+            path =plot_sav_path
         )
         
         # Visualize t-SNE embedding
         print("Visualizing t-SNE embedding...")
-        visualize_tsne(model, test_loader, device=args.device)
+        visualize_tsne(model, test_loader, device=args.device,path =plot_sav_path)
     
     print(f"All results saved to {save_dir}")
 

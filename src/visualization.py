@@ -8,7 +8,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.manifold import TSNE
 import seaborn as sns
 
-def plot_training_history(history):
+def plot_training_history(history,path):
     """
     Plot training and validation loss/accuracy curves
     
@@ -38,10 +38,11 @@ def plot_training_history(history):
     plt.grid(True)
     
     plt.tight_layout()
-    plt.savefig('training_history.png')
+    path = path+"training_history.png"
+    plt.savefig(path)
     plt.show()
 
-def plot_confusion_matrix(y_true, y_pred, class_names=None):
+def plot_confusion_matrix(y_true, y_pred, class_names=None,path=None):
     """
     Plot confusion matrix
     
@@ -63,7 +64,8 @@ def plot_confusion_matrix(y_true, y_pred, class_names=None):
     plt.ylabel('True Label')
     plt.xlabel('Predicted Label')
     plt.tight_layout()
-    plt.savefig('confusion_matrix.png')
+    path = path+"confusion_matrix.png"
+    plt.savefig(path)
     plt.show()
     
     # Print classification report
@@ -156,7 +158,7 @@ def generate_gradcam(model, image, target_class=None, layer_name='block4'):
     
     return orig_img, heatmap, superimposed
 
-def visualize_multiple_samples(model, dataloader, class_names=None, num_samples=5, layer_name='block4', device='cuda'):
+def visualize_multiple_samples(model, dataloader, class_names=None, num_samples=5, layer_name='block4', device='cuda',path=None):
     """
     Visualize Grad-CAM for multiple samples
     
@@ -221,10 +223,11 @@ def visualize_multiple_samples(model, dataloader, class_names=None, num_samples=
         axes[i, 2].axis('off')
     
     plt.tight_layout()
-    plt.savefig('gradcam_visualization.png')
+    path = path+"gradcam_visualization.png"
+    plt.savefig(path)
     plt.show()
 
-def visualize_filters(model, layer_name='conv1', num_filters=16):
+def visualize_filters(model, layer_name='conv1', num_filters=16, path=None):
     """
     Visualize CNN filters for a specific layer
     
@@ -263,10 +266,11 @@ def visualize_filters(model, layer_name='conv1', num_filters=16):
         axes[i].axis('off')
     
     plt.tight_layout()
-    plt.savefig(f'{layer_name}_filters.png')
+    path = path+str(layer_name)+"_filters.png"
+    plt.savefig(path)
     plt.show()
 
-def visualize_feature_maps(model, image, layer_names=None, device='cuda'):
+def visualize_feature_maps(model, image, layer_names=None, device='cuda',path=None):
     """
     Visualize feature maps for a given image
     
@@ -276,8 +280,14 @@ def visualize_feature_maps(model, image, layer_names=None, device='cuda'):
         layer_names: List of layer names to visualize
         device: Device to run model on
     """
+    # Default layer names
     if layer_names is None:
-        layer_names = ['block1', 'block2', 'block3', 'block4']
+        # For SimplerBallCounterCNN
+        if hasattr(model, 'gap'):
+            layer_names = ['block1', 'block2', 'block3']
+        # For BallCounterCNN
+        else:
+            layer_names = ['block1', 'block2', 'block3', 'block4']
     
     model = model.to(device)
     model.eval()
@@ -292,15 +302,30 @@ def visualize_feature_maps(model, image, layer_names=None, device='cuda'):
     with torch.no_grad():
         features = model(image, return_features=True)
     
+    # Check which layers are actually available
+    available_layers = list(features.keys())
+    print(f"Available feature layers: {available_layers}")
+    
+    # Filter layer_names to only include available layers
+    valid_layer_names = [name for name in layer_names if name in available_layers]
+    
+    if not valid_layer_names:
+        print(f"Warning: None of the requested layers {layer_names} are available.")
+        print(f"Using available layers instead.")
+        # Use the first few available feature layers, excluding 'output'
+        valid_layer_names = [name for name in available_layers if name != 'output'][:3]
+    
+    print(f"Visualizing layers: {valid_layer_names}")
+    
     # Create figure
-    num_layers = len(layer_names)
+    num_layers = len(valid_layer_names)
     fig, axes = plt.subplots(num_layers, 8, figsize=(20, 5 * num_layers))
     
     # If only one layer, add dimension to axes
     if num_layers == 1:
         axes = axes.reshape(1, -1)
     
-    for i, layer_name in enumerate(layer_names):
+    for i, layer_name in enumerate(valid_layer_names):
         # Get feature maps
         feature_maps = features[layer_name]
         
@@ -322,14 +347,15 @@ def visualize_feature_maps(model, image, layer_names=None, device='cuda'):
             
             # Plot feature map
             axes[i, j].imshow(feature_map, cmap='viridis')
-            axes[i, j].set_title(f'Channel {channel_idx}')
+            axes[i, j].set_title(f'{layer_name} - Channel {channel_idx}')
             axes[i, j].axis('off')
     
     plt.tight_layout()
-    plt.savefig('feature_maps.png')
+    path = path+"feature_maps.png"
+    plt.savefig(path)
     plt.show()
 
-def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000):
+def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000,path=None):
     """
     Visualize t-SNE embedding of features from the penultimate layer
     
@@ -348,46 +374,47 @@ def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000)
     labels = []
     
     with torch.no_grad():
+        # Get one batch to identify available feature layers
+        for img, lbl in dataloader:
+            img = img.to(device)
+            feature_dict = model(img, return_features=True)
+            available_features = list(feature_dict.keys())
+            print(f"Available features: {available_features}")
+            break
+        
+        # Determine which feature to use (penultimate layer)
+        feature_to_use = None
+        # Check for specific feature names
+        if 'penultimate' in available_features:
+            feature_to_use = 'penultimate'
+        elif 'pooled' in available_features:
+            feature_to_use = 'pooled'
+        elif 'gap' in available_features:
+            feature_to_use = 'gap'
+        else:
+            # Use the layer before 'output' as fallback
+            non_output_features = [f for f in available_features if f != 'output']
+            if non_output_features:
+                feature_to_use = non_output_features[-1]  # Last feature before output
+        
+        if not feature_to_use:
+            print("Could not find a suitable feature layer for t-SNE visualization")
+            return
+            
+        print(f"Using '{feature_to_use}' for t-SNE visualization")
+            
+        # Now extract features from all batches
         for img, lbl in dataloader:
             img = img.to(device)
             
-            # Get features from penultimate layer - simplified approach
-            if hasattr(model, 'forward'):
-                # Use the model's built-in feature extraction
-                feature_dict = model(img, return_features=True)
-                batch_features = feature_dict['penultimate'].cpu().numpy()
-            else:
-                # For models without return_features, use a step-by-step approach
-                # This replaces the complex nested function call with more readable code
-                x = img
-                
-                # Block 1
-                x = F.relu(model.bn1_1(model.conv1_1(x)))
-                x = F.relu(model.bn1_2(model.conv1_2(x)))
-                x = model.pool1(x)
-                x = model.dropout1(x)
-                
-                # Block 2
-                x = F.relu(model.bn2_1(model.conv2_1(x)))
-                x = F.relu(model.bn2_2(model.conv2_2(x)))
-                x = model.pool2(x)
-                x = model.dropout2(x)
-                
-                # Block 3
-                x = F.relu(model.bn3_1(model.conv3_1(x)))
-                x = F.relu(model.bn3_2(model.conv3_2(x)))
-                x = model.pool3(x)
-                x = model.dropout3(x)
-                
-                # Block 4
-                x = F.relu(model.bn4_1(model.conv4_1(x)))
-                x = F.relu(model.bn4_2(model.conv4_2(x)))
-                x = model.pool4(x)
-                
-                # Flatten and get features from fc1
-                x = torch.flatten(x, 1)
-                x = model.fc1(x)
-                batch_features = x.cpu().numpy()
+            # Extract features
+            feature_dict = model(img, return_features=True)
+            batch_features = feature_dict[feature_to_use].cpu().numpy()
+            
+            # For SimplerBallCounterCNN, the feature might be 4D with dimensions [batch, channels, 1, 1]
+            # We need to flatten it to 2D [batch, features]
+            if len(batch_features.shape) > 2:
+                batch_features = batch_features.reshape(batch_features.shape[0], -1)
             
             features.append(batch_features)
             labels.append(lbl.numpy())
@@ -397,9 +424,10 @@ def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000)
     labels = np.concatenate(labels, axis=0)
     
     print(f"Computing t-SNE on {features.shape[0]} samples...")
+    print(f"Feature shape: {features.shape}")
     
     # Apply t-SNE
-    tsne = TSNE(n_components=2, perplexity=perplexity, n_iter=n_iter, random_state=42)
+    tsne = TSNE(n_components=2, perplexity=perplexity, max_iter=n_iter, random_state=42)
     features_embedded = tsne.fit_transform(features)
     
     # Plot t-SNE
@@ -419,5 +447,6 @@ def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000)
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig('tsne_visualization.png')
+    path = path+"tsne_visualization.png"
+    plt.savefig(path)
     plt.show()
