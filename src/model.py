@@ -161,7 +161,7 @@ class SimplerBallCounterCNN(nn.Module):
     and better interpretability
     """
     
-    def __init__(self, num_classes=5):
+    def __init__(self, num_classes=10):
         super(SimplerBallCounterCNN, self).__init__()
         
         # Block 1

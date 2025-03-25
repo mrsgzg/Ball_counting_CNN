@@ -1,0 +1,12 @@
+{
+    "data_dir": "/home/embody_data/raw",
+    "samples": 500,
+    "batch_size": 32,
+    "epochs": 9,
+    "learning_rate": 0.001,
+    "model_type": "simple",
+    "seed": 42,
+    "save_dir": "results_10balls_9",
+    "device": "cuda",
+    "visualize": true
+}

@@ -51,8 +51,8 @@ def plot_confusion_matrix(y_true, y_pred, class_names=None,path=None):
         y_pred: Predicted labels
         class_names: List of class names
     """
-    if class_names is None:
-        class_names = [f'{i+1} Ball(s)' for i in range(5)]
+    #if class_names is None:
+    class_names = [f'{i+1} Ball(s)' for i in range(class_names)]
     
     # Compute confusion matrix
     cm = confusion_matrix(y_true, y_pred)
@@ -158,6 +158,177 @@ def generate_gradcam(model, image, target_class=None, layer_name='block4'):
     
     return orig_img, heatmap, superimposed
 
+
+
+def visualize_multiple_samples(model, dataloader, num_samples=5, layer_name='block4', device='cuda', path=None):
+    """
+    Visualize Grad-CAM for multiple samples, handling any number of balls
+    
+    Args:
+        model: Trained PyTorch model
+        dataloader: DataLoader to get samples from
+        num_samples: Number of samples to visualize
+        layer_name: Layer to use for Grad-CAM
+        device: Device to run model on
+        path: Path to save the visualization
+    """
+    model = model.to(device)
+    model.eval()
+    
+    # Get samples
+    images = []
+    labels = []
+    
+    for img, lbl in dataloader:
+        images.extend(img)
+        labels.extend(lbl)
+        
+        if len(images) >= num_samples:
+            break
+    
+    images = images[:num_samples]
+    labels = labels[:num_samples]
+    
+    # Convert labels to list of integers if they're tensors
+    if hasattr(labels[0], 'item'):
+        labels = [label.item() for label in labels]
+    
+    print(f"Sample labels: {labels}")
+    
+    # Determine the number of classes from the data
+    # Add 1 to max label to account for 0-indexing
+    max_label = max(labels)
+    num_classes = max_label + 1
+    
+    # Create class names dynamically based on the max number of balls
+    class_names = [f'{i} Ball(s)' for i in range(num_classes)]
+    print(f'Class names: {class_names}')
+
+    # Create figure
+    fig, axes = plt.subplots(num_samples, 3, figsize=(15, 5 * num_samples))
+    
+    # Handle case where there's only one sample
+    if num_samples == 1:
+        axes = [axes]
+    
+    for i, (img, lbl) in enumerate(zip(images, labels)):
+        # Generate Grad-CAM
+        img_tensor = img.to(device).unsqueeze(0) if img.dim() == 3 else img.to(device)
+        orig_img, heatmap, superimposed = generate_gradcam(model, img_tensor, target_class=lbl, layer_name=layer_name)
+        
+        # Convert tensors to numpy arrays for plotting
+        if isinstance(img, torch.Tensor):
+            img_np = img.detach().cpu().numpy()
+            if img_np.ndim == 3:
+                img_np = np.transpose(img_np, (1, 2, 0))
+                if img_np.shape[2] == 1:  # If grayscale, repeat channels
+                    img_np = np.repeat(img_np, 3, axis=2)
+        else:
+            img_np = img
+        
+        # Normalize image for display if needed
+        if img_np.max() > 1.0:
+            img_np = img_np / 255.0
+        
+        # Make sure label is in bounds
+        if lbl >= len(class_names):
+            class_label = f'{lbl} Ball(s)'
+        else:
+            class_label = class_names[lbl]
+        
+        # Plot original image
+        axes[i][0].imshow(img_np)
+        axes[i][0].set_title(f'Original: {class_label}')
+        axes[i][0].axis('off')
+        
+        # Plot heatmap
+        axes[i][1].imshow(cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB))
+        axes[i][1].set_title('Grad-CAM Heatmap')
+        axes[i][1].axis('off')
+        
+        # Plot superimposed
+        axes[i][2].imshow(cv2.cvtColor(superimposed, cv2.COLOR_BGR2RGB))
+        axes[i][2].set_title('Superimposed')
+        axes[i][2].axis('off')
+    
+    plt.tight_layout()
+    if path:
+        plt.savefig(path + "gradcam_visualization.png")
+    plt.show()
+'''
+def visualize_multiple_samples(model, dataloader, num_samples=5, layer_name='block4', device='cuda', path=None):
+    """
+    Visualize Grad-CAM for multiple samples
+    
+    Args:
+        model: Trained PyTorch model
+        dataloader: DataLoader to get samples from
+        num_samples: Number of samples to visualize
+        layer_name: Layer to use for Grad-CAM
+        device: Device to run model on
+        path: Path to save the visualization
+    """
+    model = model.to(device)
+    model.eval()
+    
+    # Get samples
+    images = []
+    labels = []
+    
+    for img, lbl in dataloader:
+        images.extend(img)
+        labels.extend(lbl)
+        
+        if len(images) >= num_samples:
+            break
+    
+    images = images[:num_samples]
+    labels = labels[:num_samples]
+    print(f"***{labels}***")
+    # Determine the number of unique labels
+    unique_labels = sorted(set(labels))
+    num_classes = len(unique_labels)
+    class_names = [f'{i+1} Ball(s)' for i in range(num_classes)]
+    print(f'***{class_names}***')
+
+    # Create figure
+    fig, axes = plt.subplots(num_samples, 3, figsize=(15, 10 * num_samples))
+    
+    for i, (img, lbl) in enumerate(zip(images, labels)):
+        # Generate Grad-CAM
+        img = img.to(device)
+        orig_img, heatmap, superimposed = generate_gradcam(model, img, target_class=lbl, layer_name=layer_name)
+        
+        # Convert tensors to numpy arrays for plotting
+        if isinstance(img, torch.Tensor):
+            img_np = img.detach().cpu().numpy()
+            img_np = np.transpose(img_np, (1, 2, 0))
+            if img_np.shape[2] == 1:  # If grayscale, repeat channels
+                img_np = np.repeat(img_np, 3, axis=2)
+        else:
+            img_np = img
+        
+        # Plot original image
+        axes[i, 0].imshow(img_np)
+        axes[i, 0].set_title(f'Original: {class_names[lbl]}')
+        axes[i, 0].axis('off')
+        
+        # Plot heatmap
+        axes[i, 1].imshow(cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB))
+        axes[i, 1].set_title('Grad-CAM Heatmap')
+        axes[i, 1].axis('off')
+        
+        # Plot superimposed
+        axes[i, 2].imshow(cv2.cvtColor(superimposed, cv2.COLOR_BGR2RGB))
+        axes[i, 2].set_title('Superimposed')
+        axes[i, 2].axis('off')
+    
+    plt.tight_layout()
+    if path:
+        plt.savefig(path + "gradcam_visualization.png")
+    plt.show()
+'''
+'''
 def visualize_multiple_samples(model, dataloader, class_names=None, num_samples=5, layer_name='block4', device='cuda',path=None):
     """
     Visualize Grad-CAM for multiple samples
@@ -191,7 +362,7 @@ def visualize_multiple_samples(model, dataloader, class_names=None, num_samples=
     labels = labels[:num_samples]
     
     # Create figure
-    fig, axes = plt.subplots(num_samples, 3, figsize=(15, 5 * num_samples))
+    fig, axes = plt.subplots(num_samples, 3, figsize=(15, 10 * num_samples))
     
     for i, (img, lbl) in enumerate(zip(images, labels)):
         # Generate Grad-CAM
@@ -226,7 +397,7 @@ def visualize_multiple_samples(model, dataloader, class_names=None, num_samples=
     path = path+"gradcam_visualization.png"
     plt.savefig(path)
     plt.show()
-
+'''
 def visualize_filters(model, layer_name='conv1', num_filters=16, path=None):
     """
     Visualize CNN filters for a specific layer
@@ -355,7 +526,7 @@ def visualize_feature_maps(model, image, layer_names=None, device='cuda',path=No
     plt.savefig(path)
     plt.show()
 
-def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000,path=None):
+def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000, path=None):
     """
     Visualize t-SNE embedding of features from the penultimate layer
     
@@ -365,6 +536,7 @@ def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000,
         device: Device to run model on
         perplexity: t-SNE perplexity parameter
         n_iter: Number of t-SNE iterations
+        path: Path to save the visualization
     """
     model = model.to(device)
     model.eval()
@@ -417,7 +589,11 @@ def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000,
                 batch_features = batch_features.reshape(batch_features.shape[0], -1)
             
             features.append(batch_features)
-            labels.append(lbl.numpy())
+            
+            # Convert labels to numpy array if they're tensors
+            if isinstance(lbl, torch.Tensor):
+                lbl = lbl.cpu().numpy()
+            labels.append(lbl)
     
     # Concatenate all features and labels
     features = np.concatenate(features, axis=0)
@@ -426,18 +602,31 @@ def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000,
     print(f"Computing t-SNE on {features.shape[0]} samples...")
     print(f"Feature shape: {features.shape}")
     
+    # Get unique classes
+    unique_labels = np.unique(labels)
+    max_label = np.max(labels)
+    num_classes = max_label + 1  # +1 because labels are typically 0-indexed
+    
+    print(f"Dataset contains {len(unique_labels)} unique classes from 0 to {max_label}")
+    
     # Apply t-SNE
     tsne = TSNE(n_components=2, perplexity=perplexity, max_iter=n_iter, random_state=42)
     features_embedded = tsne.fit_transform(features)
     
     # Plot t-SNE
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(12, 10))
     
-    for i in range(5):  # 5 classes (1-5 balls)
+    # Use a colormap that can handle many classes
+    cmap = plt.get_cmap('tab10' if num_classes <= 10 else 'tab20')
+    
+    # Plot each class
+    for i, label in enumerate(unique_labels):
+        mask = labels == label
         plt.scatter(
-            features_embedded[labels == i, 0],
-            features_embedded[labels == i, 1],
-            label=f'{i+1} Ball(s)',
+            features_embedded[mask, 0],
+            features_embedded[mask, 1],
+            label=f'{label} Ball(s)',
+            color=cmap(i % cmap.N),
             alpha=0.7
         )
     
@@ -447,6 +636,10 @@ def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000,
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    path = path+"tsne_visualization.png"
-    plt.savefig(path)
+    
+    if path is not None:
+        save_path = path + "tsne_visualization.png" if not path.endswith('.png') else path
+        plt.savefig(save_path)
+        print(f"Visualization saved to {save_path}")
+    
     plt.show()

@@ -11,7 +11,8 @@ from sklearn.model_selection import train_test_split
 class BallDataset(Dataset):
     """Ball counter dataset for loading and preprocessing images"""
     
-    def __init__(self, image_paths, labels, transform=None, binary=True, lower_threshold=200, upper_threshold=255):
+    def __init__(self, image_paths, labels, transform=None, binary=True, lower_threshold=200, upper_threshold=255,
+                 random_contrast=True):
         """
         Args:
             image_paths: List of image file paths
@@ -25,7 +26,7 @@ class BallDataset(Dataset):
         self.binary = binary
         self.lower_threshold = lower_threshold
         self.upper_threshold = upper_threshold
-
+        self.random_contrast = random_contrast
     def __len__(self):
         return len(self.image_paths)
     
@@ -48,9 +49,17 @@ class BallDataset(Dataset):
             # Clean up the binary image using morphological operations
             kernel = np.ones((3, 3), np.uint8)
             binary = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=1)
-            
-            # Use the binary image for further processing
-            image = binary
+            if self.random_contrast:
+                # Apply random contrast adjustment to binary image
+                contrast_factor = random.uniform(0, 0.05)
+                # 将二值图像转换为浮点型以进行对比度调整
+                float_binary = binary.astype(float) / 255.0
+                # 应用对比度调整
+                adjusted = np.clip(float_binary * contrast_factor, 0, 1)
+                # 将结果转换回uint8类型
+                image = (adjusted * 255).astype(np.uint8)
+            else:
+                image = binary
         else:
             image = gray
 
@@ -100,7 +109,7 @@ def load_dataset(data_dir, num_samples_per_class=500):
     labels = []
     
     # For each class folder (1-5)
-    for class_idx in range(1, 6):
+    for class_idx in range(1, 11):
         class_dir = os.path.join(data_dir, str(class_idx))
         if not os.path.exists(class_dir):
             raise ValueError(f"Class directory {class_dir} not found")
@@ -135,7 +144,10 @@ def load_dataset(data_dir, num_samples_per_class=500):
     return image_paths, labels
 
 def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32, 
-                     val_split=0.15, test_split=0.15, seed=42):
+                     val_split=0.15, test_split=0.15, seed=42,
+                     binary=True, random_brightness=True, 
+                     brightness_range_train=(50, 240), 
+                     brightness_val=150):
     """
     Create train, validation, and test data loaders
     
@@ -146,6 +158,10 @@ def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32,
         val_split: Fraction of data for validation
         test_split: Fraction of data for testing
         seed: Random seed for reproducibility
+        binary: Whether to use binary images
+        random_brightness: Whether to apply random brightness to training images
+        brightness_range_train: Range of brightness values for training (min, max)
+        brightness_val: Fixed brightness value for validation and test sets
         
     Returns:
         train_loader, val_loader, test_loader
@@ -174,8 +190,6 @@ def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32,
     
     # Define transforms
     train_transform = transforms.Compose([
-        #transforms.RandomHorizontalFlip(),
-        #transforms.RandomRotation(15),
         transforms.ToTensor(),
     ])
     
@@ -184,9 +198,30 @@ def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32,
     ])
     
     # Create datasets
-    train_dataset = BallDataset(X_train, y_train, transform=train_transform)
-    val_dataset = BallDataset(X_val, y_val, transform=val_transform)
-    test_dataset = BallDataset(X_test, y_test, transform=val_transform)
+    train_dataset = BallDataset(
+        X_train, y_train, 
+        transform=train_transform, 
+        binary=binary,
+        random_brightness=random_brightness,
+        random_brightness_range=brightness_range_train
+    )
+    
+    # For validation and test, use fixed brightness for consistency
+    val_dataset = BallDataset(
+        X_val, y_val, 
+        transform=val_transform, 
+        binary=binary,
+        random_brightness=True if brightness_val is not None else False,
+        random_brightness_range=(brightness_val, brightness_val)  # Fixed brightness
+    )
+    
+    test_dataset = BallDataset(
+        X_test, y_test, 
+        transform=val_transform, 
+        binary=binary,
+        random_brightness=True if brightness_val is not None else False,
+        random_brightness_range=(brightness_val, brightness_val)  # Fixed brightness
+    )
     
     # Create data loaders
     train_loader = DataLoader(
@@ -205,4 +240,3 @@ def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32,
     )
     
     return train_loader, val_loader, test_loader
-

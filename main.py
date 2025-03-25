@@ -30,7 +30,7 @@ def main():
     parser.add_argument('--data_dir', type=str, required=True, help='Directory containing class folders')
     parser.add_argument('--samples', type=int, default=500, help='Number of samples per class')
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for training')
-    parser.add_argument('--epochs', type=int, default=30, help='Number of training epochs')
+    parser.add_argument('--epochs', type=int, default=15, help='Number of training epochs')
     parser.add_argument('--learning_rate', type=float, default=0.001, help='Initial learning rate')
     parser.add_argument('--model_type', type=str, default='simple', 
                         choices=['simple', 'complex'], help='Model architecture to use')
@@ -63,6 +63,10 @@ def main():
     train_loader, val_loader, test_loader = get_data_loaders(
         args.data_dir,
         num_samples_per_class=args.samples,
+        binary=True,
+        random_brightness=True,  # 启用随机明暗变化
+        brightness_range_train=(50, 240),  # 训练集的明暗范围
+        brightness_val=150,  # 验证和测试集的固定明暗度
         batch_size=args.batch_size,
         seed=args.seed
     )
@@ -70,9 +74,9 @@ def main():
     # Create model
     print(f"Creating {args.model_type} model...")
     if args.model_type == 'simple':
-        model = SimplerBallCounterCNN(num_classes=5)
+        model = SimplerBallCounterCNN(num_classes=10)
     else:
-        model = BallCounterCNN(num_classes=5)
+        model = BallCounterCNN(num_classes=10)
     
     # Print model summary
     print(model)
@@ -116,7 +120,7 @@ def main():
     plot_training_history(history,path=plot_sav_path)
     
     # Plot confusion matrix
-    plot_confusion_matrix(all_labels, all_preds,path=plot_sav_path)
+    plot_confusion_matrix(all_labels, all_preds,path=plot_sav_path,class_names=10)
     save_args_to_json(args,path=plot_sav_path)
 
     # Generate visualizations if requested
