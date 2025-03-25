@@ -64,9 +64,7 @@ def main():
         args.data_dir,
         num_samples_per_class=args.samples,
         binary=True,
-        random_brightness=True,  # 启用随机明暗变化
-        brightness_range_train=(50, 240),  # 训练集的明暗范围
-        brightness_val=150,  # 验证和测试集的固定明暗度
+        random_contrast=True,  # 启用随机明暗变化
         batch_size=args.batch_size,
         seed=args.seed
     )

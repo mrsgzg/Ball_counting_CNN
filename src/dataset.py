@@ -49,15 +49,33 @@ class BallDataset(Dataset):
             # Clean up the binary image using morphological operations
             kernel = np.ones((3, 3), np.uint8)
             binary = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=1)
+            
             if self.random_contrast:
-                # Apply random contrast adjustment to binary image
-                contrast_factor = random.uniform(0, 0.05)
-                # 将二值图像转换为浮点型以进行对比度调整
-                float_binary = binary.astype(float) / 255.0
-                # 应用对比度调整
-                adjusted = np.clip(float_binary * contrast_factor, 0, 1)
-                # 将结果转换回uint8类型
-                image = (adjusted * 255).astype(np.uint8)
+                # 为每个连通区域（球）分配不同的灰度值
+                # 首先，找到所有连通区域
+                num_labels, labels = cv2.connectedComponents(binary)
+                
+                # 创建新的图像，初始值为0（黑色背景）
+                contrast_image = np.zeros_like(binary)
+                
+                # 为每个标签（除了背景，背景是0）分配一个随机灰度值
+                for label in range(1, num_labels):
+                    # 为每个球生成不同的随机灰度值
+                    # 使用更合理的范围，例如30到200
+                    gray_value = random.randint(30, 200)
+                    
+                    # 将该标签的所有像素设置为这个灰度值
+                    contrast_image[labels == label] = gray_value
+                
+                # 使用这个具有不同灰度级别的图像
+                image = contrast_image
+                
+                # 可选：打印调试信息
+                if random.random() < 0.01:  # 只打印1%的样本，避免输出过多
+                    print(f"形状: {image.shape}")
+                    print(f"数据类型: {image.dtype}")
+                    print(f"最小值: {image.min()}, 最大值: {image.max()}")
+                    print(f"发现 {num_labels-1} 个球，灰度范围: 30-200")
             else:
                 image = binary
         else:
@@ -145,9 +163,7 @@ def load_dataset(data_dir, num_samples_per_class=500):
 
 def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32, 
                      val_split=0.15, test_split=0.15, seed=42,
-                     binary=True, random_brightness=True, 
-                     brightness_range_train=(50, 240), 
-                     brightness_val=150):
+                     binary=True, random_contrast=True):
     """
     Create train, validation, and test data loaders
     
@@ -202,8 +218,7 @@ def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32,
         X_train, y_train, 
         transform=train_transform, 
         binary=binary,
-        random_brightness=random_brightness,
-        random_brightness_range=brightness_range_train
+        random_contrast=random_contrast,
     )
     
     # For validation and test, use fixed brightness for consistency
@@ -211,16 +226,14 @@ def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32,
         X_val, y_val, 
         transform=val_transform, 
         binary=binary,
-        random_brightness=True if brightness_val is not None else False,
-        random_brightness_range=(brightness_val, brightness_val)  # Fixed brightness
+        random_contrast=random_contrast
     )
     
     test_dataset = BallDataset(
         X_test, y_test, 
         transform=val_transform, 
         binary=binary,
-        random_brightness=True if brightness_val is not None else False,
-        random_brightness_range=(brightness_val, brightness_val)  # Fixed brightness
+        random_contrast=random_contrast
     )
     
     # Create data loaders

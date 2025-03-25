@@ -2,9 +2,9 @@ import subprocess
 import time
 
 # 外层循环控制 n_poch 从 1 到 10
-for n_poch in range(0, 16):
-    dir_name = f"results_10balls_{n_poch}"
-    command = f"python main.py --data_dir /home/embody_data/raw --model_type simple --visualize --epochs {n_poch} --save_dir {dir_name}"
+for n_poch in range(0, 10):
+    dir_name = f"results_10balls_contrast_{n_poch}"
+    command = f"python main.py --data_dir /home/embody_data/raw --samples 1000 --model_type simple --visualize --epochs {n_poch} --save_dir {dir_name}"
     
     # 内层循环执行每个 n_poch 的 10 次重复
     for i in range(1):
