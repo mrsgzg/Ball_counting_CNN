@@ -69,13 +69,14 @@ class BallDataset(Dataset):
                 
                 # 使用这个具有不同灰度级别的图像
                 image = contrast_image
-                
+                '''
                 # 可选：打印调试信息
                 if random.random() < 0.01:  # 只打印1%的样本，避免输出过多
                     print(f"形状: {image.shape}")
                     print(f"数据类型: {image.dtype}")
                     print(f"最小值: {image.min()}, 最大值: {image.max()}")
                     print(f"发现 {num_labels-1} 个球，灰度范围: 30-200")
+                '''
             else:
                 image = binary
         else:
