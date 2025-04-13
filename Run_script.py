@@ -2,16 +2,16 @@ import subprocess
 import time
 
 # 外层循环控制 n_poch 从 1 到 10
-for n_poch in range(0, 10):
-    dir_name = f"results_10balls_contrast_{n_poch}"
-    command = f"python main.py --data_dir /home/embody_data/raw --samples 1000 --model_type simple --visualize --epochs {n_poch} --save_dir {dir_name}"
+for n_poch in range(0, 20):
+    dir_name = f"save_results/results_10balls_contrast_{n_poch}"
+    command = f"python main.py --data_dir /home/embody_data/raw --learning_rate 0.0001 --batch_size 128 --samples 2000 --model_type simple --visualize --epochs {n_poch} --save_dir {dir_name}"
     
     # 内层循环执行每个 n_poch 的 10 次重复
     for i in range(1):
         print(f"Epoch {n_poch}, Execution {i+1}/1 starting...")
         
         # Execute the command
-        process = subprocess.run(command, shell=True, cwd="/home/Ball_counting_CNN")
+        process = subprocess.run(command, shell=True, cwd="/home/embody_data/Ball_counting_CNN")
         
         # Print the completion status
         if process.returncode == 0:

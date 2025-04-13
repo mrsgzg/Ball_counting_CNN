@@ -244,12 +244,12 @@ def get_data_loaders(data_dir, num_samples_per_class=500, batch_size=32,
     )
     
     val_loader = DataLoader(
-        val_dataset, batch_size=batch_size, shuffle=False, 
+        val_dataset, batch_size=batch_size, shuffle=True, 
         num_workers=4, pin_memory=True
     )
     
     test_loader = DataLoader(
-        test_dataset, batch_size=batch_size, shuffle=False, 
+        test_dataset, batch_size=batch_size, shuffle=True, 
         num_workers=4, pin_memory=True
     )
     

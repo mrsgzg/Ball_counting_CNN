@@ -1,5 +1,6 @@
 import argparse
 import torch
+import torch.nn as nn
 import os
 import random
 import numpy as np
@@ -77,19 +78,25 @@ def main():
         model = BallCounterCNN(num_classes=10)
     
     # Print model summary
-    print(model)
+    #print(model)
+    #if torch.cuda.device_count() > 1:
+    #    print(f"使用 {torch.cuda.device_count()} 个GPU进行训练")
+    #    model = nn.DataParallel(model)
     print(f"Number of parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
     
     # Setup training
     criterion, optimizer, scheduler = setup_training(
         model, learning_rate=args.learning_rate
     )
+    plot_sav_path = save_dir+"/"
     
     # Train model
     print("Training model...")
     model, history = train_model(
         model=model,
         train_loader=train_loader,
+        test_loader = test_loader,
+        plot_sav_path = plot_sav_path,
         val_loader=val_loader,
         criterion=criterion,
         optimizer=optimizer,
@@ -114,7 +121,7 @@ def main():
         f.write(f"Test Accuracy: {test_acc:.4f}\n")
     
     # Plot training history
-    plot_sav_path = save_dir+"/"
+    
     plot_training_history(history,path=plot_sav_path)
     
     # Plot confusion matrix
@@ -144,7 +151,7 @@ def main():
         visualize_multiple_samples(
             model=model,
             dataloader=test_loader,
-            num_samples=5,
+            num_samples=10,
             layer_name='block3' if args.model_type == 'simple' else 'block4',
             device=args.device,
             path =plot_sav_path

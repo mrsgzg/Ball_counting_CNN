@@ -3,11 +3,23 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import numpy as np
+import pandas as pd
 import time
 import copy
 from tqdm import tqdm
+import os
+from src.visualization import (
+    plot_training_history, 
+    plot_confusion_matrix,
+    visualize_multiple_samples,
+    visualize_filters,
+    visualize_feature_maps,
+    visualize_tsne
+)
 
-def train_model(model, train_loader, val_loader, criterion, optimizer, scheduler=None, 
+
+
+def train_model(model, train_loader, test_loader,plot_sav_path, val_loader, criterion, optimizer, scheduler=None,
                 num_epochs=25, device='cuda', save_path='model.pth'):
     """
     Train the CNN model
@@ -43,9 +55,45 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, scheduler
     
     # Training loop
     for epoch in range(num_epochs):
+        plot_sav_path_use = plot_sav_path+'/epoch'+str(epoch)
+        os.makedirs(plot_sav_path_use, exist_ok=True)
+        torch.save(model.state_dict(), plot_sav_path_use+'/model.pth')
+        print(f'Epoch:{epoch} model saved')
         print(f'Epoch {epoch+1}/{num_epochs}')
         print('-' * 10)
+
+        visualize_multiple_samples(
+            model=model,
+            dataloader=test_loader,
+            num_samples=10,
+            layer_name='block3',
+            device='cuda',
+            path =plot_sav_path_use+'/'+'block3')
         
+        visualize_multiple_samples(
+            model=model,
+            dataloader=test_loader,
+            num_samples=10,
+            layer_name='block2',
+            device='cuda',
+            path =plot_sav_path_use+'/'+'block2')
+        
+        visualize_multiple_samples(
+            model=model,
+            dataloader=test_loader,
+            num_samples=10,
+            layer_name='block1',
+            device='cuda',
+            path =plot_sav_path_use+'/'+'block1')
+
+        test_loss, test_acc, all_preds, all_labels = evaluate_model(
+        model=model,
+        test_loader=test_loader,
+        criterion=criterion,
+        device='cuda')
+
+        plot_confusion_matrix(all_labels, all_preds,path=plot_sav_path_use+'/',class_names=10)
+        visualize_tsne(model, test_loader, device='cuda',path =plot_sav_path_use+'/')
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
             if phase == 'train':
@@ -59,6 +107,7 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, scheduler
             running_corrects = 0
             
             # Iterate over data
+            
             for inputs, labels in tqdm(dataloader, desc=phase):
                 inputs = inputs.to(device)
                 labels = labels.to(device)
@@ -105,10 +154,11 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, scheduler
                     best_model_wts = copy.deepcopy(model.state_dict())
                     torch.save(model.state_dict(), save_path)
                     print(f'New best model saved with accuracy: {best_acc:.4f}')
-        
-        print()
-    
+            
     # Load best model weights
+    history_df = pd.DataFrame(history)
+    csv_save_path = plot_sav_path_use+'/'+'history.csv'
+    history_df.to_csv(csv_save_path, index=False)
     model.load_state_dict(best_model_wts)
     
     return model, history

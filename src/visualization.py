@@ -69,7 +69,10 @@ def plot_confusion_matrix(y_true, y_pred, class_names=None,path=None):
     plt.show()
     
     # Print classification report
-    print(classification_report(y_true, y_pred, target_names=class_names))
+    report = classification_report(y_true, y_pred, target_names=class_names)
+    #print()
+    with open(path + "classification_report.txt", "w") as f:
+        f.write(report)
 
 def generate_gradcam(model, image, target_class=None, layer_name='block4'):
     """
@@ -254,7 +257,7 @@ def visualize_multiple_samples(model, dataloader, num_samples=5, layer_name='blo
     plt.tight_layout()
     if path:
         plt.savefig(path + "gradcam_visualization.png")
-    plt.show()
+    #plt.show()
 '''
 def visualize_multiple_samples(model, dataloader, num_samples=5, layer_name='block4', device='cuda', path=None):
     """
@@ -625,7 +628,7 @@ def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000,
         plt.scatter(
             features_embedded[mask, 0],
             features_embedded[mask, 1],
-            label=f'{label} Ball(s)',
+            label=f'{label+1} Ball(s)',
             color=cmap(i % cmap.N),
             alpha=0.7
         )
@@ -640,6 +643,8 @@ def visualize_tsne(model, dataloader, device='cuda', perplexity=30, n_iter=1000,
     if path is not None:
         save_path = path + "tsne_visualization.png" if not path.endswith('.png') else path
         plt.savefig(save_path)
+        np.savetxt(path + "tsne_features.csv", features_embedded, delimiter=",")
+
         print(f"Visualization saved to {save_path}")
     
     plt.show()
