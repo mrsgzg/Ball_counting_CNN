@@ -1,0 +1,150 @@
+{
+  "analysis_type": "Enhanced Embodied Counting Model Analysis",
+  "timestamp": "2025-07-04T11:55:00.824881",
+  "summary": {
+    "total_samples": 242,
+    "overall_accuracy": 0.9669421487603306,
+    "unique_true_labels": 10,
+    "unique_predictions": 10,
+    "analyzed_layers": [
+      "visual_encoder",
+      "embodiment_encoder",
+      "fusion",
+      "lstm",
+      "counting_decoder"
+    ]
+  },
+  "modality_analysis": {
+    "visual_variance": 0.0619630329310894,
+    "embodiment_variance": 0.07413413375616074,
+    "modality_balance": 0.4552852511405945
+  },
+  "layer_complexity": {
+    "visual_encoder": {
+      "feature_dim": 256,
+      "feature_variance": 0.0619630329310894,
+      "feature_range": [
+        -1.0306650400161743,
+        0.977129340171814
+      ],
+      "effective_rank": 226.0
+    },
+    "embodiment_encoder": {
+      "feature_dim": 256,
+      "feature_variance": 0.07413413375616074,
+      "feature_range": [
+        -1.407857060432434,
+        1.42790687084198
+      ],
+      "effective_rank": 231.0
+    },
+    "fusion": {
+      "feature_dim": 256,
+      "feature_variance": 2.4037861824035645,
+      "feature_range": [
+        -7.433757781982422,
+        6.969607353210449
+      ],
+      "effective_rank": 231.0
+    },
+    "lstm": {
+      "feature_dim": 512,
+      "feature_variance": 0.6160975098609924,
+      "feature_range": [
+        -0.9999996423721313,
+        0.999998927116394
+      ],
+      "effective_rank": 242.0
+    },
+    "counting_decoder": {
+      "feature_dim": 11,
+      "feature_variance": 169.30758666992188,
+      "feature_range": [
+        -30.33307647705078,
+        25.111486434936523
+      ],
+      "effective_rank": 11.0
+    }
+  },
+  "attention_analysis": {
+    "mean_attention": 0.0012755104107782245,
+    "attention_entropy": 5.885015964508057,
+    "attention_sparsity": 0.9999288455051442
+  },
+  "clustering_summary": {
+    "visual_encoder": {
+      "tsne": {
+        "best_silhouette": 0.2563113272190094,
+        "best_ari": 0.1676438401535258
+      },
+      "pca": {
+        "best_silhouette": 0.2563113272190094,
+        "best_ari": 0.1676438401535258
+      },
+      "umap": {
+        "best_silhouette": 0.2563113272190094,
+        "best_ari": 0.1676438401535258
+      }
+    },
+    "embodiment_encoder": {
+      "tsne": {
+        "best_silhouette": 0.28177088499069214,
+        "best_ari": 0.13538005860682578
+      },
+      "pca": {
+        "best_silhouette": 0.28177088499069214,
+        "best_ari": 0.13538005860682578
+      },
+      "umap": {
+        "best_silhouette": 0.28177088499069214,
+        "best_ari": 0.13538005860682578
+      }
+    },
+    "fusion": {
+      "tsne": {
+        "best_silhouette": 0.2115742415189743,
+        "best_ari": 0.21392540001427618
+      },
+      "pca": {
+        "best_silhouette": 0.2115742415189743,
+        "best_ari": 0.21392540001427618
+      },
+      "umap": {
+        "best_silhouette": 0.2115742415189743,
+        "best_ari": 0.21392540001427618
+      }
+    },
+    "lstm": {
+      "tsne": {
+        "best_silhouette": 0.2762189507484436,
+        "best_ari": 0.6569143715412841
+      },
+      "pca": {
+        "best_silhouette": 0.2762189507484436,
+        "best_ari": 0.6569143715412841
+      },
+      "umap": {
+        "best_silhouette": 0.2762189507484436,
+        "best_ari": 0.6569143715412841
+      }
+    },
+    "counting_decoder": {
+      "tsne": {
+        "best_silhouette": 0.7892757058143616,
+        "best_ari": 0.9686263495953544
+      },
+      "pca": {
+        "best_silhouette": 0.7892757058143616,
+        "best_ari": 0.9686263495953544
+      },
+      "umap": {
+        "best_silhouette": 0.7892757058143616,
+        "best_ari": 0.9686263495953544
+      }
+    }
+  },
+  "recommendations": [
+    "\u6a21\u578b\u51c6\u786e\u7387\u5f88\u9ad8\uff0c\u53ef\u4ee5\u8003\u8651\u5728\u66f4\u590d\u6742\u7684\u4efb\u52a1\u4e0a\u6d4b\u8bd5",
+    "\u5c42 ['visual_encoder', 'embodiment_encoder', 'fusion', 'lstm'] \u7684\u805a\u7c7b\u8d28\u91cf\u8f83\u5dee\uff0c\u7279\u5f81\u53ef\u5206\u79bb\u6027\u4e0d\u5f3a"
+  ]
+}
