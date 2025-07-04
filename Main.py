@@ -1,5 +1,5 @@
 """
-主文件 - 视觉/具身计数模型训练程序
+主文件 - 具身计数模型训练程序 (修改版 - 移除纯视觉模式)
 """
 
 import argparse
@@ -8,18 +8,12 @@ import torch
 import numpy as np
 import random
 import json
-from Train_embodiment import create_trainer  # 原来的具身模型训练器
-from train_vision import create_vision_trainer  # 新的纯视觉模型训练器
+from Train_embodiment import create_trainer
 
 
 def parse_arguments():
     """解析命令行参数"""
-    parser = argparse.ArgumentParser(description='Vision/Embodied Counting Model Training')
-    
-    # 选择模型类型
-    parser.add_argument('--model_type', type=str, default='embodied',
-                        choices=['embodied', 'vision'],
-                        help='Type of model to train (embodied or vision)')
+    parser = argparse.ArgumentParser(description='Embodied Counting Model Training')
     
     # 基础配置
     parser.add_argument('--resume', type=str, default=None,
@@ -27,19 +21,19 @@ def parse_arguments():
     parser.add_argument('--device', type=str, default='cuda',
                         help='Device to use (cuda/cpu)')
     
-    # 数据路径
+    # 数据路径 - 更新为你的路径
     parser.add_argument('--data_root', type=str, 
-                        default='/home/embody_data/E_talk_project/Data_Set/Ball_dataset1',
+                        default='/mnt/iusers01/fatpou01/compsci01/k09562zs/scratch/Ball_counting_CNN/ball_data_collection',
                         help='Data root directory')
     parser.add_argument('--train_csv', type=str,
-                        default='/home/embody_data/E_talk_project/Embodyment_research/Pointing_embody/Dataset_CSV/train_zipf_10.csv',
+                        default='scratch/Ball_counting_CNN/Tools_script/ball_counting_dataset_train.csv',
                         help='Train CSV file path')
     parser.add_argument('--val_csv', type=str,
-                        default='/home/embody_data/E_talk_project/Embodyment_research/Pointing_embody/Dataset_CSV/val.csv',
+                        default='scratch/Ball_counting_CNN/Tools_script/ball_counting_dataset_val.csv',
                         help='Validation CSV file path')
     
     # 训练参数
-    parser.add_argument('--batch_size', type=int, default=8,
+    parser.add_argument('--batch_size', type=int, default=32,
                         help='Batch size')
     parser.add_argument('--learning_rate', type=float, default=1e-4,
                         help='Learning rate')
@@ -47,14 +41,14 @@ def parse_arguments():
                         help='Weight decay for Adam optimizer')
     parser.add_argument('--grad_clip_norm', type=float, default=1.0,
                         help='Gradient clipping norm')
-    parser.add_argument('--total_epochs', type=int, default=200,
+    parser.add_argument('--total_epochs', type=int, default=500,
                         help='Total training epochs')
     
-    # 具身模型特有参数
-    parser.add_argument('--stage_1_epochs', type=int, default=20,
-                        help='Epochs for stage 1 (motion only) - only for embodied model')
-    parser.add_argument('--stage_2_epochs', type=int, default=150,
-                        help='Epochs for stage 2 (joint training) - only for embodied model')
+    # 具身模型训练阶段参数
+    parser.add_argument('--stage_1_epochs', type=int, default=150,
+                        help='Epochs for stage 1 (visual+embodiment pretraining)')
+    parser.add_argument('--stage_2_epochs', type=int, default=350,
+                        help='Epochs for stage 2 (joint training)')
     
     # 模型参数
     parser.add_argument('--cnn_layers', type=int, default=3,
@@ -69,10 +63,15 @@ def parse_arguments():
                         help='Feature dimension')
     parser.add_argument('--attention_heads', type=int, default=2,
                         help='Number of attention heads')
-    parser.add_argument('--joint_dim', type=int, default=8,
-                        help='Joint dimension (only for embodied model)')
+    parser.add_argument('--joint_dim', type=int, default=7,  # 修改默认值为7
+                        help='Joint dimension (7 for your robot joints)')
     parser.add_argument('--dropout', type=float, default=0.1,
                         help='Dropout rate')
+    
+    # 图像处理参数 - 新增
+    parser.add_argument('--image_mode', type=str, default='rgb',
+                        choices=['rgb', 'grayscale'],
+                        help='Image processing mode (rgb or grayscale)')
     
     # 学习率调度参数
     parser.add_argument('--scheduler_type', type=str, default='cosine',
@@ -88,10 +87,10 @@ def parse_arguments():
                         help='Normalize input data')
     
     # 保存和日志参数
-    parser.add_argument('--save_dir', type=str, default=None,
-                        help='Directory to save checkpoints (default: ./checkpoints/[model_type])')
-    parser.add_argument('--log_dir', type=str, default=None,
-                        help='Directory to save logs (default: ./logs/[model_type])')
+    parser.add_argument('--save_dir', type=str, default='./scratch/Ball_counting_CNN/Result_data/checkpoints/embodied',
+                        help='Directory to save checkpoints')
+    parser.add_argument('--log_dir', type=str, default='./scratch/Ball_counting_CNN/Result_data/logs/embodied',
+                        help='Directory to save logs')
     parser.add_argument('--save_every', type=int, default=5,
                         help='Save checkpoint every N epochs')
     parser.add_argument('--print_freq', type=int, default=10,
@@ -119,37 +118,90 @@ def set_random_seed(seed):
 
 def print_config(config):
     """打印配置信息"""
-    print("="*50)
-    print(f"训练 {config['model_type'].upper()} 模型配置")
-    print("="*50)
+    print("="*60)
+    print("具身计数模型训练配置")
+    print("="*60)
     
-    for key, value in config.items():
-        if key != 'model_config':
-            print(f"{key}: {value}")
+    # 基础配置
+    print("基础配置:")
+    basic_keys = ['device', 'batch_size', 'learning_rate', 'total_epochs', 'image_mode']
+    for key in basic_keys:
+        if key in config:
+            print(f"  {key}: {config[key]}")
     
+    # 数据配置
+    print("\n数据配置:")
+    data_keys = ['data_root', 'train_csv', 'val_csv', 'sequence_length', 'normalize']
+    for key in data_keys:
+        if key in config:
+            print(f"  {key}: {config[key]}")
+    
+    # 训练阶段配置
+    print("\n训练阶段:")
+    stage_keys = ['stage_1_epochs', 'stage_2_epochs']
+    for key in stage_keys:
+        if key in config:
+            print(f"  {key}: {config[key]}")
+    
+    # 模型配置
     print("\n模型配置:")
     for key, value in config['model_config'].items():
         print(f"  {key}: {value}")
     
-    print("="*50)
+    # 保存配置
+    print("\n保存配置:")
+    save_keys = ['save_dir', 'log_dir', 'save_every']
+    for key in save_keys:
+        if key in config:
+            print(f"  {key}: {config[key]}")
+    
+    print("="*60)
+
+
+def validate_paths(config):
+    """验证文件路径是否存在"""
+    errors = []
+    
+    # 检查数据根目录
+    if not os.path.exists(config['data_root']):
+        errors.append(f"数据根目录不存在: {config['data_root']}")
+    
+    # 检查CSV文件
+    if not os.path.exists(config['train_csv']):
+        errors.append(f"训练CSV文件不存在: {config['train_csv']}")
+    
+    if not os.path.exists(config['val_csv']):
+        errors.append(f"验证CSV文件不存在: {config['val_csv']}")
+    
+    if errors:
+        print("路径验证失败:")
+        for error in errors:
+            print(f"  - {error}")
+        return False
+    
+    print("所有路径验证通过")
+    return True
 
 
 def save_config(config, save_path):
     """保存配置文件"""
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    
+    # 创建可序列化的配置副本
+    serializable_config = {}
+    for key, value in config.items():
+        if isinstance(value, dict):
+            serializable_config[key] = dict(value)
+        else:
+            serializable_config[key] = value
+    
     with open(save_path, 'w') as f:
-        json.dump(config, f, indent=2)
+        json.dump(serializable_config, f, indent=2)
     print(f"配置保存到: {save_path}")
 
 
 def build_config_from_args(args):
     """从命令行参数构建配置"""
-    # 设置保存和日志目录
-    if args.save_dir is None:
-        args.save_dir = f'./checkpoints/{args.model_type}'
-    if args.log_dir is None:
-        args.log_dir = f'./logs/{args.model_type}'
-    
     # 将CNN通道从字符串转换为列表
     cnn_channels = [int(c) for c in args.cnn_channels.split(',')]
     
@@ -161,24 +213,20 @@ def build_config_from_args(args):
         'lstm_hidden_size': args.lstm_hidden_size,
         'feature_dim': args.feature_dim,
         'attention_heads': args.attention_heads,
-        'dropout': args.dropout
+        'joint_dim': args.joint_dim,
+        'dropout': args.dropout,
+        # input_channels将在trainer中根据image_mode设置
     }
-    
-    # 具身模型额外参数
-    if args.model_type == 'embodied':
-        model_config['joint_dim'] = args.joint_dim
     
     # 构建完整配置
     config = {
-        # 模型类型
-        'model_type': args.model_type,
-        
         # 数据配置
         'data_root': args.data_root,
         'train_csv': args.train_csv,
         'val_csv': args.val_csv,
         'sequence_length': args.sequence_length,
         'normalize': args.normalize,
+        'image_mode': args.image_mode,  # 新增
         
         # 模型配置
         'model_config': model_config,
@@ -187,9 +235,11 @@ def build_config_from_args(args):
         'batch_size': args.batch_size,
         'learning_rate': args.learning_rate,
         'weight_decay': args.weight_decay,
-        'adam_betas': (0.9, 0.999),  # Adam优化器的beta参数
+        'adam_betas': (0.9, 0.999),
         'grad_clip_norm': args.grad_clip_norm,
         'total_epochs': args.total_epochs,
+        'stage_1_epochs': args.stage_1_epochs,
+        'stage_2_epochs': args.stage_2_epochs,
         
         # 学习率调度器
         'scheduler_type': args.scheduler_type,
@@ -209,11 +259,6 @@ def build_config_from_args(args):
         'seed': args.seed
     }
     
-    # 具身模型特有配置
-    if args.model_type == 'embodied':
-        config['stage_1_epochs'] = args.stage_1_epochs
-        config['stage_2_epochs'] = args.stage_2_epochs
-    
     return config
 
 
@@ -229,51 +274,112 @@ def main():
     # 打印配置
     print_config(config)
     
+    # 验证路径
+    if not validate_paths(config):
+        print("路径验证失败，程序退出")
+        return
+    
     # 创建保存目录
     os.makedirs(config['save_dir'], exist_ok=True)
     os.makedirs(config['log_dir'], exist_ok=True)
     
     # 保存当前配置
-    config_save_path = os.path.join(config['save_dir'], f'{config["model_type"]}_config.json')
+    config_save_path = os.path.join(config['save_dir'], 'embodied_config.json')
     save_config(config, config_save_path)
     
-    # 根据模型类型创建相应的训练器
-    print(f"\n正在初始化 {config['model_type']} 模型训练器...")
-    if config['model_type'] == 'embodied':
-        # 创建具身模型训练器
+    # 创建具身模型训练器
+    print(f"\n正在初始化具身计数模型训练器...")
+    print(f"图像模式: {config['image_mode'].upper()}")
+    print(f"关节维度: {config['model_config']['joint_dim']}")
+    
+    try:
         trainer = create_trainer(config)
-    else:
-        # 创建纯视觉模型训练器
-        trainer = create_vision_trainer(config)
+    except Exception as e:
+        print(f"初始化训练器失败: {e}")
+        import traceback
+        traceback.print_exc()
+        return
     
     # 如果指定了resume路径，加载检查点
     if args.resume:
         if os.path.exists(args.resume):
+            print(f"从检查点恢复训练: {args.resume}")
             trainer.load_checkpoint(args.resume)
         else:
             print(f"找不到恢复检查点: {args.resume}")
-            exit(1)
+            return
     
     # 开始训练
-    print(f"\n开始训练 {config['model_type']} 模型...")
+    print(f"\n开始训练具身计数模型...")
+    print(f"训练阶段:")
+    print(f"  阶段1 (0-{config['stage_1_epochs']}): 预训练视觉特征+具身编码")
+    print(f"  阶段2 ({config['stage_1_epochs']}-{config['stage_2_epochs']}): 联合训练")
+    print(f"  阶段3 ({config['stage_2_epochs']}-{config['total_epochs']}): 精调计数")
+    
     try:
         trainer.train()
+        print("\n训练成功完成！")
     except KeyboardInterrupt:
         print("\n训练被用户中断")
         # 保存当前状态
+        current_epoch = trainer.start_epoch if hasattr(trainer, 'start_epoch') else 0
         trainer.save_checkpoint(
-            epoch=trainer.start_epoch - 1,
+            epoch=current_epoch,
             val_loss=trainer.best_val_loss,
             val_accuracy=trainer.best_val_accuracy,
             checkpoint_type='interrupted'
         )
+        print("已保存中断时的模型状态")
     except Exception as e:
         print(f"\n训练失败，错误: {e}")
         import traceback
         traceback.print_exc()
+        
+        # 尝试保存当前状态
+        try:
+            current_epoch = trainer.start_epoch if hasattr(trainer, 'start_epoch') else 0
+            trainer.save_checkpoint(
+                epoch=current_epoch,
+                val_loss=trainer.best_val_loss if hasattr(trainer, 'best_val_loss') else float('inf'),
+                val_accuracy=trainer.best_val_accuracy if hasattr(trainer, 'best_val_accuracy') else 0.0,
+                checkpoint_type='error'
+            )
+            print("已保存错误时的模型状态")
+        except:
+            print("无法保存错误时的模型状态")
     
-    print("训练程序完成。")
+    print("程序结束。")
+
+
+def print_usage_examples():
+    """打印使用示例"""
+    print("\n使用示例:")
+    print("="*60)
+    
+    print("1. 基础训练 (RGB模式):")
+    print("python Main.py --image_mode rgb --batch_size 8")
+    
+    print("\n2. 灰度模式训练:")
+    print("python Main.py --image_mode grayscale --batch_size 16")
+    
+    print("\n3. 自定义训练参数:")
+    print("python Main.py --learning_rate 5e-5 --total_epochs 300 --stage_1_epochs 30")
+    
+    print("\n4. 从检查点恢复:")
+    print("python Main.py --resume ./checkpoints/embodied/best_model.pth")
+    
+    print("\n5. 自定义数据路径:")
+    print("python Main.py --data_root /path/to/data --train_csv /path/to/train.csv")
+    
+    print("="*60)
 
 
 if __name__ == '__main__':
-    main()
+    # 检查是否请求帮助
+    import sys
+    if len(sys.argv) == 1:
+        print("具身计数模型训练程序")
+        print("使用 --help 查看完整参数列表")
+        print_usage_examples()
+    else:
+        main()

@@ -1,5 +1,5 @@
 """
-训练模块 - 具身计数模型训练
+训练模块 - 具身计数模型训练 (修改版)
 """
 
 import torch
@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from Model_embodiment import EmbodiedCountingModel
-from DataLoader_embodiment import get_data_loaders
+from DataLoader_embodiment import get_ball_counting_data_loaders  # 修改导入
 
 
 class ModelTrainer:
@@ -25,31 +25,36 @@ class ModelTrainer:
         self.config = config
         self.device = torch.device(config['device'])
         
-        # 训练阶段配置
-        #['visual', 'embodiment', 'fusion', 'lstm', 'counting', 'motion']
+        # 修改训练阶段配置 - 更适合counting任务
         self.training_stages = {
             'stage_1': {
                 'epochs': (0, config['stage_1_epochs']),
-                'description': '只训练具身',
-                'frozen_modules': ['counting'],
+                'description': '预训练视觉特征 + 具身编码',
+                'frozen_modules': ['counting'],  # 只冻结计数，允许motion训练
                 'loss_weights': {'motion': 1.0, 'count': 0.0}
             },
             'stage_2': {
                 'epochs': (config['stage_1_epochs'], config['stage_2_epochs']),
                 'description': '联合训练',
                 'frozen_modules': [],
-                'loss_weights': {'motion': 0.5, 'count': 1.5}
+                'loss_weights': {'motion': 0.3, 'count': 1.0}  # 更重视计数
             },
             'stage_3': {
                 'epochs': (config['stage_2_epochs'], config['total_epochs']),
-                'description': '只训练数数',
-                'frozen_modules': ['visual', 'embodiment', 'fusion', 'lstm', 'motion'],
-                'loss_weights': {'motion': 0.0, 'count': 1.5}
+                'description': '精调计数',
+                'frozen_modules': ['motion'],  # 冻结motion，专注计数
+                'loss_weights': {'motion': 0.0, 'count': 1.0}
             }
         }
         
-        # 初始化模型
-        self.model = EmbodiedCountingModel(**config['model_config']).to(self.device)
+        # 确定图像模式
+        self.image_mode = config.get('image_mode', 'rgb')
+        input_channels = 3 if self.image_mode == 'rgb' else 1
+        
+        # 初始化模型 - 传递input_channels参数
+        model_config = config['model_config'].copy()
+        model_config['input_channels'] = input_channels
+        self.model = EmbodiedCountingModel(**model_config).to(self.device)
         
         # 初始化优化器和调度器
         self.optimizer = optim.Adam(
@@ -63,15 +68,17 @@ class ModelTrainer:
         self.scheduler = None
         self._create_scheduler()
         
-        # 创建数据加载器
-        self.train_loader, self.val_loader, self.normalizer = get_data_loaders(
+        # 创建数据加载器 - 使用新的函数名和参数
+        self.train_loader, self.val_loader, self.normalizer = get_ball_counting_data_loaders(
             train_csv_path=config['train_csv'],
             val_csv_path=config['val_csv'],
             data_root=config['data_root'],
             batch_size=config['batch_size'],
             sequence_length=config['sequence_length'],
             normalize=config['normalize'],
-            num_workers=config['num_workers']
+            num_workers=config['num_workers'],
+            image_mode=self.image_mode,  # 传递图像模式
+            normalize_images=True
         )
         
         # 初始化TensorBoard
@@ -80,7 +87,8 @@ class ModelTrainer:
         self.writer = SummaryWriter(log_dir)
         
         # 保存配置到TensorBoard
-        config_text = '\n'.join([f'{k}: {v}' for k, v in config.items()])
+        config_text = '\n'.join([f'{k}: {v}' for k, v in config.items() if k != 'model_config'])
+        config_text += '\nModel Config:\n' + '\n'.join([f'  {k}: {v}' for k, v in config['model_config'].items()])
         self.writer.add_text('Config', config_text, 0)
         
         # 训练状态
@@ -95,6 +103,7 @@ class ModelTrainer:
         print(f"Model initialized with {sum(p.numel() for p in self.model.parameters()):,} parameters")
         print(f"Training data: {len(self.train_loader.dataset)} samples")
         print(f"Validation data: {len(self.val_loader.dataset)} samples")
+        print(f"Image mode: {self.image_mode.upper()} ({input_channels} channels)")
     
     def _create_scheduler(self):
         """创建学习率调度器"""
@@ -110,7 +119,9 @@ class ModelTrainer:
                 factor=0.5,
                 patience=self.config['scheduler_patience']
             )
-        
+        elif self.config['scheduler_type'] == 'none':
+            self.scheduler = None
+    
     def get_current_stage(self, epoch):
         """获取当前训练阶段"""
         for stage_name, stage_config in self.training_stages.items():
@@ -120,26 +131,28 @@ class ModelTrainer:
         return 'stage_3', self.training_stages['stage_3']  # 默认最后阶段
     
     def compute_loss(self, outputs, targets, stage_config):
-        """计算损失"""
+        """计算损失 - 修改以匹配新的数据格式"""
         losses = {}
         
         # 计数分类损失
         if stage_config['loss_weights']['count'] > 0:
             count_logits = outputs['counts']  # [batch, seq_len, 11]
-            target_counts = targets['counts'].long()  # [batch, seq_len]
+            target_counts = targets['labels'].long()  # [batch, seq_len] - 使用每帧的标签
+            
+            # 计算序列损失
             count_loss = F.cross_entropy(
                 count_logits.view(-1, 11),
-                target_counts.view(-1)
+                target_counts.view(-1),
+                ignore_index=-1  # 如果有无效标签
             )
             losses['count_loss'] = count_loss
         else:
             losses['count_loss'] = torch.tensor(0.0, device=self.device)
         
-        # 动作回归损失
+        # 动作回归损失 - 预测下一帧的关节位置
         if stage_config['loss_weights']['motion'] > 0:
-            # 只计算前seq_len-1个时刻的损失
-            pred_joints = outputs['joints'][:, :-1]
-            target_joints = targets['joints'][:, 1:]
+            pred_joints = outputs['joints'][:, :-1]  # [batch, seq_len-1, 7] 前seq_len-1个预测
+            target_joints = targets['joints'][:, 1:]  # [batch, seq_len-1, 7] 后seq_len-1个真实值
             motion_loss = F.mse_loss(pred_joints, target_joints)
             losses['motion_loss'] = motion_loss
         else:
@@ -164,52 +177,65 @@ class ModelTrainer:
             # 找到当前样本的最大计数值
             max_count = target_counts[i].max().item()
             # 找到最大计数值第一次出现的位置
-            final_pos = (target_counts[i] == max_count).nonzero(as_tuple=True)[0][0].item()
-            true_final_positions.append(final_pos)
+            final_pos = (target_counts[i] == max_count).nonzero(as_tuple=True)[0]
+            if len(final_pos) > 0:
+                true_final_positions.append(final_pos[0].item())
+            else:
+                true_final_positions.append(target_counts.shape[1] - 1)  # 默认最后一帧
         
         return torch.tensor(true_final_positions, device=target_counts.device)
     
     def compute_metrics(self, outputs, targets):
-        """计算指标"""
+        """计算指标 - 修改以匹配新的数据格式"""
         metrics = {}
         
         # 计数分类指标
         count_logits = outputs['counts']  # [batch, seq_len, 11]
         pred_labels = torch.argmax(count_logits, dim=-1)  # [batch, seq_len]
-        target_counts = targets['counts'].long()  # [batch, seq_len]
+        target_counts = targets['labels'].long()  # [batch, seq_len]
         
         # 整体准确率
-        metrics['count_accuracy'] = (pred_labels == target_counts).float().mean().item()
+        valid_mask = target_counts >= 0  # 假设负值是无效标签
+        if valid_mask.sum() > 0:
+            metrics['count_accuracy'] = (pred_labels[valid_mask] == target_counts[valid_mask]).float().mean().item()
+        else:
+            metrics['count_accuracy'] = 0.0
         
-        # 原始的最终计数准确率（保留）
+        # 最终计数准确率（使用最后一帧）
         metrics['final_count_accuracy'] = (pred_labels[:, -1] == target_counts[:, -1]).float().mean().item()
         
-        # 真实的最终计数准确率（新增）
-        true_final_positions = self.find_true_final_positions(target_counts)
-        batch_size = pred_labels.shape[0]
-        
-        true_final_correct = 0
-        for i in range(batch_size):
-            true_pos = true_final_positions[i]
-            if pred_labels[i, true_pos] == target_counts[i, true_pos]:
-                true_final_correct += 1
-        
-        metrics['true_final_count_accuracy'] = true_final_correct / batch_size
+        # 真实的最终计数准确率
+        try:
+            true_final_positions = self.find_true_final_positions(target_counts)
+            batch_size = pred_labels.shape[0]
+            
+            true_final_correct = 0
+            for i in range(batch_size):
+                true_pos = true_final_positions[i]
+                if pred_labels[i, true_pos] == target_counts[i, true_pos]:
+                    true_final_correct += 1
+            
+            metrics['true_final_count_accuracy'] = true_final_correct / batch_size
+        except:
+            metrics['true_final_count_accuracy'] = metrics['final_count_accuracy']
         
         # 动作指标
-        pred_joints = outputs['joints'][:, :-1]
-        target_joints = targets['joints'][:, 1:]
-        metrics['joint_mse'] = F.mse_loss(pred_joints, target_joints).item()
-        metrics['joint_mae'] = F.l1_loss(pred_joints, target_joints).item()
+        if outputs['joints'].shape[1] > 1:  # 确保有足够的序列长度
+            pred_joints = outputs['joints'][:, :-1]
+            target_joints = targets['joints'][:, 1:]
+            metrics['joint_mse'] = F.mse_loss(pred_joints, target_joints).item()
+            metrics['joint_mae'] = F.l1_loss(pred_joints, target_joints).item()
+        else:
+            metrics['joint_mse'] = 0.0
+            metrics['joint_mae'] = 0.0
         
         return metrics
     
     def train_one_epoch(self, epoch, stage_config):
-        """训练一个epoch"""
+        """训练一个epoch - 修改以匹配新的数据格式"""
         self.model.train()
         total_loss = 0
         total_metrics = {}
-        # 新增：用于累积损失
         total_count_loss = 0
         total_motion_loss = 0
         batch_count = 0
@@ -218,23 +244,26 @@ class ModelTrainer:
         teacher_forcing_ratio = max(0.5, 1.0 - epoch * 0.01)
         
         for batch_idx, batch in enumerate(self.train_loader):
-            # 移动到设备
-            images = batch['sequence_data']['images'].to(self.device)
-            initial_joints = batch['sequence_data']['joint_positions'][:, 0].to(self.device)
-            target_joints = batch['sequence_data']['joint_positions'].to(self.device)
-            target_counts = batch['sequence_data']['counts'].to(self.device)
+            # 数据准备 - 匹配新的DataLoader格式
+            sequence_data = {
+                'images': batch['sequence_data']['images'].to(self.device),
+                'joints': batch['sequence_data']['joints'].to(self.device),
+                'timestamps': batch['sequence_data']['timestamps'].to(self.device),
+                'labels': batch['sequence_data']['labels'].to(self.device)
+            }
             
             # 前向传播
             use_tf = np.random.random() < teacher_forcing_ratio
             outputs = self.model(
-                images=images,
-                initial_joints=initial_joints,
-                target_joints=target_joints,
+                sequence_data=sequence_data,
                 use_teacher_forcing=use_tf
             )
             
             # 计算损失
-            targets = {'counts': target_counts, 'joints': target_joints}
+            targets = {
+                'labels': sequence_data['labels'],
+                'joints': sequence_data['joints']
+            }
             losses = self.compute_loss(outputs, targets, stage_config)
             
             # 反向传播
@@ -248,7 +277,6 @@ class ModelTrainer:
             
             # 累积损失和指标
             total_loss += losses['total_loss'].item()
-            # 新增：累积各种损失
             total_count_loss += losses['count_loss'].item()
             total_motion_loss += losses['motion_loss'].item()
             
@@ -271,8 +299,6 @@ class ModelTrainer:
         # 平均指标
         avg_loss = total_loss / batch_count
         avg_metrics = {key: value / batch_count for key, value in total_metrics.items()}
-        
-        # 新增：将平均损失添加到metrics中
         avg_metrics['count_loss'] = total_count_loss / batch_count
         avg_metrics['motion_loss'] = total_motion_loss / batch_count
         
@@ -280,11 +306,10 @@ class ModelTrainer:
     
     @torch.no_grad()
     def validate(self, epoch, stage_config):
-        """验证"""
+        """验证 - 修改以匹配新的数据格式"""
         self.model.eval()
         total_loss = 0
         total_metrics = {}
-        # 新增：用于累积损失
         total_count_loss = 0
         total_motion_loss = 0
         batch_count = 0
@@ -294,24 +319,27 @@ class ModelTrainer:
         all_target_labels = []
         
         for batch in self.val_loader:
-            # 移动到设备
-            images = batch['sequence_data']['images'].to(self.device)
-            initial_joints = batch['sequence_data']['joint_positions'][:, 0].to(self.device)
-            target_joints = batch['sequence_data']['joint_positions'].to(self.device)
-            target_counts = batch['sequence_data']['counts'].to(self.device)
+            # 数据准备
+            sequence_data = {
+                'images': batch['sequence_data']['images'].to(self.device),
+                'joints': batch['sequence_data']['joints'].to(self.device),
+                'timestamps': batch['sequence_data']['timestamps'].to(self.device),
+                'labels': batch['sequence_data']['labels'].to(self.device)
+            }
             
             # 前向传播（不使用teacher forcing）
             outputs = self.model(
-                images=images,
-                initial_joints=initial_joints,
+                sequence_data=sequence_data,
                 use_teacher_forcing=False
             )
             
             # 计算损失
-            targets = {'counts': target_counts, 'joints': target_joints}
+            targets = {
+                'labels': sequence_data['labels'],
+                'joints': sequence_data['joints']
+            }
             losses = self.compute_loss(outputs, targets, stage_config)
             total_loss += losses['total_loss'].item()
-            # 新增：累积各种损失
             total_count_loss += losses['count_loss'].item()
             total_motion_loss += losses['motion_loss'].item()
             
@@ -324,15 +352,13 @@ class ModelTrainer:
             count_logits = outputs['counts']
             pred_labels = torch.argmax(count_logits, dim=-1)
             all_pred_labels.append(pred_labels.cpu())
-            all_target_labels.append(target_counts.cpu())
+            all_target_labels.append(sequence_data['labels'].cpu())
             
             batch_count += 1
         
         # 平均指标
         avg_loss = total_loss / batch_count
         avg_metrics = {key: value / batch_count for key, value in total_metrics.items()}
-        
-        # 新增：将平均损失添加到metrics中
         avg_metrics['count_loss'] = total_count_loss / batch_count
         avg_metrics['motion_loss'] = total_motion_loss / batch_count
         
@@ -344,7 +370,12 @@ class ModelTrainer:
         final_pred = all_pred_labels[:, -1]
         final_target = all_target_labels[:, -1]
         
-        cm = confusion_matrix(final_target, final_pred, labels=list(range(11)))
+        # 过滤无效标签
+        valid_mask = final_target >= 0
+        if valid_mask.sum() > 0:
+            cm = confusion_matrix(final_target[valid_mask], final_pred[valid_mask], labels=list(range(11)))
+        else:
+            cm = np.zeros((11, 11), dtype=int)
         
         return avg_loss, avg_metrics, cm
     
@@ -358,7 +389,8 @@ class ModelTrainer:
             'best_val_loss': self.best_val_loss,
             'best_val_accuracy': self.best_val_accuracy,
             'config': self.config,
-            'normalizer_stats': self.normalizer.stats if hasattr(self.normalizer, 'stats') else None
+            'normalizer_stats': self.normalizer.stats if hasattr(self.normalizer, 'stats') else None,
+            'image_mode': self.image_mode
         }
         
         # 保存路径
@@ -366,6 +398,8 @@ class ModelTrainer:
             checkpoint_path = os.path.join(self.config['save_dir'], 'best_model.pth')
         elif checkpoint_type == 'init':
             checkpoint_path = os.path.join(self.config['save_dir'], 'initial_model.pth')
+        elif checkpoint_type == 'interrupted':
+            checkpoint_path = os.path.join(self.config['save_dir'], 'interrupted_model.pth')
         else:
             checkpoint_path = os.path.join(self.config['save_dir'], f'checkpoint_epoch_{epoch}.pth')
         
@@ -385,15 +419,20 @@ class ModelTrainer:
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         
-        if checkpoint['scheduler_state_dict'] and self.scheduler:
+        if checkpoint.get('scheduler_state_dict') and self.scheduler:
             self.scheduler.load_state_dict(checkpoint['scheduler_state_dict'])
         
         self.start_epoch = checkpoint['epoch'] + 1
         self.best_val_loss = checkpoint['best_val_loss']
         self.best_val_accuracy = checkpoint.get('best_val_accuracy', 0.0)
         
+        # 加载图像模式
+        if 'image_mode' in checkpoint:
+            self.image_mode = checkpoint['image_mode']
+        
         print(f"Checkpoint loaded: {checkpoint_path}")
         print(f"Resuming from epoch {self.start_epoch}")
+        print(f"Image mode: {self.image_mode}")
     
     def plot_confusion_matrix(self, cm, epoch):
         """绘制混淆矩阵"""
@@ -415,7 +454,7 @@ class ModelTrainer:
             'Val': val_loss
         }, epoch)
         
-        # 单独的损失组件 - 修复：使用正确的损失值
+        # 单独的损失组件
         self.writer.add_scalars('Loss/Count', {
             'Train': train_metrics['count_loss'],
             'Val': val_metrics['count_loss']
@@ -432,13 +471,11 @@ class ModelTrainer:
             'Val': val_metrics['count_accuracy']
         }, epoch)
         
-        # 原始的最终计数准确率（保留）
         self.writer.add_scalars('Accuracy/Final_Count', {
             'Train': train_metrics['final_count_accuracy'],
             'Val': val_metrics['final_count_accuracy']
         }, epoch)
         
-        # 新增：真实的最终计数准确率
         self.writer.add_scalars('Accuracy/True_Final_Count', {
             'Train': train_metrics['true_final_count_accuracy'],
             'Val': val_metrics['true_final_count_accuracy']
@@ -463,15 +500,14 @@ class ModelTrainer:
         self.writer.add_scalar('Learning_Rate', self.optimizer.param_groups[0]['lr'], epoch)
         
         # 混淆矩阵
-        cm_figure = self.plot_confusion_matrix(confusion_matrix, epoch)
-        self.writer.add_figure('Confusion_Matrix/Final_Count', cm_figure, epoch)
-        plt.close(cm_figure)
+        if confusion_matrix.sum() > 0:  # 只有在有数据时才绘制
+            cm_figure = self.plot_confusion_matrix(confusion_matrix, epoch)
+            self.writer.add_figure('Confusion_Matrix/Final_Count', cm_figure, epoch)
+            plt.close(cm_figure)
         
-        # 每个数字的准确率 - 修复除零警告
+        # 每个数字的准确率
         with np.errstate(divide='ignore', invalid='ignore'):
-            # 安全处理除零情况
             row_sums = confusion_matrix.sum(axis=1)[:, np.newaxis]
-            # 避免除零，将零行替换为1
             row_sums = np.where(row_sums == 0, 1, row_sums)
             cm_norm = confusion_matrix.astype('float') / row_sums
         
@@ -488,10 +524,11 @@ class ModelTrainer:
         
         # 初始验证
         stage_name, stage_config = self.get_current_stage(0)
+        print(f"进行初始验证...")
         val_loss_init, val_metrics_init, confusion_matrix_init = self.validate(0, stage_config)
         self.save_checkpoint(0, val_loss_init, val_metrics_init['count_accuracy'], 
                            checkpoint_type='init')
-        print(f"初始模型已保存")
+        print(f"初始模型已保存，初始验证准确率: {val_metrics_init['count_accuracy']:.4f}")
         
         # 按阶段训练
         for stage_name, stage_config in self.training_stages.items():
@@ -571,7 +608,7 @@ class ModelTrainer:
                 print(f'Train Count Acc: {train_metrics["count_accuracy"]:.4f} | '
                       f'Val Count Acc: {val_metrics["count_accuracy"]:.4f}')
                 print(f'Final Count Acc: {val_metrics["final_count_accuracy"]:.4f}')
-                print(f'True Final Count Acc: {val_metrics["true_final_count_accuracy"]:.4f}')  # 新增
+                print(f'True Final Count Acc: {val_metrics["true_final_count_accuracy"]:.4f}')
                 print(f'Joint MSE: {val_metrics["joint_mse"]:.6f}')
                 print(f'学习率: {self.optimizer.param_groups[0]["lr"]:.6f}')
                 

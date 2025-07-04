@@ -8,7 +8,7 @@ from typing import Dict, Optional, Tuple
 class VisualEncoder(nn.Module):
     """可配置的CNN视觉编码器，支持1-3层"""
     
-    def __init__(self, cnn_layers=3, cnn_channels=[64, 128, 256], input_channels=1, feature_dim=256):
+    def __init__(self, cnn_layers=3, cnn_channels=[64, 128, 256], input_channels=3, feature_dim=256):
         super().__init__()
         
         self.cnn_layers = cnn_layers
@@ -72,9 +72,9 @@ class VisualEncoder(nn.Module):
 
 
 class EmbodimentEncoder(nn.Module):
-    """具身编码器"""
+    """具身编码器 - 修改为7个关节"""
     
-    def __init__(self, joint_dim=8, hidden_dim=256):
+    def __init__(self, joint_dim=7, hidden_dim=256):
         super().__init__()
         
         self.joint_encoder = nn.Sequential(
@@ -88,7 +88,7 @@ class EmbodimentEncoder(nn.Module):
         
     def forward(self, joint_positions):
         """
-        joint_positions: [batch, 8] - 当前的关节位置
+        joint_positions: [batch, 7] - 当前的关节位置
         """
         return self.joint_encoder(joint_positions)
 
@@ -180,9 +180,9 @@ class CountingDecoder(nn.Module):
 
 
 class MotionDecoder(nn.Module):
-    """动作解码器"""
+    """动作解码器 - 修改为7个关节"""
     
-    def __init__(self, input_dim=256, hidden_dim=128, joint_dim=8):
+    def __init__(self, input_dim=256, hidden_dim=128, joint_dim=7):
         super().__init__()
         
         self.decoder = nn.Sequential(
@@ -200,7 +200,7 @@ class MotionDecoder(nn.Module):
 
 
 class EmbodiedCountingModel(nn.Module):
-    """具身计数模型"""
+    """具身计数模型 - 修改以匹配新的DataLoader"""
     
     def __init__(self, 
                  cnn_layers=3,
@@ -209,7 +209,8 @@ class EmbodiedCountingModel(nn.Module):
                  lstm_hidden_size=512,
                  feature_dim=256,
                  attention_heads=8,
-                 joint_dim=8,
+                 joint_dim=7,  # 修改为7
+                 input_channels=3,  # 新增：图像通道数
                  dropout=0.1,
                  **kwargs):
         super().__init__()
@@ -222,6 +223,7 @@ class EmbodiedCountingModel(nn.Module):
         self.visual_encoder = VisualEncoder(
             cnn_layers=cnn_layers,
             cnn_channels=cnn_channels,
+            input_channels=input_channels,  # 传递图像通道数
             feature_dim=feature_dim
         )
         
@@ -268,20 +270,22 @@ class EmbodiedCountingModel(nn.Module):
         c0 = torch.zeros(self.lstm_layers, batch_size, self.lstm_hidden_size, device=device)
         return (h0, c0)
     
-    def forward(self, 
-                images, 
-                initial_joints, 
-                target_joints=None, 
-                use_teacher_forcing=True,
-                return_attention=False):
+    def forward(self, sequence_data, use_teacher_forcing=True, return_attention=False):
         """
+        修改后的forward方法，直接接收sequence_data
+        
         Args:
-            images: [batch, seq_len, 1, 224, 224]
-            initial_joints: [batch, 8] - 初始关节位置
-            target_joints: [batch, seq_len, 8] - 目标关节位置（训练时使用）
+            sequence_data: dict包含:
+                - 'images': [batch, seq_len, channels, 224, 224]
+                - 'joints': [batch, seq_len, 7] 
+                - 'timestamps': [batch, seq_len]
+                - 'labels': [batch, seq_len] - 每帧的计数标签
             use_teacher_forcing: 是否使用teacher forcing
             return_attention: 是否返回attention权重
         """
+        images = sequence_data['images']
+        joints = sequence_data['joints']
+        
         batch_size, seq_len = images.shape[:2]
         device = images.device
         
@@ -296,8 +300,8 @@ class EmbodiedCountingModel(nn.Module):
         self.lstm_hidden_states.clear()
         self.attention_weights_history.clear()
         
-        # 当前关节位置（初始为initial_joints）
-        current_joints = initial_joints
+        # 当前关节位置（初始为第一帧的关节位置）
+        current_joints = joints[:, 0]  # [batch, 7]
         
         for t in range(seq_len):
             # 1. 编码当前帧的视觉信息
@@ -329,16 +333,16 @@ class EmbodiedCountingModel(nn.Module):
             joint_predictions.append(joint_pred)
             
             # 6. 更新当前关节位置（用于下一时刻）
-            if use_teacher_forcing and target_joints is not None and t < seq_len - 1:
+            if use_teacher_forcing and t < seq_len - 1:
                 # 训练时使用真实值
-                current_joints = target_joints[:, t]
+                current_joints = joints[:, t + 1]
             else:
                 # 推理时使用预测值
                 current_joints = joint_pred
         
         outputs = {
-            'counts': torch.stack(count_predictions, dim=1),
-            'joints': torch.stack(joint_predictions, dim=1)
+            'counts': torch.stack(count_predictions, dim=1),    # [batch, seq_len, 11]
+            'joints': torch.stack(joint_predictions, dim=1)     # [batch, seq_len, 7]
         }
         
         if return_attention:
@@ -362,6 +366,7 @@ class EmbodiedCountingModel(nn.Module):
             for param in module.parameters():
                 param.requires_grad = False
             self.frozen_modules.add(module_name)
+            print(f"模块 '{module_name}' 已冻结")
         else:
             raise ValueError(f"Module {module_name} not found. Available: {list(modules_map.keys())}")
     
@@ -381,6 +386,7 @@ class EmbodiedCountingModel(nn.Module):
             for param in module.parameters():
                 param.requires_grad = True
             self.frozen_modules.discard(module_name)
+            print(f"模块 '{module_name}' 已解冻")
         else:
             raise ValueError(f"Module {module_name} not found. Available: {list(modules_map.keys())}")
     
@@ -391,8 +397,10 @@ class EmbodiedCountingModel(nn.Module):
         elif mode == 'motion_only':
             self.freeze_module('counting')
         elif mode == 'both':
-            self.unfreeze_module('counting')
-            self.unfreeze_module('motion')
+            if 'counting' in self.frozen_modules:
+                self.unfreeze_module('counting')
+            if 'motion' in self.frozen_modules:
+                self.unfreeze_module('motion')
         else:
             raise ValueError(f"Unknown training mode: {mode}. Available: 'both', 'counting_only', 'motion_only'")
     
