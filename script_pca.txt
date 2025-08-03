@@ -1,0 +1,1 @@
+python scratch/Ball_counting_CNN/embodied_analysis_V2.py --checkpoint scratch/Ball_counting_CNN/Final_result/Embodiment_Count_only/20data/check_points/counting_only_checkpoint_epoch_239.pth --save_dir scratch/Ball_counting_CNN/PCA/Embodiment_Count_only/20data/239/
