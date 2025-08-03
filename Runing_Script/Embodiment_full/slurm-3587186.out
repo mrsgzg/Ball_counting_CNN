@@ -1,0 +1,3483 @@
+=== 作业信息 ===
+节点: node802
+GPU: 1 (ID: 0)
+CPU核心: 4
+内存: 20480 MB
+开始时间: Sun 20 Jul 19:33:10 BST 2025
+=== 激活环境 ===
+/var/spool/slurmd/job3587186/slurm_script: line 25: --version: command not found
+Python版本: 
+当前环境: cgtest
+=== 开始训练 ===
+============================================================
+具身计数模型训练配置
+============================================================
+基础配置:
+  device: cuda
+  batch_size: 16
+  learning_rate: 0.0001
+  total_epochs: 350
+  image_mode: rgb
+
+数据配置:
+  data_root: /mnt/iusers01/fatpou01/compsci01/k09562zs/scratch/Ball_counting_CNN/ball_data_collection
+  train_csv: scratch/Ball_counting_CNN/Tools_script/ball_counting_dataset_train_10.csv
+  val_csv: scratch/Ball_counting_CNN/Tools_script/ball_counting_dataset_val.csv
+  sequence_length: 11
+  normalize: True
+
+训练阶段:
+  stage_1_epochs: 0
+  stage_2_epochs: 350
+
+模型配置:
+  cnn_layers: 3
+  cnn_channels: [64, 128, 256]
+  lstm_layers: 1
+  lstm_hidden_size: 512
+  feature_dim: 256
+  attention_heads: 1
+  joint_dim: 7
+  dropout: 0.1
+
+保存配置:
+  save_dir: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points
+  log_dir: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/logs
+  save_every: 2
+============================================================
+所有路径验证通过
+配置保存到: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/embodied_config.json
+
+正在初始化具身计数模型训练器...
+图像模式: RGB
+关节维度: 7
+=== 创建数据加载器 - 图像模式: RGB ===
+归一化统计信息已从 /mnt/iusers01/fatpou01/compsci01/k09562zs/scratch/Ball_counting_CNN/ball_data_collection/ball_normalization_stats.json 加载
+图像处理模式: rgb
+图像标准化: True
+使用ImageNet标准化参数
+归一化统计信息已从 /mnt/iusers01/fatpou01/compsci01/k09562zs/scratch/Ball_counting_CNN/ball_data_collection/ball_normalization_stats.json 加载
+图像处理模式: rgb
+图像标准化: True
+使用ImageNet标准化参数
+Model initialized with 3,004,946 parameters
+Training data: 94 samples
+Validation data: 242 samples
+Image mode: RGB (3 channels)
+
+开始训练具身计数模型...
+训练阶段:
+  阶段1 (0-0): 预训练视觉特征+具身编码
+  阶段2 (0-350): 联合训练
+  阶段3 (350-350): 精调计数
+
+开始训练，总计 350 个epoch
+每 2 个epoch保存一次模型
+使用设备: cuda
+进行初始验证...
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/initial_model.pth
+初始模型已保存，初始验证准确率: 0.0320
+
+=== 开始 stage_1: 预训练视觉特征 + 具身编码 ===
+模块 'visual' 已解冻
+模块 'embodiment' 已解冻
+模块 'fusion' 已解冻
+模块 'lstm' 已解冻
+模块 'counting' 已冻结
+模块 'motion' 已解冻
+冻结模块: ['counting']
+损失权重: {'motion': 1.0, 'count': 0.0}
+学习率已重置为 0.0001
+
+=== 开始 stage_2: 联合训练 ===
+模块 'visual' 已解冻
+模块 'embodiment' 已解冻
+模块 'fusion' 已解冻
+模块 'lstm' 已解冻
+模块 'counting' 已解冻
+模块 'motion' 已解冻
+冻结模块: []
+损失权重: {'motion': 0.3, 'count': 1.0}
+学习率已重置为 0.0001
+Epoch [0] Batch [0/6] Loss: 2.6688 Count Loss: 2.4337 Motion Loss: 0.7836 Count Acc: 0.0000
+
+Epoch [0] - Time: 17.47s
+Train Loss: 2.7149 | Val Loss: 2.6935
+Train Count Acc: 0.0290 | Val Count Acc: 0.0320
+Final Count Acc: 0.0469
+True Final Count Acc: 0.0469
+Joint MSE: 0.930045
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [1] Batch [0/6] Loss: 2.6891 Count Loss: 2.4159 Motion Loss: 0.9106 Count Acc: 0.0455
+
+Epoch [1] - Time: 11.10s
+Train Loss: 2.7006 | Val Loss: 2.6796
+Train Count Acc: 0.0277 | Val Count Acc: 0.0163
+Final Count Acc: 0.0000
+True Final Count Acc: 0.0000
+Joint MSE: 0.918786
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_1.pth
+Epoch [2] Batch [0/6] Loss: 2.7424 Count Loss: 2.4064 Motion Loss: 1.1201 Count Acc: 0.0455
+
+Epoch [2] - Time: 10.61s
+Train Loss: 2.6777 | Val Loss: 2.6503
+Train Count Acc: 0.0800 | Val Count Acc: 0.2649
+Final Count Acc: 0.3086
+True Final Count Acc: 0.0117
+Joint MSE: 0.899145
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [3] Batch [0/6] Loss: 2.6096 Count Loss: 2.3648 Motion Loss: 0.8160 Count Acc: 0.4318
+
+Epoch [3] - Time: 10.52s
+Train Loss: 2.6242 | Val Loss: 2.5852
+Train Count Acc: 0.3552 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+Joint MSE: 0.872650
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_3.pth
+Epoch [4] Batch [0/6] Loss: 2.5474 Count Loss: 2.2940 Motion Loss: 0.8447 Count Acc: 0.3977
+
+Epoch [4] - Time: 10.61s
+Train Loss: 2.4810 | Val Loss: 2.4325
+Train Count Acc: 0.3782 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+Joint MSE: 0.887356
+学习率: 0.000100
+Epoch [5] Batch [0/6] Loss: 2.4401 Count Loss: 2.1894 Motion Loss: 0.8359 Count Acc: 0.2443
+
+Epoch [5] - Time: 10.00s
+Train Loss: 2.3158 | Val Loss: 2.2925
+Train Count Acc: 0.3782 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+Joint MSE: 0.904328
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_5.pth
+Epoch [6] Batch [0/6] Loss: 2.1731 Count Loss: 1.9705 Motion Loss: 0.6752 Count Acc: 0.3466
+
+Epoch [6] - Time: 10.37s
+Train Loss: 2.2115 | Val Loss: 2.2277
+Train Count Acc: 0.3734 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+Joint MSE: 0.859671
+学习率: 0.000100
+Epoch [7] Batch [0/6] Loss: 2.4383 Count Loss: 2.0770 Motion Loss: 1.2043 Count Acc: 0.2955
+
+Epoch [7] - Time: 10.27s
+Train Loss: 2.1191 | Val Loss: 2.1855
+Train Count Acc: 0.3795 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+Joint MSE: 0.859828
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_7.pth
+Epoch [8] Batch [0/6] Loss: 1.7563 Count Loss: 1.5151 Motion Loss: 0.8041 Count Acc: 0.5000
+
+Epoch [8] - Time: 10.30s
+Train Loss: 2.0612 | Val Loss: 2.1124
+Train Count Acc: 0.3782 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+Joint MSE: 0.855062
+学习率: 0.000100
+Epoch [9] Batch [0/6] Loss: 1.9570 Count Loss: 1.7450 Motion Loss: 0.7067 Count Acc: 0.3466
+
+Epoch [9] - Time: 10.55s
+Train Loss: 1.9995 | Val Loss: 2.0686
+Train Count Acc: 0.3770 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+Joint MSE: 0.855236
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_9.pth
+Epoch [10] Batch [0/6] Loss: 2.1083 Count Loss: 1.8868 Motion Loss: 0.7383 Count Acc: 0.2955
+
+Epoch [10] - Time: 10.07s
+Train Loss: 1.9364 | Val Loss: 2.0394
+Train Count Acc: 0.3784 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+Joint MSE: 0.850050
+学习率: 0.000100
+Epoch [11] Batch [0/6] Loss: 1.7232 Count Loss: 1.4843 Motion Loss: 0.7965 Count Acc: 0.5000
+
+Epoch [11] - Time: 10.12s
+Train Loss: 1.9022 | Val Loss: 2.0041
+Train Count Acc: 0.3757 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+Joint MSE: 0.849377
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_11.pth
+Epoch [12] Batch [0/6] Loss: 1.9617 Count Loss: 1.7180 Motion Loss: 0.8126 Count Acc: 0.4773
+
+Epoch [12] - Time: 10.04s
+Train Loss: 1.8620 | Val Loss: 1.9676
+Train Count Acc: 0.3776 | Val Count Acc: 0.3523
+Final Count Acc: 0.3203
+True Final Count Acc: 0.3164
+Joint MSE: 0.854477
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [13] Batch [0/6] Loss: 1.8778 Count Loss: 1.5912 Motion Loss: 0.9553 Count Acc: 0.3920
+
+Epoch [13] - Time: 10.30s
+Train Loss: 1.8157 | Val Loss: 1.9467
+Train Count Acc: 0.4035 | Val Count Acc: 0.3917
+Final Count Acc: 0.3086
+True Final Count Acc: 0.4180
+Joint MSE: 0.852230
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_13.pth
+Epoch [14] Batch [0/6] Loss: 1.5067 Count Loss: 1.3205 Motion Loss: 0.6208 Count Acc: 0.4830
+
+Epoch [14] - Time: 10.11s
+Train Loss: 1.7698 | Val Loss: 1.9702
+Train Count Acc: 0.4283 | Val Count Acc: 0.4233
+Final Count Acc: 0.3242
+True Final Count Acc: 0.4102
+Joint MSE: 0.849210
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [15] Batch [0/6] Loss: 1.7330 Count Loss: 1.4862 Motion Loss: 0.8225 Count Acc: 0.4773
+
+Epoch [15] - Time: 10.30s
+Train Loss: 1.7367 | Val Loss: 1.8700
+Train Count Acc: 0.4406 | Val Count Acc: 0.3832
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3516
+Joint MSE: 0.849596
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_15.pth
+Epoch [16] Batch [0/6] Loss: 1.5716 Count Loss: 1.3647 Motion Loss: 0.6896 Count Acc: 0.5114
+
+Epoch [16] - Time: 10.10s
+Train Loss: 1.6825 | Val Loss: 1.8773
+Train Count Acc: 0.4577 | Val Count Acc: 0.4038
+Final Count Acc: 0.3047
+True Final Count Acc: 0.4336
+Joint MSE: 0.853472
+学习率: 0.000100
+Epoch [17] Batch [0/6] Loss: 1.6477 Count Loss: 1.4605 Motion Loss: 0.6240 Count Acc: 0.4318
+
+Epoch [17] - Time: 10.54s
+Train Loss: 1.6173 | Val Loss: 1.7951
+Train Count Acc: 0.4597 | Val Count Acc: 0.4141
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3594
+Joint MSE: 0.832988
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_17.pth
+Epoch [18] Batch [0/6] Loss: 1.7979 Count Loss: 1.5348 Motion Loss: 0.8771 Count Acc: 0.3068
+
+Epoch [18] - Time: 9.83s
+Train Loss: 1.5769 | Val Loss: 1.8400
+Train Count Acc: 0.4959 | Val Count Acc: 0.4023
+Final Count Acc: 0.2812
+True Final Count Acc: 0.4180
+Joint MSE: 0.840728
+学习率: 0.000100
+Epoch [19] Batch [0/6] Loss: 1.3603 Count Loss: 1.1362 Motion Loss: 0.7470 Count Acc: 0.6023
+
+Epoch [19] - Time: 9.87s
+Train Loss: 1.5649 | Val Loss: 1.7718
+Train Count Acc: 0.4578 | Val Count Acc: 0.4322
+Final Count Acc: 0.3086
+True Final Count Acc: 0.3750
+Joint MSE: 0.828680
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_19.pth
+Epoch [20] Batch [0/6] Loss: 1.4492 Count Loss: 1.2285 Motion Loss: 0.7356 Count Acc: 0.5568
+
+Epoch [20] - Time: 10.09s
+Train Loss: 1.5070 | Val Loss: 1.7042
+Train Count Acc: 0.5130 | Val Count Acc: 0.4371
+Final Count Acc: 0.3438
+True Final Count Acc: 0.3438
+Joint MSE: 0.813479
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [21] Batch [0/6] Loss: 1.1472 Count Loss: 0.9216 Motion Loss: 0.7520 Count Acc: 0.6989
+
+Epoch [21] - Time: 10.48s
+Train Loss: 1.4451 | Val Loss: 1.7081
+Train Count Acc: 0.5647 | Val Count Acc: 0.4538
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3906
+Joint MSE: 0.816655
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_21.pth
+Epoch [22] Batch [0/6] Loss: 1.4482 Count Loss: 1.1150 Motion Loss: 1.1109 Count Acc: 0.6420
+
+Epoch [22] - Time: 10.56s
+Train Loss: 1.3914 | Val Loss: 1.6842
+Train Count Acc: 0.5674 | Val Count Acc: 0.4645
+Final Count Acc: 0.2891
+True Final Count Acc: 0.3672
+Joint MSE: 0.820301
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [23] Batch [0/6] Loss: 1.1779 Count Loss: 0.9694 Motion Loss: 0.6950 Count Acc: 0.6250
+
+Epoch [23] - Time: 9.91s
+Train Loss: 1.3673 | Val Loss: 1.6496
+Train Count Acc: 0.5947 | Val Count Acc: 0.5131
+Final Count Acc: 0.3281
+True Final Count Acc: 0.3867
+Joint MSE: 0.822255
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_23.pth
+Epoch [24] Batch [0/6] Loss: 1.5516 Count Loss: 1.2488 Motion Loss: 1.0095 Count Acc: 0.6136
+
+Epoch [24] - Time: 9.90s
+Train Loss: 1.2902 | Val Loss: 1.6200
+Train Count Acc: 0.6515 | Val Count Acc: 0.5071
+Final Count Acc: 0.3242
+True Final Count Acc: 0.3984
+Joint MSE: 0.821288
+学习率: 0.000100
+Epoch [25] Batch [0/6] Loss: 1.5975 Count Loss: 1.3116 Motion Loss: 0.9528 Count Acc: 0.5682
+
+Epoch [25] - Time: 10.21s
+Train Loss: 1.2685 | Val Loss: 1.6001
+Train Count Acc: 0.6429 | Val Count Acc: 0.4982
+Final Count Acc: 0.3203
+True Final Count Acc: 0.3867
+Joint MSE: 0.815864
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_25.pth
+Epoch [26] Batch [0/6] Loss: 1.4242 Count Loss: 1.1992 Motion Loss: 0.7500 Count Acc: 0.5341
+
+Epoch [26] - Time: 10.02s
+Train Loss: 1.2019 | Val Loss: 1.7236
+Train Count Acc: 0.6906 | Val Count Acc: 0.4688
+Final Count Acc: 0.2617
+True Final Count Acc: 0.4922
+Joint MSE: 0.839645
+学习率: 0.000100
+Epoch [27] Batch [0/6] Loss: 1.0815 Count Loss: 0.8273 Motion Loss: 0.8475 Count Acc: 0.8466
+
+Epoch [27] - Time: 10.11s
+Train Loss: 1.2045 | Val Loss: 1.6045
+Train Count Acc: 0.6669 | Val Count Acc: 0.4954
+Final Count Acc: 0.3203
+True Final Count Acc: 0.3789
+Joint MSE: 0.825937
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_27.pth
+Epoch [28] Batch [0/6] Loss: 1.0288 Count Loss: 0.8523 Motion Loss: 0.5882 Count Acc: 0.6648
+
+Epoch [28] - Time: 9.95s
+Train Loss: 1.1974 | Val Loss: 1.6448
+Train Count Acc: 0.6568 | Val Count Acc: 0.4982
+Final Count Acc: 0.3047
+True Final Count Acc: 0.4688
+Joint MSE: 0.832691
+学习率: 0.000100
+Epoch [29] Batch [0/6] Loss: 0.9857 Count Loss: 0.7283 Motion Loss: 0.8583 Count Acc: 0.8125
+
+Epoch [29] - Time: 10.41s
+Train Loss: 1.1346 | Val Loss: 1.5807
+Train Count Acc: 0.6936 | Val Count Acc: 0.5007
+Final Count Acc: 0.3164
+True Final Count Acc: 0.4375
+Joint MSE: 0.812810
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_29.pth
+Epoch [30] Batch [0/6] Loss: 1.2762 Count Loss: 0.9522 Motion Loss: 1.0798 Count Acc: 0.6591
+
+Epoch [30] - Time: 10.01s
+Train Loss: 1.0634 | Val Loss: 1.5526
+Train Count Acc: 0.7235 | Val Count Acc: 0.5199
+Final Count Acc: 0.3438
+True Final Count Acc: 0.4219
+Joint MSE: 0.809076
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [31] Batch [0/6] Loss: 0.7881 Count Loss: 0.5269 Motion Loss: 0.8705 Count Acc: 0.8466
+
+Epoch [31] - Time: 10.14s
+Train Loss: 1.0574 | Val Loss: 1.5456
+Train Count Acc: 0.7127 | Val Count Acc: 0.5192
+Final Count Acc: 0.3398
+True Final Count Acc: 0.4258
+Joint MSE: 0.809939
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_31.pth
+Epoch [32] Batch [0/6] Loss: 1.3063 Count Loss: 1.0306 Motion Loss: 0.9191 Count Acc: 0.5852
+
+Epoch [32] - Time: 10.20s
+Train Loss: 1.0881 | Val Loss: 1.6299
+Train Count Acc: 0.6944 | Val Count Acc: 0.5121
+Final Count Acc: 0.3477
+True Final Count Acc: 0.3906
+Joint MSE: 0.814207
+学习率: 0.000100
+Epoch [33] Batch [0/6] Loss: 1.1199 Count Loss: 0.8947 Motion Loss: 0.7509 Count Acc: 0.6307
+
+Epoch [33] - Time: 10.34s
+Train Loss: 1.0811 | Val Loss: 1.6271
+Train Count Acc: 0.6700 | Val Count Acc: 0.4975
+Final Count Acc: 0.3164
+True Final Count Acc: 0.4922
+Joint MSE: 0.822874
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_33.pth
+Epoch [34] Batch [0/6] Loss: 1.1837 Count Loss: 0.9704 Motion Loss: 0.7110 Count Acc: 0.6875
+
+Epoch [34] - Time: 10.27s
+Train Loss: 1.0918 | Val Loss: 1.6925
+Train Count Acc: 0.6849 | Val Count Acc: 0.5036
+Final Count Acc: 0.3438
+True Final Count Acc: 0.3867
+Joint MSE: 0.826228
+学习率: 0.000100
+Epoch [35] Batch [0/6] Loss: 0.9549 Count Loss: 0.7402 Motion Loss: 0.7157 Count Acc: 0.7273
+
+Epoch [35] - Time: 10.24s
+Train Loss: 1.1277 | Val Loss: 1.5052
+Train Count Acc: 0.6845 | Val Count Acc: 0.5515
+Final Count Acc: 0.3711
+True Final Count Acc: 0.4414
+Joint MSE: 0.807385
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_35.pth
+Epoch [36] Batch [0/6] Loss: 0.6441 Count Loss: 0.4387 Motion Loss: 0.6850 Count Acc: 0.9034
+
+Epoch [36] - Time: 10.61s
+Train Loss: 1.0850 | Val Loss: 1.5119
+Train Count Acc: 0.7052 | Val Count Acc: 0.5334
+Final Count Acc: 0.3438
+True Final Count Acc: 0.4102
+Joint MSE: 0.802473
+学习率: 0.000100
+Epoch [37] Batch [0/6] Loss: 0.5106 Count Loss: 0.3096 Motion Loss: 0.6700 Count Acc: 0.9148
+
+Epoch [37] - Time: 10.45s
+Train Loss: 0.9793 | Val Loss: 1.6625
+Train Count Acc: 0.7120 | Val Count Acc: 0.4989
+Final Count Acc: 0.2773
+True Final Count Acc: 0.5352
+Joint MSE: 0.822683
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_37.pth
+Epoch [38] Batch [0/6] Loss: 1.1777 Count Loss: 0.8887 Motion Loss: 0.9632 Count Acc: 0.6932
+
+Epoch [38] - Time: 9.99s
+Train Loss: 1.0306 | Val Loss: 1.6401
+Train Count Acc: 0.7323 | Val Count Acc: 0.4996
+Final Count Acc: 0.3281
+True Final Count Acc: 0.4141
+Joint MSE: 0.820591
+学习率: 0.000100
+Epoch [39] Batch [0/6] Loss: 0.9166 Count Loss: 0.7189 Motion Loss: 0.6589 Count Acc: 0.7102
+
+Epoch [39] - Time: 10.22s
+Train Loss: 0.9506 | Val Loss: 1.6432
+Train Count Acc: 0.7542 | Val Count Acc: 0.5199
+Final Count Acc: 0.3594
+True Final Count Acc: 0.4023
+Joint MSE: 0.818696
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_39.pth
+Epoch [40] Batch [0/6] Loss: 1.0550 Count Loss: 0.7864 Motion Loss: 0.8954 Count Acc: 0.7330
+
+Epoch [40] - Time: 10.17s
+Train Loss: 1.0220 | Val Loss: 1.5353
+Train Count Acc: 0.7294 | Val Count Acc: 0.5210
+Final Count Acc: 0.3203
+True Final Count Acc: 0.4727
+Joint MSE: 0.787452
+学习率: 0.000100
+Epoch [41] Batch [0/6] Loss: 0.9858 Count Loss: 0.7774 Motion Loss: 0.6946 Count Acc: 0.7386
+
+Epoch [41] - Time: 9.93s
+Train Loss: 0.9366 | Val Loss: 1.6003
+Train Count Acc: 0.7393 | Val Count Acc: 0.5281
+Final Count Acc: 0.3594
+True Final Count Acc: 0.3945
+Joint MSE: 0.780640
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_41.pth
+Epoch [42] Batch [0/6] Loss: 0.9138 Count Loss: 0.7330 Motion Loss: 0.6027 Count Acc: 0.7216
+
+Epoch [42] - Time: 10.07s
+Train Loss: 0.9246 | Val Loss: 1.5313
+Train Count Acc: 0.7653 | Val Count Acc: 0.5316
+Final Count Acc: 0.3281
+True Final Count Acc: 0.4922
+Joint MSE: 0.782351
+学习率: 0.000100
+Epoch [43] Batch [0/6] Loss: 0.9796 Count Loss: 0.6416 Motion Loss: 1.1265 Count Acc: 0.7216
+
+Epoch [43] - Time: 9.93s
+Train Loss: 0.9561 | Val Loss: 1.5171
+Train Count Acc: 0.7082 | Val Count Acc: 0.5458
+Final Count Acc: 0.3438
+True Final Count Acc: 0.5039
+Joint MSE: 0.786805
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_43.pth
+Epoch [44] Batch [0/6] Loss: 0.6263 Count Loss: 0.4304 Motion Loss: 0.6532 Count Acc: 0.8864
+
+Epoch [44] - Time: 10.39s
+Train Loss: 0.8902 | Val Loss: 1.5177
+Train Count Acc: 0.7823 | Val Count Acc: 0.5703
+Final Count Acc: 0.3789
+True Final Count Acc: 0.4258
+Joint MSE: 0.781902
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [45] Batch [0/6] Loss: 0.9134 Count Loss: 0.6804 Motion Loss: 0.7768 Count Acc: 0.7443
+
+Epoch [45] - Time: 10.00s
+Train Loss: 0.8721 | Val Loss: 1.5880
+Train Count Acc: 0.7779 | Val Count Acc: 0.5000
+Final Count Acc: 0.3086
+True Final Count Acc: 0.4844
+Joint MSE: 0.775131
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_45.pth
+Epoch [46] Batch [0/6] Loss: 1.1972 Count Loss: 0.9710 Motion Loss: 0.7539 Count Acc: 0.6307
+
+Epoch [46] - Time: 10.05s
+Train Loss: 0.9255 | Val Loss: 1.4952
+Train Count Acc: 0.7446 | Val Count Acc: 0.5707
+Final Count Acc: 0.3711
+True Final Count Acc: 0.5195
+Joint MSE: 0.788121
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [47] Batch [0/6] Loss: 1.2404 Count Loss: 1.0168 Motion Loss: 0.7454 Count Acc: 0.5966
+
+Epoch [47] - Time: 10.11s
+Train Loss: 0.8794 | Val Loss: 1.4619
+Train Count Acc: 0.7737 | Val Count Acc: 0.5504
+Final Count Acc: 0.3359
+True Final Count Acc: 0.4922
+Joint MSE: 0.791706
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_47.pth
+Epoch [48] Batch [0/6] Loss: 0.6272 Count Loss: 0.4197 Motion Loss: 0.6916 Count Acc: 0.8693
+
+Epoch [48] - Time: 9.97s
+Train Loss: 0.8822 | Val Loss: 1.8014
+Train Count Acc: 0.7554 | Val Count Acc: 0.4826
+Final Count Acc: 0.2773
+True Final Count Acc: 0.5586
+Joint MSE: 0.828813
+学习率: 0.000100
+Epoch [49] Batch [0/6] Loss: 0.8455 Count Loss: 0.6532 Motion Loss: 0.6410 Count Acc: 0.7841
+
+Epoch [49] - Time: 10.05s
+Train Loss: 0.8980 | Val Loss: 1.6335
+Train Count Acc: 0.7662 | Val Count Acc: 0.5341
+Final Count Acc: 0.3789
+True Final Count Acc: 0.4062
+Joint MSE: 0.770737
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_49.pth
+Epoch [50] Batch [0/6] Loss: 0.8185 Count Loss: 0.6194 Motion Loss: 0.6639 Count Acc: 0.7102
+
+Epoch [50] - Time: 10.31s
+Train Loss: 0.9251 | Val Loss: 1.8281
+Train Count Acc: 0.7454 | Val Count Acc: 0.4904
+Final Count Acc: 0.2695
+True Final Count Acc: 0.5820
+Joint MSE: 0.806219
+学习率: 0.000100
+Epoch [51] Batch [0/6] Loss: 0.8848 Count Loss: 0.6914 Motion Loss: 0.6447 Count Acc: 0.7216
+
+Epoch [51] - Time: 10.17s
+Train Loss: 0.9616 | Val Loss: 1.4975
+Train Count Acc: 0.7064 | Val Count Acc: 0.5650
+Final Count Acc: 0.3594
+True Final Count Acc: 0.4727
+Joint MSE: 0.772056
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_51.pth
+Epoch [52] Batch [0/6] Loss: 0.8527 Count Loss: 0.5837 Motion Loss: 0.8967 Count Acc: 0.7727
+
+Epoch [52] - Time: 10.04s
+Train Loss: 0.7928 | Val Loss: 1.3915
+Train Count Acc: 0.8033 | Val Count Acc: 0.5820
+Final Count Acc: 0.3633
+True Final Count Acc: 0.5078
+Joint MSE: 0.768471
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [53] Batch [0/6] Loss: 0.6415 Count Loss: 0.4678 Motion Loss: 0.5791 Count Acc: 0.8580
+
+Epoch [53] - Time: 10.05s
+Train Loss: 0.7860 | Val Loss: 1.3712
+Train Count Acc: 0.8025 | Val Count Acc: 0.5842
+Final Count Acc: 0.3633
+True Final Count Acc: 0.5117
+Joint MSE: 0.759140
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_53.pth
+Epoch [54] Batch [0/6] Loss: 0.9055 Count Loss: 0.6319 Motion Loss: 0.9122 Count Acc: 0.7443
+
+Epoch [54] - Time: 10.10s
+Train Loss: 0.7628 | Val Loss: 1.4475
+Train Count Acc: 0.8055 | Val Count Acc: 0.5533
+Final Count Acc: 0.3594
+True Final Count Acc: 0.5000
+Joint MSE: 0.756608
+学习率: 0.000100
+Epoch [55] Batch [0/6] Loss: 0.5868 Count Loss: 0.4471 Motion Loss: 0.4658 Count Acc: 0.8580
+
+Epoch [55] - Time: 10.20s
+Train Loss: 0.7701 | Val Loss: 1.4936
+Train Count Acc: 0.7975 | Val Count Acc: 0.5536
+Final Count Acc: 0.3398
+True Final Count Acc: 0.5391
+Joint MSE: 0.764677
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_55.pth
+Epoch [56] Batch [0/6] Loss: 0.8167 Count Loss: 0.4911 Motion Loss: 1.0853 Count Acc: 0.8750
+
+Epoch [56] - Time: 10.03s
+Train Loss: 0.7031 | Val Loss: 1.4239
+Train Count Acc: 0.8328 | Val Count Acc: 0.5817
+Final Count Acc: 0.3516
+True Final Count Acc: 0.5078
+Joint MSE: 0.752675
+学习率: 0.000100
+Epoch [57] Batch [0/6] Loss: 0.6370 Count Loss: 0.4007 Motion Loss: 0.7877 Count Acc: 0.8580
+
+Epoch [57] - Time: 10.35s
+Train Loss: 0.6741 | Val Loss: 1.4575
+Train Count Acc: 0.8492 | Val Count Acc: 0.5891
+Final Count Acc: 0.4062
+True Final Count Acc: 0.4375
+Joint MSE: 0.745047
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_57.pth
+Epoch [58] Batch [0/6] Loss: 0.8266 Count Loss: 0.6141 Motion Loss: 0.7086 Count Acc: 0.7159
+
+Epoch [58] - Time: 10.45s
+Train Loss: 0.7042 | Val Loss: 1.4566
+Train Count Acc: 0.8285 | Val Count Acc: 0.5817
+Final Count Acc: 0.3555
+True Final Count Acc: 0.5508
+Joint MSE: 0.749475
+学习率: 0.000100
+Epoch [59] Batch [0/6] Loss: 0.6393 Count Loss: 0.4398 Motion Loss: 0.6650 Count Acc: 0.8352
+
+Epoch [59] - Time: 10.01s
+Train Loss: 0.7194 | Val Loss: 1.4473
+Train Count Acc: 0.8047 | Val Count Acc: 0.5923
+Final Count Acc: 0.3828
+True Final Count Acc: 0.5156
+Joint MSE: 0.766859
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_59.pth
+Epoch [60] Batch [0/6] Loss: 0.7898 Count Loss: 0.4598 Motion Loss: 1.1001 Count Acc: 0.8409
+
+Epoch [60] - Time: 10.30s
+Train Loss: 0.8294 | Val Loss: 1.4190
+Train Count Acc: 0.7624 | Val Count Acc: 0.6236
+Final Count Acc: 0.4102
+True Final Count Acc: 0.5039
+Joint MSE: 0.772464
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [61] Batch [0/6] Loss: 0.6102 Count Loss: 0.3917 Motion Loss: 0.7285 Count Acc: 0.8750
+
+Epoch [61] - Time: 10.04s
+Train Loss: 0.7141 | Val Loss: 1.5400
+Train Count Acc: 0.8061 | Val Count Acc: 0.5813
+Final Count Acc: 0.3398
+True Final Count Acc: 0.6172
+Joint MSE: 0.764234
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_61.pth
+Epoch [62] Batch [0/6] Loss: 0.6010 Count Loss: 0.3957 Motion Loss: 0.6842 Count Acc: 0.8920
+
+Epoch [62] - Time: 10.08s
+Train Loss: 0.7712 | Val Loss: 1.3656
+Train Count Acc: 0.7868 | Val Count Acc: 0.6129
+Final Count Acc: 0.4180
+True Final Count Acc: 0.5039
+Joint MSE: 0.743509
+学习率: 0.000100
+Epoch [63] Batch [0/6] Loss: 0.7754 Count Loss: 0.6507 Motion Loss: 0.4158 Count Acc: 0.7443
+
+Epoch [63] - Time: 10.09s
+Train Loss: 0.6843 | Val Loss: 1.3426
+Train Count Acc: 0.8070 | Val Count Acc: 0.6300
+Final Count Acc: 0.4062
+True Final Count Acc: 0.5625
+Joint MSE: 0.739966
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_63.pth
+Epoch [64] Batch [0/6] Loss: 0.6673 Count Loss: 0.4546 Motion Loss: 0.7088 Count Acc: 0.8239
+
+Epoch [64] - Time: 9.98s
+Train Loss: 0.7092 | Val Loss: 1.4701
+Train Count Acc: 0.8235 | Val Count Acc: 0.5994
+Final Count Acc: 0.3867
+True Final Count Acc: 0.4453
+Joint MSE: 0.761906
+学习率: 0.000100
+Epoch [65] Batch [0/6] Loss: 0.8767 Count Loss: 0.5907 Motion Loss: 0.9534 Count Acc: 0.8011
+
+Epoch [65] - Time: 10.17s
+Train Loss: 0.8184 | Val Loss: 1.5191
+Train Count Acc: 0.7592 | Val Count Acc: 0.6023
+Final Count Acc: 0.3516
+True Final Count Acc: 0.6406
+Joint MSE: 0.747779
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_65.pth
+Epoch [66] Batch [0/6] Loss: 0.6469 Count Loss: 0.4393 Motion Loss: 0.6919 Count Acc: 0.8523
+
+Epoch [66] - Time: 10.10s
+Train Loss: 0.6779 | Val Loss: 1.3508
+Train Count Acc: 0.8094 | Val Count Acc: 0.6218
+Final Count Acc: 0.4336
+True Final Count Acc: 0.4648
+Joint MSE: 0.743735
+学习率: 0.000100
+Epoch [67] Batch [0/6] Loss: 0.5967 Count Loss: 0.4185 Motion Loss: 0.5940 Count Acc: 0.8295
+
+Epoch [67] - Time: 10.09s
+Train Loss: 0.6175 | Val Loss: 1.3059
+Train Count Acc: 0.8566 | Val Count Acc: 0.6282
+Final Count Acc: 0.4219
+True Final Count Acc: 0.5508
+Joint MSE: 0.736362
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_67.pth
+Epoch [68] Batch [0/6] Loss: 0.8035 Count Loss: 0.4875 Motion Loss: 1.0535 Count Acc: 0.8352
+
+Epoch [68] - Time: 10.00s
+Train Loss: 0.5957 | Val Loss: 1.3625
+Train Count Acc: 0.8682 | Val Count Acc: 0.6388
+Final Count Acc: 0.4102
+True Final Count Acc: 0.6133
+Joint MSE: 0.740009
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [69] Batch [0/6] Loss: 0.5001 Count Loss: 0.3190 Motion Loss: 0.6035 Count Acc: 0.9091
+
+Epoch [69] - Time: 10.40s
+Train Loss: 0.5768 | Val Loss: 1.3636
+Train Count Acc: 0.8846 | Val Count Acc: 0.6246
+Final Count Acc: 0.4219
+True Final Count Acc: 0.4922
+Joint MSE: 0.736052
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_69.pth
+Epoch [70] Batch [0/6] Loss: 0.4460 Count Loss: 0.2306 Motion Loss: 0.7181 Count Acc: 0.9318
+
+Epoch [70] - Time: 10.06s
+Train Loss: 0.5642 | Val Loss: 1.4943
+Train Count Acc: 0.8690 | Val Count Acc: 0.6204
+Final Count Acc: 0.3867
+True Final Count Acc: 0.6680
+Joint MSE: 0.733117
+学习率: 0.000100
+Epoch [71] Batch [0/6] Loss: 0.6228 Count Loss: 0.4273 Motion Loss: 0.6517 Count Acc: 0.8239
+
+Epoch [71] - Time: 10.14s
+Train Loss: 0.6504 | Val Loss: 1.3937
+Train Count Acc: 0.8348 | Val Count Acc: 0.6286
+Final Count Acc: 0.4297
+True Final Count Acc: 0.5352
+Joint MSE: 0.719934
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_71.pth
+Epoch [72] Batch [0/6] Loss: 0.5367 Count Loss: 0.3937 Motion Loss: 0.4767 Count Acc: 0.8182
+
+Epoch [72] - Time: 10.24s
+Train Loss: 0.5948 | Val Loss: 1.4389
+Train Count Acc: 0.8501 | Val Count Acc: 0.6154
+Final Count Acc: 0.4141
+True Final Count Acc: 0.5078
+Joint MSE: 0.729808
+学习率: 0.000100
+Epoch [73] Batch [0/6] Loss: 0.6299 Count Loss: 0.5054 Motion Loss: 0.4151 Count Acc: 0.8409
+
+Epoch [73] - Time: 10.36s
+Train Loss: 0.6042 | Val Loss: 1.3937
+Train Count Acc: 0.8451 | Val Count Acc: 0.6243
+Final Count Acc: 0.3945
+True Final Count Acc: 0.6016
+Joint MSE: 0.704847
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_73.pth
+Epoch [74] Batch [0/6] Loss: 0.6146 Count Loss: 0.4417 Motion Loss: 0.5763 Count Acc: 0.8011
+
+Epoch [74] - Time: 10.04s
+Train Loss: 0.5863 | Val Loss: 1.3438
+Train Count Acc: 0.8466 | Val Count Acc: 0.6346
+Final Count Acc: 0.4453
+True Final Count Acc: 0.5352
+Joint MSE: 0.721212
+学习率: 0.000100
+Epoch [75] Batch [0/6] Loss: 0.6831 Count Loss: 0.3942 Motion Loss: 0.9631 Count Acc: 0.8466
+
+Epoch [75] - Time: 10.52s
+Train Loss: 0.5269 | Val Loss: 1.5341
+Train Count Acc: 0.8816 | Val Count Acc: 0.6190
+Final Count Acc: 0.3867
+True Final Count Acc: 0.6133
+Joint MSE: 0.729673
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_75.pth
+Epoch [76] Batch [0/6] Loss: 0.4287 Count Loss: 0.2237 Motion Loss: 0.6836 Count Acc: 0.9489
+
+Epoch [76] - Time: 10.00s
+Train Loss: 0.5069 | Val Loss: 1.3159
+Train Count Acc: 0.8984 | Val Count Acc: 0.6719
+Final Count Acc: 0.4375
+True Final Count Acc: 0.5820
+Joint MSE: 0.714147
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [77] Batch [0/6] Loss: 0.5266 Count Loss: 0.3419 Motion Loss: 0.6157 Count Acc: 0.9034
+
+Epoch [77] - Time: 10.78s
+Train Loss: 0.5684 | Val Loss: 1.6350
+Train Count Acc: 0.8766 | Val Count Acc: 0.5451
+Final Count Acc: 0.3750
+True Final Count Acc: 0.6211
+Joint MSE: 0.718217
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_77.pth
+Epoch [78] Batch [0/6] Loss: 0.5290 Count Loss: 0.2756 Motion Loss: 0.8446 Count Acc: 0.9318
+
+Epoch [78] - Time: 9.99s
+Train Loss: 0.4944 | Val Loss: 1.3829
+Train Count Acc: 0.8902 | Val Count Acc: 0.6460
+Final Count Acc: 0.4180
+True Final Count Acc: 0.5625
+Joint MSE: 0.707580
+学习率: 0.000100
+Epoch [79] Batch [0/6] Loss: 0.4579 Count Loss: 0.2895 Motion Loss: 0.5612 Count Acc: 0.8977
+
+Epoch [79] - Time: 10.13s
+Train Loss: 0.6279 | Val Loss: 1.4323
+Train Count Acc: 0.8451 | Val Count Acc: 0.6516
+Final Count Acc: 0.4414
+True Final Count Acc: 0.5273
+Joint MSE: 0.701444
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_79.pth
+Epoch [80] Batch [0/6] Loss: 0.5349 Count Loss: 0.2755 Motion Loss: 0.8648 Count Acc: 0.9261
+
+Epoch [80] - Time: 10.48s
+Train Loss: 0.8392 | Val Loss: 1.7223
+Train Count Acc: 0.7607 | Val Count Acc: 0.6005
+Final Count Acc: 0.3164
+True Final Count Acc: 0.7148
+Joint MSE: 0.721651
+学习率: 0.000100
+Epoch [81] Batch [0/6] Loss: 0.6783 Count Loss: 0.4863 Motion Loss: 0.6401 Count Acc: 0.8182
+
+Epoch [81] - Time: 10.03s
+Train Loss: 0.8374 | Val Loss: 1.4417
+Train Count Acc: 0.7491 | Val Count Acc: 0.6090
+Final Count Acc: 0.4414
+True Final Count Acc: 0.5039
+Joint MSE: 0.687129
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_81.pth
+Epoch [82] Batch [0/6] Loss: 1.0991 Count Loss: 0.9393 Motion Loss: 0.5326 Count Acc: 0.6136
+
+Epoch [82] - Time: 10.09s
+Train Loss: 0.6418 | Val Loss: 1.4138
+Train Count Acc: 0.8302 | Val Count Acc: 0.6399
+Final Count Acc: 0.4062
+True Final Count Acc: 0.6172
+Joint MSE: 0.712124
+学习率: 0.000100
+Epoch [83] Batch [0/6] Loss: 0.6262 Count Loss: 0.3972 Motion Loss: 0.7634 Count Acc: 0.8125
+
+Epoch [83] - Time: 10.30s
+Train Loss: 0.5454 | Val Loss: 1.3695
+Train Count Acc: 0.8616 | Val Count Acc: 0.6534
+Final Count Acc: 0.4258
+True Final Count Acc: 0.5977
+Joint MSE: 0.709538
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_83.pth
+Epoch [84] Batch [0/6] Loss: 0.4427 Count Loss: 0.2938 Motion Loss: 0.4963 Count Acc: 0.8807
+
+Epoch [84] - Time: 10.51s
+Train Loss: 0.4580 | Val Loss: 1.3613
+Train Count Acc: 0.9107 | Val Count Acc: 0.6477
+Final Count Acc: 0.4609
+True Final Count Acc: 0.5234
+Joint MSE: 0.697035
+学习率: 0.000100
+Epoch [85] Batch [0/6] Loss: 0.4018 Count Loss: 0.2159 Motion Loss: 0.6197 Count Acc: 0.8750
+
+Epoch [85] - Time: 10.47s
+Train Loss: 0.4624 | Val Loss: 1.3831
+Train Count Acc: 0.8965 | Val Count Acc: 0.6378
+Final Count Acc: 0.4141
+True Final Count Acc: 0.5625
+Joint MSE: 0.694997
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_85.pth
+Epoch [86] Batch [0/6] Loss: 0.4081 Count Loss: 0.2506 Motion Loss: 0.5250 Count Acc: 0.9318
+
+Epoch [86] - Time: 9.92s
+Train Loss: 0.4751 | Val Loss: 1.4816
+Train Count Acc: 0.8889 | Val Count Acc: 0.6328
+Final Count Acc: 0.3789
+True Final Count Acc: 0.6992
+Joint MSE: 0.700484
+学习率: 0.000100
+Epoch [87] Batch [0/6] Loss: 0.4254 Count Loss: 0.2579 Motion Loss: 0.5584 Count Acc: 0.9148
+
+Epoch [87] - Time: 10.26s
+Train Loss: 0.5524 | Val Loss: 1.4464
+Train Count Acc: 0.8446 | Val Count Acc: 0.6325
+Final Count Acc: 0.4297
+True Final Count Acc: 0.4883
+Joint MSE: 0.687514
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_87.pth
+Epoch [88] Batch [0/6] Loss: 0.6477 Count Loss: 0.4514 Motion Loss: 0.6545 Count Acc: 0.7841
+
+Epoch [88] - Time: 10.19s
+Train Loss: 0.8067 | Val Loss: 1.7358
+Train Count Acc: 0.7542 | Val Count Acc: 0.5852
+Final Count Acc: 0.3555
+True Final Count Acc: 0.6484
+Joint MSE: 0.691881
+学习率: 0.000100
+Epoch [89] Batch [0/6] Loss: 0.8942 Count Loss: 0.7405 Motion Loss: 0.5125 Count Acc: 0.6364
+
+Epoch [89] - Time: 10.32s
+Train Loss: 0.6116 | Val Loss: 2.4976
+Train Count Acc: 0.8202 | Val Count Acc: 0.5653
+Final Count Acc: 0.3867
+True Final Count Acc: 0.3516
+Joint MSE: 0.813479
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_89.pth
+Epoch [90] Batch [0/6] Loss: 0.8149 Count Loss: 0.5526 Motion Loss: 0.8744 Count Acc: 0.8239
+
+Epoch [90] - Time: 9.87s
+Train Loss: 1.0599 | Val Loss: 1.4742
+Train Count Acc: 0.7362 | Val Count Acc: 0.6559
+Final Count Acc: 0.4336
+True Final Count Acc: 0.6133
+Joint MSE: 0.688601
+学习率: 0.000100
+Epoch [91] Batch [0/6] Loss: 0.7097 Count Loss: 0.4801 Motion Loss: 0.7652 Count Acc: 0.7955
+
+Epoch [91] - Time: 10.10s
+Train Loss: 0.7609 | Val Loss: 1.2980
+Train Count Acc: 0.7703 | Val Count Acc: 0.6605
+Final Count Acc: 0.4570
+True Final Count Acc: 0.6055
+Joint MSE: 0.691141
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_91.pth
+Epoch [92] Batch [0/6] Loss: 0.3677 Count Loss: 0.2198 Motion Loss: 0.4931 Count Acc: 0.9432
+
+Epoch [92] - Time: 10.50s
+Train Loss: 0.5401 | Val Loss: 1.2460
+Train Count Acc: 0.8578 | Val Count Acc: 0.6857
+Final Count Acc: 0.4883
+True Final Count Acc: 0.5820
+Joint MSE: 0.690781
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [93] Batch [0/6] Loss: 0.5769 Count Loss: 0.2919 Motion Loss: 0.9501 Count Acc: 0.8807
+
+Epoch [93] - Time: 10.23s
+Train Loss: 0.4635 | Val Loss: 1.3522
+Train Count Acc: 0.8934 | Val Count Acc: 0.6697
+Final Count Acc: 0.4570
+True Final Count Acc: 0.5039
+Joint MSE: 0.710300
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_93.pth
+Epoch [94] Batch [0/6] Loss: 0.4365 Count Loss: 0.2519 Motion Loss: 0.6155 Count Acc: 0.9489
+
+Epoch [94] - Time: 10.43s
+Train Loss: 0.4243 | Val Loss: 1.3696
+Train Count Acc: 0.9230 | Val Count Acc: 0.6701
+Final Count Acc: 0.4570
+True Final Count Acc: 0.6406
+Joint MSE: 0.677895
+学习率: 0.000100
+Epoch [95] Batch [0/6] Loss: 0.4347 Count Loss: 0.2776 Motion Loss: 0.5238 Count Acc: 0.8977
+
+Epoch [95] - Time: 10.10s
+Train Loss: 0.4049 | Val Loss: 1.2564
+Train Count Acc: 0.9191 | Val Count Acc: 0.6825
+Final Count Acc: 0.4844
+True Final Count Acc: 0.5312
+Joint MSE: 0.674792
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_95.pth
+Epoch [96] Batch [0/6] Loss: 0.3988 Count Loss: 0.2541 Motion Loss: 0.4823 Count Acc: 0.8977
+
+Epoch [96] - Time: 10.02s
+Train Loss: 0.6109 | Val Loss: 2.0546
+Train Count Acc: 0.8243 | Val Count Acc: 0.5550
+Final Count Acc: 0.2852
+True Final Count Acc: 0.7500
+Joint MSE: 0.727820
+学习率: 0.000100
+Epoch [97] Batch [0/6] Loss: 0.5179 Count Loss: 0.2696 Motion Loss: 0.8276 Count Acc: 0.9261
+
+Epoch [97] - Time: 10.18s
+Train Loss: 0.5058 | Val Loss: 1.5039
+Train Count Acc: 0.8759 | Val Count Acc: 0.6559
+Final Count Acc: 0.4531
+True Final Count Acc: 0.4297
+Joint MSE: 0.681792
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_97.pth
+Epoch [98] Batch [0/6] Loss: 0.7697 Count Loss: 0.6034 Motion Loss: 0.5544 Count Acc: 0.7159
+
+Epoch [98] - Time: 10.19s
+Train Loss: 0.5117 | Val Loss: 1.5919
+Train Count Acc: 0.8594 | Val Count Acc: 0.6523
+Final Count Acc: 0.3672
+True Final Count Acc: 0.7109
+Joint MSE: 0.671920
+学习率: 0.000100
+Epoch [99] Batch [0/6] Loss: 0.4390 Count Loss: 0.2813 Motion Loss: 0.5256 Count Acc: 0.8750
+
+Epoch [99] - Time: 10.21s
+Train Loss: 0.4286 | Val Loss: 1.4134
+Train Count Acc: 0.9033 | Val Count Acc: 0.6630
+Final Count Acc: 0.4805
+True Final Count Acc: 0.5703
+Joint MSE: 0.664868
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_99.pth
+Epoch [100] Batch [0/6] Loss: 0.4463 Count Loss: 0.2150 Motion Loss: 0.7711 Count Acc: 0.8920
+
+Epoch [100] - Time: 10.14s
+Train Loss: 0.5046 | Val Loss: 1.3677
+Train Count Acc: 0.8654 | Val Count Acc: 0.6822
+Final Count Acc: 0.4609
+True Final Count Acc: 0.6367
+Joint MSE: 0.663584
+学习率: 0.000100
+Epoch [101] Batch [0/6] Loss: 0.3284 Count Loss: 0.1709 Motion Loss: 0.5250 Count Acc: 0.9489
+
+Epoch [101] - Time: 10.05s
+Train Loss: 0.5117 | Val Loss: 1.5274
+Train Count Acc: 0.8558 | Val Count Acc: 0.6573
+Final Count Acc: 0.4297
+True Final Count Acc: 0.5977
+Joint MSE: 0.654668
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_101.pth
+Epoch [102] Batch [0/6] Loss: 0.4273 Count Loss: 0.2654 Motion Loss: 0.5397 Count Acc: 0.8693
+
+Epoch [102] - Time: 10.54s
+Train Loss: 0.5097 | Val Loss: 1.2462
+Train Count Acc: 0.8705 | Val Count Acc: 0.6950
+Final Count Acc: 0.4883
+True Final Count Acc: 0.5938
+Joint MSE: 0.656817
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [103] Batch [0/6] Loss: 0.6219 Count Loss: 0.4892 Motion Loss: 0.4422 Count Acc: 0.7614
+
+Epoch [103] - Time: 9.94s
+Train Loss: 0.4803 | Val Loss: 1.2372
+Train Count Acc: 0.8780 | Val Count Acc: 0.7010
+Final Count Acc: 0.4961
+True Final Count Acc: 0.6172
+Joint MSE: 0.645579
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_103.pth
+Epoch [104] Batch [0/6] Loss: 0.3706 Count Loss: 0.1869 Motion Loss: 0.6123 Count Acc: 0.9432
+
+Epoch [104] - Time: 10.08s
+Train Loss: 0.3980 | Val Loss: 1.6163
+Train Count Acc: 0.9023 | Val Count Acc: 0.6300
+Final Count Acc: 0.3984
+True Final Count Acc: 0.6367
+Joint MSE: 0.667124
+学习率: 0.000100
+Epoch [105] Batch [0/6] Loss: 0.4424 Count Loss: 0.2929 Motion Loss: 0.4981 Count Acc: 0.8807
+
+Epoch [105] - Time: 9.95s
+Train Loss: 0.5797 | Val Loss: 1.3475
+Train Count Acc: 0.8524 | Val Count Acc: 0.6903
+Final Count Acc: 0.4727
+True Final Count Acc: 0.6172
+Joint MSE: 0.662011
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_105.pth
+Epoch [106] Batch [0/6] Loss: 0.4311 Count Loss: 0.1699 Motion Loss: 0.8706 Count Acc: 0.9318
+
+Epoch [106] - Time: 10.22s
+Train Loss: 0.5102 | Val Loss: 1.5679
+Train Count Acc: 0.8567 | Val Count Acc: 0.6591
+Final Count Acc: 0.4453
+True Final Count Acc: 0.5117
+Joint MSE: 0.702328
+学习率: 0.000100
+Epoch [107] Batch [0/6] Loss: 0.4067 Count Loss: 0.2446 Motion Loss: 0.5402 Count Acc: 0.9034
+
+Epoch [107] - Time: 10.01s
+Train Loss: 0.7356 | Val Loss: 2.0930
+Train Count Acc: 0.8305 | Val Count Acc: 0.5661
+Final Count Acc: 0.2930
+True Final Count Acc: 0.7617
+Joint MSE: 0.677973
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_107.pth
+Epoch [108] Batch [0/6] Loss: 0.4563 Count Loss: 0.2883 Motion Loss: 0.5601 Count Acc: 0.8750
+
+Epoch [108] - Time: 10.31s
+Train Loss: 0.4656 | Val Loss: 1.4778
+Train Count Acc: 0.8879 | Val Count Acc: 0.6754
+Final Count Acc: 0.4648
+True Final Count Acc: 0.5273
+Joint MSE: 0.685550
+学习率: 0.000100
+Epoch [109] Batch [0/6] Loss: 0.3258 Count Loss: 0.1341 Motion Loss: 0.6392 Count Acc: 0.9716
+
+Epoch [109] - Time: 10.58s
+Train Loss: 0.3837 | Val Loss: 1.5330
+Train Count Acc: 0.9313 | Val Count Acc: 0.6584
+Final Count Acc: 0.4531
+True Final Count Acc: 0.6211
+Joint MSE: 0.651524
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_109.pth
+Epoch [110] Batch [0/6] Loss: 0.2014 Count Loss: 0.0760 Motion Loss: 0.4182 Count Acc: 0.9830
+
+Epoch [110] - Time: 10.10s
+Train Loss: 0.4238 | Val Loss: 1.6339
+Train Count Acc: 0.8884 | Val Count Acc: 0.6506
+Final Count Acc: 0.3984
+True Final Count Acc: 0.6914
+Joint MSE: 0.666658
+学习率: 0.000100
+Epoch [111] Batch [0/6] Loss: 0.3414 Count Loss: 0.1835 Motion Loss: 0.5263 Count Acc: 0.9205
+
+Epoch [111] - Time: 10.16s
+Train Loss: 0.3493 | Val Loss: 1.3438
+Train Count Acc: 0.9387 | Val Count Acc: 0.6960
+Final Count Acc: 0.4961
+True Final Count Acc: 0.5508
+Joint MSE: 0.656771
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_111.pth
+Epoch [112] Batch [0/6] Loss: 0.3357 Count Loss: 0.1969 Motion Loss: 0.4628 Count Acc: 0.9318
+
+Epoch [112] - Time: 9.96s
+Train Loss: 0.3871 | Val Loss: 1.6028
+Train Count Acc: 0.9150 | Val Count Acc: 0.6793
+Final Count Acc: 0.3867
+True Final Count Acc: 0.7031
+Joint MSE: 0.660456
+学习率: 0.000100
+Epoch [113] Batch [0/6] Loss: 0.3322 Count Loss: 0.1686 Motion Loss: 0.5454 Count Acc: 0.9432
+
+Epoch [113] - Time: 10.09s
+Train Loss: 0.3995 | Val Loss: 1.4411
+Train Count Acc: 0.9221 | Val Count Acc: 0.6733
+Final Count Acc: 0.4609
+True Final Count Acc: 0.5547
+Joint MSE: 0.676573
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_113.pth
+Epoch [114] Batch [0/6] Loss: 0.3222 Count Loss: 0.1822 Motion Loss: 0.4667 Count Acc: 0.9261
+
+Epoch [114] - Time: 10.64s
+Train Loss: 0.4182 | Val Loss: 1.5571
+Train Count Acc: 0.9088 | Val Count Acc: 0.6715
+Final Count Acc: 0.3867
+True Final Count Acc: 0.7539
+Joint MSE: 0.654224
+学习率: 0.000100
+Epoch [115] Batch [0/6] Loss: 0.3157 Count Loss: 0.1602 Motion Loss: 0.5183 Count Acc: 0.9545
+
+Epoch [115] - Time: 10.55s
+Train Loss: 0.3809 | Val Loss: 1.3916
+Train Count Acc: 0.9123 | Val Count Acc: 0.7028
+Final Count Acc: 0.5039
+True Final Count Acc: 0.5938
+Joint MSE: 0.630334
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_115.pth
+Epoch [116] Batch [0/6] Loss: 0.3163 Count Loss: 0.1736 Motion Loss: 0.4757 Count Acc: 0.9261
+
+Epoch [116] - Time: 10.28s
+Train Loss: 0.3527 | Val Loss: 1.5334
+Train Count Acc: 0.9363 | Val Count Acc: 0.6605
+Final Count Acc: 0.4883
+True Final Count Acc: 0.5820
+Joint MSE: 0.656301
+学习率: 0.000100
+Epoch [117] Batch [0/6] Loss: 0.3496 Count Loss: 0.1903 Motion Loss: 0.5310 Count Acc: 0.9318
+
+Epoch [117] - Time: 10.43s
+Train Loss: 0.3672 | Val Loss: 1.7475
+Train Count Acc: 0.9121 | Val Count Acc: 0.6484
+Final Count Acc: 0.3516
+True Final Count Acc: 0.7148
+Joint MSE: 0.647500
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_117.pth
+Epoch [118] Batch [0/6] Loss: 0.2931 Count Loss: 0.1153 Motion Loss: 0.5924 Count Acc: 0.9886
+
+Epoch [118] - Time: 9.87s
+Train Loss: 0.3768 | Val Loss: 1.5496
+Train Count Acc: 0.9209 | Val Count Acc: 0.6694
+Final Count Acc: 0.4375
+True Final Count Acc: 0.5391
+Joint MSE: 0.674722
+学习率: 0.000100
+Epoch [119] Batch [0/6] Loss: 0.5153 Count Loss: 0.2892 Motion Loss: 0.7537 Count Acc: 0.8409
+
+Epoch [119] - Time: 10.02s
+Train Loss: 0.3420 | Val Loss: 1.5242
+Train Count Acc: 0.9311 | Val Count Acc: 0.6893
+Final Count Acc: 0.4609
+True Final Count Acc: 0.6523
+Joint MSE: 0.652008
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_119.pth
+Epoch [120] Batch [0/6] Loss: 0.3293 Count Loss: 0.1577 Motion Loss: 0.5721 Count Acc: 0.9830
+
+Epoch [120] - Time: 10.45s
+Train Loss: 0.3825 | Val Loss: 1.6712
+Train Count Acc: 0.9186 | Val Count Acc: 0.6438
+Final Count Acc: 0.4023
+True Final Count Acc: 0.6367
+Joint MSE: 0.656157
+学习率: 0.000100
+Epoch [121] Batch [0/6] Loss: 0.4649 Count Loss: 0.2057 Motion Loss: 0.8638 Count Acc: 0.9034
+
+Epoch [121] - Time: 10.22s
+Train Loss: 0.4360 | Val Loss: 1.2321
+Train Count Acc: 0.8883 | Val Count Acc: 0.7273
+Final Count Acc: 0.5195
+True Final Count Acc: 0.6406
+Joint MSE: 0.646686
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_121.pth
+Epoch [122] Batch [0/6] Loss: 0.3690 Count Loss: 0.1975 Motion Loss: 0.5716 Count Acc: 0.9091
+
+Epoch [122] - Time: 10.64s
+Train Loss: 0.4364 | Val Loss: 1.3370
+Train Count Acc: 0.8983 | Val Count Acc: 0.7195
+Final Count Acc: 0.5000
+True Final Count Acc: 0.5938
+Joint MSE: 0.657746
+学习率: 0.000100
+Epoch [123] Batch [0/6] Loss: 0.3379 Count Loss: 0.1591 Motion Loss: 0.5959 Count Acc: 0.9205
+
+Epoch [123] - Time: 10.23s
+Train Loss: 0.3244 | Val Loss: 1.4779
+Train Count Acc: 0.9440 | Val Count Acc: 0.6864
+Final Count Acc: 0.4922
+True Final Count Acc: 0.6328
+Joint MSE: 0.685395
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_123.pth
+Epoch [124] Batch [0/6] Loss: 0.2966 Count Loss: 0.1276 Motion Loss: 0.5635 Count Acc: 0.9716
+
+Epoch [124] - Time: 10.22s
+Train Loss: 0.3419 | Val Loss: 1.3755
+Train Count Acc: 0.9248 | Val Count Acc: 0.6900
+Final Count Acc: 0.4961
+True Final Count Acc: 0.6523
+Joint MSE: 0.655720
+学习率: 0.000100
+Epoch [125] Batch [0/6] Loss: 0.3025 Count Loss: 0.1820 Motion Loss: 0.4018 Count Acc: 0.9205
+
+Epoch [125] - Time: 10.47s
+Train Loss: 0.3948 | Val Loss: 1.1449
+Train Count Acc: 0.9134 | Val Count Acc: 0.7457
+Final Count Acc: 0.5391
+True Final Count Acc: 0.5977
+Joint MSE: 0.640253
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_125.pth
+Epoch [126] Batch [0/6] Loss: 0.3171 Count Loss: 0.1414 Motion Loss: 0.5854 Count Acc: 0.9545
+
+Epoch [126] - Time: 10.18s
+Train Loss: 0.4341 | Val Loss: 1.4950
+Train Count Acc: 0.9046 | Val Count Acc: 0.6793
+Final Count Acc: 0.4492
+True Final Count Acc: 0.5898
+Joint MSE: 0.666180
+学习率: 0.000100
+Epoch [127] Batch [0/6] Loss: 0.2954 Count Loss: 0.1728 Motion Loss: 0.4086 Count Acc: 0.9261
+
+Epoch [127] - Time: 10.17s
+Train Loss: 0.4551 | Val Loss: 1.4454
+Train Count Acc: 0.8948 | Val Count Acc: 0.6982
+Final Count Acc: 0.5039
+True Final Count Acc: 0.6562
+Joint MSE: 0.684116
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_127.pth
+Epoch [128] Batch [0/6] Loss: 0.3618 Count Loss: 0.1683 Motion Loss: 0.6450 Count Acc: 0.9261
+
+Epoch [128] - Time: 9.99s
+Train Loss: 0.4208 | Val Loss: 1.1955
+Train Count Acc: 0.8874 | Val Count Acc: 0.7408
+Final Count Acc: 0.5508
+True Final Count Acc: 0.5547
+Joint MSE: 0.696541
+学习率: 0.000100
+Epoch [129] Batch [0/6] Loss: 0.4555 Count Loss: 0.2685 Motion Loss: 0.6232 Count Acc: 0.8693
+
+Epoch [129] - Time: 10.37s
+Train Loss: 0.3125 | Val Loss: 1.3269
+Train Count Acc: 0.9541 | Val Count Acc: 0.6974
+Final Count Acc: 0.4844
+True Final Count Acc: 0.6094
+Joint MSE: 0.674047
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_129.pth
+Epoch [130] Batch [0/6] Loss: 0.4056 Count Loss: 0.1670 Motion Loss: 0.7955 Count Acc: 0.9432
+
+Epoch [130] - Time: 10.04s
+Train Loss: 0.3608 | Val Loss: 1.3128
+Train Count Acc: 0.9414 | Val Count Acc: 0.7227
+Final Count Acc: 0.5234
+True Final Count Acc: 0.5430
+Joint MSE: 0.655204
+学习率: 0.000100
+Epoch [131] Batch [0/6] Loss: 0.2738 Count Loss: 0.1255 Motion Loss: 0.4944 Count Acc: 0.9432
+
+Epoch [131] - Time: 10.61s
+Train Loss: 0.3131 | Val Loss: 1.4959
+Train Count Acc: 0.9476 | Val Count Acc: 0.6903
+Final Count Acc: 0.4844
+True Final Count Acc: 0.6523
+Joint MSE: 0.648103
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_131.pth
+Epoch [132] Batch [0/6] Loss: 0.4737 Count Loss: 0.2992 Motion Loss: 0.5816 Count Acc: 0.8352
+
+Epoch [132] - Time: 10.03s
+Train Loss: 0.5398 | Val Loss: 1.4253
+Train Count Acc: 0.8401 | Val Count Acc: 0.7216
+Final Count Acc: 0.4883
+True Final Count Acc: 0.7070
+Joint MSE: 0.643084
+学习率: 0.000100
+Epoch [133] Batch [0/6] Loss: 0.2447 Count Loss: 0.0908 Motion Loss: 0.5130 Count Acc: 0.9830
+
+Epoch [133] - Time: 10.32s
+Train Loss: 0.3646 | Val Loss: 1.2844
+Train Count Acc: 0.9205 | Val Count Acc: 0.7358
+Final Count Acc: 0.5391
+True Final Count Acc: 0.5977
+Joint MSE: 0.656975
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_133.pth
+Epoch [134] Batch [0/6] Loss: 0.1989 Count Loss: 0.0528 Motion Loss: 0.4871 Count Acc: 1.0000
+
+Epoch [134] - Time: 10.08s
+Train Loss: 0.2831 | Val Loss: 1.4816
+Train Count Acc: 0.9663 | Val Count Acc: 0.7031
+Final Count Acc: 0.5000
+True Final Count Acc: 0.6562
+Joint MSE: 0.653603
+学习率: 0.000100
+Epoch [135] Batch [0/6] Loss: 0.3133 Count Loss: 0.1401 Motion Loss: 0.5773 Count Acc: 0.9432
+
+Epoch [135] - Time: 10.45s
+Train Loss: 0.2877 | Val Loss: 1.3625
+Train Count Acc: 0.9545 | Val Count Acc: 0.7330
+Final Count Acc: 0.5352
+True Final Count Acc: 0.5938
+Joint MSE: 0.639918
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_135.pth
+Epoch [136] Batch [0/6] Loss: 0.2000 Count Loss: 0.0735 Motion Loss: 0.4214 Count Acc: 0.9773
+
+Epoch [136] - Time: 10.36s
+Train Loss: 0.3162 | Val Loss: 1.6408
+Train Count Acc: 0.9514 | Val Count Acc: 0.6612
+Final Count Acc: 0.4102
+True Final Count Acc: 0.6836
+Joint MSE: 0.647349
+学习率: 0.000100
+Epoch [137] Batch [0/6] Loss: 0.2042 Count Loss: 0.0711 Motion Loss: 0.4439 Count Acc: 0.9773
+
+Epoch [137] - Time: 10.60s
+Train Loss: 0.3038 | Val Loss: 1.3609
+Train Count Acc: 0.9380 | Val Count Acc: 0.7294
+Final Count Acc: 0.5156
+True Final Count Acc: 0.6641
+Joint MSE: 0.636319
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_137.pth
+Epoch [138] Batch [0/6] Loss: 0.2183 Count Loss: 0.1011 Motion Loss: 0.3906 Count Acc: 0.9659
+
+Epoch [138] - Time: 10.62s
+Train Loss: 0.3002 | Val Loss: 1.5118
+Train Count Acc: 0.9452 | Val Count Acc: 0.7024
+Final Count Acc: 0.4609
+True Final Count Acc: 0.6562
+Joint MSE: 0.634981
+学习率: 0.000100
+Epoch [139] Batch [0/6] Loss: 0.3866 Count Loss: 0.1716 Motion Loss: 0.7168 Count Acc: 0.9489
+
+Epoch [139] - Time: 10.19s
+Train Loss: 0.3030 | Val Loss: 1.4790
+Train Count Acc: 0.9439 | Val Count Acc: 0.7067
+Final Count Acc: 0.4844
+True Final Count Acc: 0.6523
+Joint MSE: 0.649853
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_139.pth
+Epoch [140] Batch [0/6] Loss: 0.2167 Count Loss: 0.0983 Motion Loss: 0.3946 Count Acc: 0.9716
+
+Epoch [140] - Time: 10.28s
+Train Loss: 0.2678 | Val Loss: 1.3319
+Train Count Acc: 0.9582 | Val Count Acc: 0.7415
+Final Count Acc: 0.5156
+True Final Count Acc: 0.6523
+Joint MSE: 0.624265
+学习率: 0.000100
+Epoch [141] Batch [0/6] Loss: 0.2139 Count Loss: 0.0963 Motion Loss: 0.3919 Count Acc: 0.9659
+
+Epoch [141] - Time: 10.47s
+Train Loss: 0.5061 | Val Loss: 1.5381
+Train Count Acc: 0.8672 | Val Count Acc: 0.6879
+Final Count Acc: 0.4531
+True Final Count Acc: 0.5820
+Joint MSE: 0.644698
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_141.pth
+Epoch [142] Batch [0/6] Loss: 0.2588 Count Loss: 0.1101 Motion Loss: 0.4956 Count Acc: 0.9489
+
+Epoch [142] - Time: 10.51s
+Train Loss: 0.2735 | Val Loss: 1.2882
+Train Count Acc: 0.9704 | Val Count Acc: 0.7592
+Final Count Acc: 0.5430
+True Final Count Acc: 0.6328
+Joint MSE: 0.642492
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [143] Batch [0/6] Loss: 0.2701 Count Loss: 0.1017 Motion Loss: 0.5613 Count Acc: 0.9659
+
+Epoch [143] - Time: 10.39s
+Train Loss: 0.2942 | Val Loss: 1.6009
+Train Count Acc: 0.9536 | Val Count Acc: 0.6871
+Final Count Acc: 0.4609
+True Final Count Acc: 0.6758
+Joint MSE: 0.648300
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_143.pth
+Epoch [144] Batch [0/6] Loss: 0.1963 Count Loss: 0.0727 Motion Loss: 0.4121 Count Acc: 0.9830
+
+Epoch [144] - Time: 10.38s
+Train Loss: 0.2860 | Val Loss: 1.5604
+Train Count Acc: 0.9462 | Val Count Acc: 0.7031
+Final Count Acc: 0.4844
+True Final Count Acc: 0.6211
+Joint MSE: 0.646793
+学习率: 0.000100
+Epoch [145] Batch [0/6] Loss: 0.2553 Count Loss: 0.1376 Motion Loss: 0.3924 Count Acc: 0.9261
+
+Epoch [145] - Time: 10.34s
+Train Loss: 0.2946 | Val Loss: 1.2286
+Train Count Acc: 0.9481 | Val Count Acc: 0.7557
+Final Count Acc: 0.5469
+True Final Count Acc: 0.6797
+Joint MSE: 0.642499
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_145.pth
+Epoch [146] Batch [0/6] Loss: 0.4202 Count Loss: 0.2525 Motion Loss: 0.5588 Count Acc: 0.8750
+
+Epoch [146] - Time: 10.00s
+Train Loss: 0.3198 | Val Loss: 1.3288
+Train Count Acc: 0.9299 | Val Count Acc: 0.7472
+Final Count Acc: 0.5352
+True Final Count Acc: 0.5312
+Joint MSE: 0.651511
+学习率: 0.000100
+Epoch [147] Batch [0/6] Loss: 0.2408 Count Loss: 0.1042 Motion Loss: 0.4554 Count Acc: 0.9602
+
+Epoch [147] - Time: 10.08s
+Train Loss: 0.2791 | Val Loss: 1.8079
+Train Count Acc: 0.9518 | Val Count Acc: 0.6861
+Final Count Acc: 0.3867
+True Final Count Acc: 0.8281
+Joint MSE: 0.630768
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_147.pth
+Epoch [148] Batch [0/6] Loss: 0.3306 Count Loss: 0.1557 Motion Loss: 0.5832 Count Acc: 0.9375
+
+Epoch [148] - Time: 10.11s
+Train Loss: 0.3232 | Val Loss: 1.4768
+Train Count Acc: 0.9491 | Val Count Acc: 0.7195
+Final Count Acc: 0.4727
+True Final Count Acc: 0.7344
+Joint MSE: 0.630421
+学习率: 0.000100
+Epoch [149] Batch [0/6] Loss: 0.2376 Count Loss: 0.1051 Motion Loss: 0.4416 Count Acc: 0.9716
+
+Epoch [149] - Time: 10.14s
+Train Loss: 0.2778 | Val Loss: 1.6177
+Train Count Acc: 0.9550 | Val Count Acc: 0.7042
+Final Count Acc: 0.4844
+True Final Count Acc: 0.7461
+Joint MSE: 0.630616
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_149.pth
+Epoch [150] Batch [0/6] Loss: 0.3264 Count Loss: 0.2271 Motion Loss: 0.3310 Count Acc: 0.8864
+
+Epoch [150] - Time: 10.19s
+Train Loss: 0.2888 | Val Loss: 1.4678
+Train Count Acc: 0.9579 | Val Count Acc: 0.7262
+Final Count Acc: 0.5430
+True Final Count Acc: 0.5703
+Joint MSE: 0.634414
+学习率: 0.000100
+Epoch [151] Batch [0/6] Loss: 0.2275 Count Loss: 0.1010 Motion Loss: 0.4216 Count Acc: 0.9659
+
+Epoch [151] - Time: 10.07s
+Train Loss: 0.2639 | Val Loss: 1.7876
+Train Count Acc: 0.9578 | Val Count Acc: 0.6783
+Final Count Acc: 0.4141
+True Final Count Acc: 0.8047
+Joint MSE: 0.642931
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_151.pth
+Epoch [152] Batch [0/6] Loss: 0.3319 Count Loss: 0.1222 Motion Loss: 0.6990 Count Acc: 0.9489
+
+Epoch [152] - Time: 10.27s
+Train Loss: 0.2990 | Val Loss: 1.3505
+Train Count Acc: 0.9401 | Val Count Acc: 0.7479
+Final Count Acc: 0.5312
+True Final Count Acc: 0.5898
+Joint MSE: 0.626745
+学习率: 0.000100
+Epoch [153] Batch [0/6] Loss: 0.2886 Count Loss: 0.1308 Motion Loss: 0.5259 Count Acc: 0.9432
+
+Epoch [153] - Time: 10.33s
+Train Loss: 0.2706 | Val Loss: 1.3621
+Train Count Acc: 0.9475 | Val Count Acc: 0.7553
+Final Count Acc: 0.5078
+True Final Count Acc: 0.7812
+Joint MSE: 0.622775
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_153.pth
+Epoch [154] Batch [0/6] Loss: 0.1936 Count Loss: 0.0992 Motion Loss: 0.3148 Count Acc: 0.9830
+
+Epoch [154] - Time: 10.27s
+Train Loss: 0.3120 | Val Loss: 1.3437
+Train Count Acc: 0.9506 | Val Count Acc: 0.7496
+Final Count Acc: 0.5625
+True Final Count Acc: 0.5703
+Joint MSE: 0.629474
+学习率: 0.000100
+Epoch [155] Batch [0/6] Loss: 0.4969 Count Loss: 0.2759 Motion Loss: 0.7366 Count Acc: 0.8977
+
+Epoch [155] - Time: 10.33s
+Train Loss: 0.2849 | Val Loss: 2.0446
+Train Count Acc: 0.9568 | Val Count Acc: 0.6385
+Final Count Acc: 0.3320
+True Final Count Acc: 0.8594
+Joint MSE: 0.676391
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_155.pth
+Epoch [156] Batch [0/6] Loss: 0.3655 Count Loss: 0.2510 Motion Loss: 0.3817 Count Acc: 0.9091
+
+Epoch [156] - Time: 10.45s
+Train Loss: 0.3120 | Val Loss: 1.1551
+Train Count Acc: 0.9367 | Val Count Acc: 0.7781
+Final Count Acc: 0.5625
+True Final Count Acc: 0.6641
+Joint MSE: 0.643102
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [157] Batch [0/6] Loss: 0.1239 Count Loss: 0.0189 Motion Loss: 0.3498 Count Acc: 1.0000
+
+Epoch [157] - Time: 9.94s
+Train Loss: 0.4702 | Val Loss: 1.5939
+Train Count Acc: 0.8850 | Val Count Acc: 0.7102
+Final Count Acc: 0.4844
+True Final Count Acc: 0.6836
+Joint MSE: 0.646951
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_157.pth
+Epoch [158] Batch [0/6] Loss: 0.1680 Count Loss: 0.0633 Motion Loss: 0.3489 Count Acc: 0.9943
+
+Epoch [158] - Time: 10.13s
+Train Loss: 0.2680 | Val Loss: 1.3800
+Train Count Acc: 0.9702 | Val Count Acc: 0.7457
+Final Count Acc: 0.5352
+True Final Count Acc: 0.6328
+Joint MSE: 0.634499
+学习率: 0.000100
+Epoch [159] Batch [0/6] Loss: 0.2261 Count Loss: 0.0656 Motion Loss: 0.5350 Count Acc: 0.9830
+
+Epoch [159] - Time: 10.55s
+Train Loss: 0.2348 | Val Loss: 1.4428
+Train Count Acc: 0.9724 | Val Count Acc: 0.7276
+Final Count Acc: 0.5312
+True Final Count Acc: 0.5742
+Joint MSE: 0.621800
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_159.pth
+Epoch [160] Batch [0/6] Loss: 0.2164 Count Loss: 0.0923 Motion Loss: 0.4138 Count Acc: 0.9716
+
+Epoch [160] - Time: 10.46s
+Train Loss: 0.2167 | Val Loss: 1.3248
+Train Count Acc: 0.9815 | Val Count Acc: 0.7638
+Final Count Acc: 0.5938
+True Final Count Acc: 0.7148
+Joint MSE: 0.619749
+学习率: 0.000100
+Epoch [161] Batch [0/6] Loss: 0.2352 Count Loss: 0.1225 Motion Loss: 0.3757 Count Acc: 0.9489
+
+Epoch [161] - Time: 10.01s
+Train Loss: 0.2365 | Val Loss: 1.4357
+Train Count Acc: 0.9762 | Val Count Acc: 0.7429
+Final Count Acc: 0.5469
+True Final Count Acc: 0.6484
+Joint MSE: 0.621762
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_161.pth
+Epoch [162] Batch [0/6] Loss: 0.2279 Count Loss: 0.1050 Motion Loss: 0.4097 Count Acc: 0.9602
+
+Epoch [162] - Time: 9.90s
+Train Loss: 0.2682 | Val Loss: 1.5061
+Train Count Acc: 0.9514 | Val Count Acc: 0.7195
+Final Count Acc: 0.4570
+True Final Count Acc: 0.7969
+Joint MSE: 0.639922
+学习率: 0.000100
+Epoch [163] Batch [0/6] Loss: 0.1966 Count Loss: 0.0785 Motion Loss: 0.3937 Count Acc: 0.9659
+
+Epoch [163] - Time: 10.22s
+Train Loss: 0.2282 | Val Loss: 1.6027
+Train Count Acc: 0.9731 | Val Count Acc: 0.7134
+Final Count Acc: 0.5195
+True Final Count Acc: 0.5781
+Joint MSE: 0.631531
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_163.pth
+Epoch [164] Batch [0/6] Loss: 0.2132 Count Loss: 0.0509 Motion Loss: 0.5409 Count Acc: 0.9886
+
+Epoch [164] - Time: 10.10s
+Train Loss: 0.2583 | Val Loss: 1.7564
+Train Count Acc: 0.9541 | Val Count Acc: 0.6996
+Final Count Acc: 0.4453
+True Final Count Acc: 0.7227
+Joint MSE: 0.616621
+学习率: 0.000100
+Epoch [165] Batch [0/6] Loss: 0.2800 Count Loss: 0.1364 Motion Loss: 0.4787 Count Acc: 0.9489
+
+Epoch [165] - Time: 10.03s
+Train Loss: 0.2849 | Val Loss: 1.3556
+Train Count Acc: 0.9517 | Val Count Acc: 0.7493
+Final Count Acc: 0.5352
+True Final Count Acc: 0.5938
+Joint MSE: 0.617518
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_165.pth
+Epoch [166] Batch [0/6] Loss: 0.2110 Count Loss: 0.0840 Motion Loss: 0.4232 Count Acc: 0.9602
+
+Epoch [166] - Time: 10.26s
+Train Loss: 0.4043 | Val Loss: 1.3832
+Train Count Acc: 0.9104 | Val Count Acc: 0.7440
+Final Count Acc: 0.5234
+True Final Count Acc: 0.6445
+Joint MSE: 0.629701
+学习率: 0.000100
+Epoch [167] Batch [0/6] Loss: 0.1599 Count Loss: 0.0243 Motion Loss: 0.4520 Count Acc: 1.0000
+
+Epoch [167] - Time: 10.31s
+Train Loss: 0.3651 | Val Loss: 1.4616
+Train Count Acc: 0.9150 | Val Count Acc: 0.7159
+Final Count Acc: 0.4570
+True Final Count Acc: 0.5703
+Joint MSE: 0.675981
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_167.pth
+Epoch [168] Batch [0/6] Loss: 0.2974 Count Loss: 0.1167 Motion Loss: 0.6023 Count Acc: 0.9545
+
+Epoch [168] - Time: 10.15s
+Train Loss: 0.3785 | Val Loss: 1.4420
+Train Count Acc: 0.9234 | Val Count Acc: 0.7312
+Final Count Acc: 0.4648
+True Final Count Acc: 0.7578
+Joint MSE: 0.636138
+学习率: 0.000100
+Epoch [169] Batch [0/6] Loss: 0.2142 Count Loss: 0.0957 Motion Loss: 0.3949 Count Acc: 0.9659
+
+Epoch [169] - Time: 10.23s
+Train Loss: 0.2224 | Val Loss: 1.2142
+Train Count Acc: 0.9761 | Val Count Acc: 0.7536
+Final Count Acc: 0.5273
+True Final Count Acc: 0.6602
+Joint MSE: 0.629703
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_169.pth
+Epoch [170] Batch [0/6] Loss: 0.1932 Count Loss: 0.0660 Motion Loss: 0.4242 Count Acc: 0.9773
+
+Epoch [170] - Time: 10.00s
+Train Loss: 0.2257 | Val Loss: 1.4708
+Train Count Acc: 0.9771 | Val Count Acc: 0.7191
+Final Count Acc: 0.4531
+True Final Count Acc: 0.7227
+Joint MSE: 0.622765
+学习率: 0.000100
+Epoch [171] Batch [0/6] Loss: 0.1969 Count Loss: 0.0690 Motion Loss: 0.4262 Count Acc: 0.9773
+
+Epoch [171] - Time: 10.40s
+Train Loss: 0.2109 | Val Loss: 1.3489
+Train Count Acc: 0.9827 | Val Count Acc: 0.7472
+Final Count Acc: 0.5312
+True Final Count Acc: 0.6602
+Joint MSE: 0.620595
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_171.pth
+Epoch [172] Batch [0/6] Loss: 0.1645 Count Loss: 0.0574 Motion Loss: 0.3569 Count Acc: 0.9830
+
+Epoch [172] - Time: 10.80s
+Train Loss: 0.2270 | Val Loss: 1.5449
+Train Count Acc: 0.9690 | Val Count Acc: 0.7319
+Final Count Acc: 0.5039
+True Final Count Acc: 0.6719
+Joint MSE: 0.631089
+学习率: 0.000100
+Epoch [173] Batch [0/6] Loss: 0.1372 Count Loss: 0.0287 Motion Loss: 0.3614 Count Acc: 0.9943
+
+Epoch [173] - Time: 9.90s
+Train Loss: 0.3791 | Val Loss: 1.6797
+Train Count Acc: 0.9079 | Val Count Acc: 0.7109
+Final Count Acc: 0.4648
+True Final Count Acc: 0.6523
+Joint MSE: 0.636274
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_173.pth
+Epoch [174] Batch [0/6] Loss: 0.2695 Count Loss: 0.1156 Motion Loss: 0.5128 Count Acc: 0.9318
+
+Epoch [174] - Time: 10.13s
+Train Loss: 0.2230 | Val Loss: 1.4072
+Train Count Acc: 0.9705 | Val Count Acc: 0.7599
+Final Count Acc: 0.5625
+True Final Count Acc: 0.7422
+Joint MSE: 0.613307
+学习率: 0.000100
+Epoch [175] Batch [0/6] Loss: 0.1459 Count Loss: 0.0425 Motion Loss: 0.3448 Count Acc: 0.9943
+
+Epoch [175] - Time: 10.35s
+Train Loss: 0.2430 | Val Loss: 1.3026
+Train Count Acc: 0.9633 | Val Count Acc: 0.7443
+Final Count Acc: 0.5039
+True Final Count Acc: 0.6133
+Joint MSE: 0.635808
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_175.pth
+Epoch [176] Batch [0/6] Loss: 0.2277 Count Loss: 0.0951 Motion Loss: 0.4419 Count Acc: 0.9773
+
+Epoch [176] - Time: 10.24s
+Train Loss: 0.3359 | Val Loss: 1.6564
+Train Count Acc: 0.9269 | Val Count Acc: 0.7106
+Final Count Acc: 0.4609
+True Final Count Acc: 0.8555
+Joint MSE: 0.634147
+学习率: 0.000100
+Epoch [177] Batch [0/6] Loss: 0.2079 Count Loss: 0.1077 Motion Loss: 0.3339 Count Acc: 0.9659
+
+Epoch [177] - Time: 9.97s
+Train Loss: 0.2868 | Val Loss: 1.3656
+Train Count Acc: 0.9422 | Val Count Acc: 0.7532
+Final Count Acc: 0.5547
+True Final Count Acc: 0.5664
+Joint MSE: 0.635685
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_177.pth
+Epoch [178] Batch [0/6] Loss: 0.1955 Count Loss: 0.0622 Motion Loss: 0.4446 Count Acc: 0.9886
+
+Epoch [178] - Time: 10.22s
+Train Loss: 0.2322 | Val Loss: 1.5805
+Train Count Acc: 0.9720 | Val Count Acc: 0.7276
+Final Count Acc: 0.5039
+True Final Count Acc: 0.6641
+Joint MSE: 0.632754
+学习率: 0.000100
+Epoch [179] Batch [0/6] Loss: 0.1945 Count Loss: 0.0837 Motion Loss: 0.3694 Count Acc: 0.9773
+
+Epoch [179] - Time: 9.98s
+Train Loss: 0.2109 | Val Loss: 1.4357
+Train Count Acc: 0.9729 | Val Count Acc: 0.7589
+Final Count Acc: 0.5273
+True Final Count Acc: 0.6406
+Joint MSE: 0.623049
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_179.pth
+Epoch [180] Batch [0/6] Loss: 0.4050 Count Loss: 0.2847 Motion Loss: 0.4008 Count Acc: 0.8807
+
+Epoch [180] - Time: 10.46s
+Train Loss: 0.2661 | Val Loss: 1.5817
+Train Count Acc: 0.9460 | Val Count Acc: 0.7102
+Final Count Acc: 0.4688
+True Final Count Acc: 0.6797
+Joint MSE: 0.617766
+学习率: 0.000100
+Epoch [181] Batch [0/6] Loss: 0.2555 Count Loss: 0.0949 Motion Loss: 0.5352 Count Acc: 0.9489
+
+Epoch [181] - Time: 10.76s
+Train Loss: 0.2154 | Val Loss: 1.2827
+Train Count Acc: 0.9705 | Val Count Acc: 0.7681
+Final Count Acc: 0.5508
+True Final Count Acc: 0.5430
+Joint MSE: 0.603346
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_181.pth
+Epoch [182] Batch [0/6] Loss: 0.2004 Count Loss: 0.0657 Motion Loss: 0.4493 Count Acc: 0.9830
+
+Epoch [182] - Time: 10.96s
+Train Loss: 0.3323 | Val Loss: 1.4549
+Train Count Acc: 0.9366 | Val Count Acc: 0.7330
+Final Count Acc: 0.5117
+True Final Count Acc: 0.6211
+Joint MSE: 0.604169
+学习率: 0.000100
+Epoch [183] Batch [0/6] Loss: 0.2742 Count Loss: 0.0510 Motion Loss: 0.7440 Count Acc: 0.9886
+
+Epoch [183] - Time: 9.97s
+Train Loss: 0.2294 | Val Loss: 1.3121
+Train Count Acc: 0.9712 | Val Count Acc: 0.7628
+Final Count Acc: 0.5195
+True Final Count Acc: 0.5977
+Joint MSE: 0.600904
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_183.pth
+Epoch [184] Batch [0/6] Loss: 0.1689 Count Loss: 0.0413 Motion Loss: 0.4253 Count Acc: 0.9943
+
+Epoch [184] - Time: 10.22s
+Train Loss: 0.3173 | Val Loss: 1.4273
+Train Count Acc: 0.9315 | Val Count Acc: 0.7397
+Final Count Acc: 0.5234
+True Final Count Acc: 0.5117
+Joint MSE: 0.635860
+学习率: 0.000100
+Epoch [185] Batch [0/6] Loss: 0.1684 Count Loss: 0.0692 Motion Loss: 0.3306 Count Acc: 0.9716
+
+Epoch [185] - Time: 10.25s
+Train Loss: 0.3356 | Val Loss: 1.1914
+Train Count Acc: 0.9332 | Val Count Acc: 0.7710
+Final Count Acc: 0.5430
+True Final Count Acc: 0.6914
+Joint MSE: 0.620628
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_185.pth
+Epoch [186] Batch [0/6] Loss: 0.2214 Count Loss: 0.0616 Motion Loss: 0.5328 Count Acc: 0.9886
+
+Epoch [186] - Time: 10.04s
+Train Loss: 0.3650 | Val Loss: 1.5671
+Train Count Acc: 0.9257 | Val Count Acc: 0.7322
+Final Count Acc: 0.5234
+True Final Count Acc: 0.4844
+Joint MSE: 0.649356
+学习率: 0.000100
+Epoch [187] Batch [0/6] Loss: 0.3767 Count Loss: 0.2336 Motion Loss: 0.4769 Count Acc: 0.8807
+
+Epoch [187] - Time: 10.11s
+Train Loss: 0.3180 | Val Loss: 2.1889
+Train Count Acc: 0.9367 | Val Count Acc: 0.6509
+Final Count Acc: 0.3438
+True Final Count Acc: 0.8359
+Joint MSE: 0.622017
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_187.pth
+Epoch [188] Batch [0/6] Loss: 0.3218 Count Loss: 0.2049 Motion Loss: 0.3897 Count Acc: 0.8807
+
+Epoch [188] - Time: 10.24s
+Train Loss: 0.2738 | Val Loss: 1.6952
+Train Count Acc: 0.9389 | Val Count Acc: 0.7205
+Final Count Acc: 0.5000
+True Final Count Acc: 0.4961
+Joint MSE: 0.624381
+学习率: 0.000100
+Epoch [189] Batch [0/6] Loss: 0.1624 Count Loss: 0.0605 Motion Loss: 0.3398 Count Acc: 0.9886
+
+Epoch [189] - Time: 10.43s
+Train Loss: 0.2424 | Val Loss: 2.2599
+Train Count Acc: 0.9650 | Val Count Acc: 0.6392
+Final Count Acc: 0.3672
+True Final Count Acc: 0.8281
+Joint MSE: 0.634817
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_189.pth
+Epoch [190] Batch [0/6] Loss: 0.3511 Count Loss: 0.1508 Motion Loss: 0.6677 Count Acc: 0.9261
+
+Epoch [190] - Time: 10.18s
+Train Loss: 0.2426 | Val Loss: 1.7113
+Train Count Acc: 0.9620 | Val Count Acc: 0.7216
+Final Count Acc: 0.5000
+True Final Count Acc: 0.5117
+Joint MSE: 0.640962
+学习率: 0.000100
+Epoch [191] Batch [0/6] Loss: 0.2333 Count Loss: 0.1156 Motion Loss: 0.3923 Count Acc: 0.9375
+
+Epoch [191] - Time: 10.85s
+Train Loss: 0.2868 | Val Loss: 1.4597
+Train Count Acc: 0.9387 | Val Count Acc: 0.7287
+Final Count Acc: 0.5078
+True Final Count Acc: 0.6680
+Joint MSE: 0.593923
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_191.pth
+Epoch [192] Batch [0/6] Loss: 0.1519 Count Loss: 0.0341 Motion Loss: 0.3929 Count Acc: 0.9886
+
+Epoch [192] - Time: 10.32s
+Train Loss: 0.2185 | Val Loss: 1.3102
+Train Count Acc: 0.9792 | Val Count Acc: 0.7784
+Final Count Acc: 0.5977
+True Final Count Acc: 0.7227
+Joint MSE: 0.604905
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [193] Batch [0/6] Loss: 0.1938 Count Loss: 0.0637 Motion Loss: 0.4337 Count Acc: 0.9943
+
+Epoch [193] - Time: 10.30s
+Train Loss: 0.1866 | Val Loss: 1.5216
+Train Count Acc: 0.9846 | Val Count Acc: 0.7621
+Final Count Acc: 0.5352
+True Final Count Acc: 0.7930
+Joint MSE: 0.612127
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_193.pth
+Epoch [194] Batch [0/6] Loss: 0.2553 Count Loss: 0.0656 Motion Loss: 0.6323 Count Acc: 0.9830
+
+Epoch [194] - Time: 10.14s
+Train Loss: 0.1878 | Val Loss: 1.5814
+Train Count Acc: 0.9843 | Val Count Acc: 0.7571
+Final Count Acc: 0.5781
+True Final Count Acc: 0.7227
+Joint MSE: 0.602319
+学习率: 0.000100
+Epoch [195] Batch [0/6] Loss: 0.1373 Count Loss: 0.0302 Motion Loss: 0.3570 Count Acc: 0.9943
+
+Epoch [195] - Time: 10.11s
+Train Loss: 0.2245 | Val Loss: 1.4973
+Train Count Acc: 0.9593 | Val Count Acc: 0.7518
+Final Count Acc: 0.5664
+True Final Count Acc: 0.6719
+Joint MSE: 0.608485
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_195.pth
+Epoch [196] Batch [0/6] Loss: 0.1566 Count Loss: 0.0320 Motion Loss: 0.4156 Count Acc: 0.9886
+
+Epoch [196] - Time: 10.19s
+Train Loss: 0.1680 | Val Loss: 1.2896
+Train Count Acc: 0.9915 | Val Count Acc: 0.7859
+Final Count Acc: 0.6172
+True Final Count Acc: 0.7969
+Joint MSE: 0.577801
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [197] Batch [0/6] Loss: 0.1509 Count Loss: 0.0498 Motion Loss: 0.3369 Count Acc: 0.9830
+
+Epoch [197] - Time: 10.77s
+Train Loss: 0.2049 | Val Loss: 1.4910
+Train Count Acc: 0.9769 | Val Count Acc: 0.7422
+Final Count Acc: 0.5000
+True Final Count Acc: 0.6055
+Joint MSE: 0.626664
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_197.pth
+Epoch [198] Batch [0/6] Loss: 0.1572 Count Loss: 0.0468 Motion Loss: 0.3681 Count Acc: 0.9830
+
+Epoch [198] - Time: 10.20s
+Train Loss: 0.3988 | Val Loss: 1.8744
+Train Count Acc: 0.9202 | Val Count Acc: 0.6889
+Final Count Acc: 0.4180
+True Final Count Acc: 0.6719
+Joint MSE: 0.651350
+学习率: 0.000100
+Epoch [199] Batch [0/6] Loss: 0.1891 Count Loss: 0.0566 Motion Loss: 0.4415 Count Acc: 0.9773
+
+Epoch [199] - Time: 10.43s
+Train Loss: 0.2676 | Val Loss: 1.3401
+Train Count Acc: 0.9541 | Val Count Acc: 0.7624
+Final Count Acc: 0.5430
+True Final Count Acc: 0.7031
+Joint MSE: 0.602006
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_199.pth
+Epoch [200] Batch [0/6] Loss: 0.1193 Count Loss: 0.0353 Motion Loss: 0.2800 Count Acc: 0.9830
+
+Epoch [200] - Time: 9.95s
+Train Loss: 0.1890 | Val Loss: 1.7941
+Train Count Acc: 0.9812 | Val Count Acc: 0.7163
+Final Count Acc: 0.4805
+True Final Count Acc: 0.5703
+Joint MSE: 0.635767
+学习率: 0.000100
+Epoch [201] Batch [0/6] Loss: 0.4207 Count Loss: 0.1793 Motion Loss: 0.8046 Count Acc: 0.9318
+
+Epoch [201] - Time: 10.40s
+Train Loss: 0.1978 | Val Loss: 1.3556
+Train Count Acc: 0.9761 | Val Count Acc: 0.7830
+Final Count Acc: 0.5977
+True Final Count Acc: 0.7422
+Joint MSE: 0.580506
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_201.pth
+Epoch [202] Batch [0/6] Loss: 0.1360 Count Loss: 0.0390 Motion Loss: 0.3233 Count Acc: 1.0000
+
+Epoch [202] - Time: 10.02s
+Train Loss: 0.1625 | Val Loss: 1.4972
+Train Count Acc: 0.9940 | Val Count Acc: 0.7511
+Final Count Acc: 0.5586
+True Final Count Acc: 0.6914
+Joint MSE: 0.589532
+学习率: 0.000100
+Epoch [203] Batch [0/6] Loss: 0.2122 Count Loss: 0.0331 Motion Loss: 0.5969 Count Acc: 0.9886
+
+Epoch [203] - Time: 10.07s
+Train Loss: 0.1727 | Val Loss: 1.4551
+Train Count Acc: 0.9850 | Val Count Acc: 0.7504
+Final Count Acc: 0.5312
+True Final Count Acc: 0.6523
+Joint MSE: 0.609693
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_203.pth
+Epoch [204] Batch [0/6] Loss: 0.1711 Count Loss: 0.0414 Motion Loss: 0.4323 Count Acc: 0.9886
+
+Epoch [204] - Time: 10.16s
+Train Loss: 0.2032 | Val Loss: 1.3627
+Train Count Acc: 0.9705 | Val Count Acc: 0.7766
+Final Count Acc: 0.5859
+True Final Count Acc: 0.8125
+Joint MSE: 0.586307
+学习率: 0.000100
+Epoch [205] Batch [0/6] Loss: 0.1739 Count Loss: 0.0383 Motion Loss: 0.4520 Count Acc: 1.0000
+
+Epoch [205] - Time: 10.11s
+Train Loss: 0.1807 | Val Loss: 1.5134
+Train Count Acc: 0.9820 | Val Count Acc: 0.7493
+Final Count Acc: 0.5273
+True Final Count Acc: 0.6328
+Joint MSE: 0.604159
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_205.pth
+Epoch [206] Batch [0/6] Loss: 0.1300 Count Loss: 0.0321 Motion Loss: 0.3265 Count Acc: 0.9886
+
+Epoch [206] - Time: 9.96s
+Train Loss: 0.1928 | Val Loss: 1.5486
+Train Count Acc: 0.9789 | Val Count Acc: 0.7582
+Final Count Acc: 0.5625
+True Final Count Acc: 0.8203
+Joint MSE: 0.588177
+学习率: 0.000100
+Epoch [207] Batch [0/6] Loss: 0.1454 Count Loss: 0.0478 Motion Loss: 0.3254 Count Acc: 0.9830
+
+Epoch [207] - Time: 10.20s
+Train Loss: 0.2089 | Val Loss: 1.4872
+Train Count Acc: 0.9704 | Val Count Acc: 0.7670
+Final Count Acc: 0.6289
+True Final Count Acc: 0.6289
+Joint MSE: 0.589813
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_207.pth
+Epoch [208] Batch [0/6] Loss: 0.1812 Count Loss: 0.0459 Motion Loss: 0.4510 Count Acc: 0.9773
+
+Epoch [208] - Time: 10.09s
+Train Loss: 0.1741 | Val Loss: 1.8108
+Train Count Acc: 0.9809 | Val Count Acc: 0.7028
+Final Count Acc: 0.4336
+True Final Count Acc: 0.6484
+Joint MSE: 0.618641
+学习率: 0.000100
+Epoch [209] Batch [0/6] Loss: 0.2582 Count Loss: 0.0471 Motion Loss: 0.7036 Count Acc: 0.9886
+
+Epoch [209] - Time: 10.03s
+Train Loss: 0.1690 | Val Loss: 1.4934
+Train Count Acc: 0.9877 | Val Count Acc: 0.7571
+Final Count Acc: 0.5391
+True Final Count Acc: 0.6133
+Joint MSE: 0.609032
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_209.pth
+Epoch [210] Batch [0/6] Loss: 0.1176 Count Loss: 0.0287 Motion Loss: 0.2963 Count Acc: 0.9886
+
+Epoch [210] - Time: 10.24s
+Train Loss: 0.2208 | Val Loss: 1.4172
+Train Count Acc: 0.9560 | Val Count Acc: 0.7738
+Final Count Acc: 0.5703
+True Final Count Acc: 0.6641
+Joint MSE: 0.602492
+学习率: 0.000100
+Epoch [211] Batch [0/6] Loss: 0.1320 Count Loss: 0.0301 Motion Loss: 0.3396 Count Acc: 0.9886
+
+Epoch [211] - Time: 10.24s
+Train Loss: 0.3438 | Val Loss: 1.7552
+Train Count Acc: 0.9157 | Val Count Acc: 0.7191
+Final Count Acc: 0.4883
+True Final Count Acc: 0.6836
+Joint MSE: 0.616708
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_211.pth
+Epoch [212] Batch [0/6] Loss: 0.3004 Count Loss: 0.1434 Motion Loss: 0.5232 Count Acc: 0.9659
+
+Epoch [212] - Time: 10.20s
+Train Loss: 0.1923 | Val Loss: 1.7349
+Train Count Acc: 0.9858 | Val Count Acc: 0.7393
+Final Count Acc: 0.5898
+True Final Count Acc: 0.6875
+Joint MSE: 0.599820
+学习率: 0.000100
+Epoch [213] Batch [0/6] Loss: 0.1680 Count Loss: 0.0369 Motion Loss: 0.4369 Count Acc: 0.9830
+
+Epoch [213] - Time: 10.10s
+Train Loss: 0.1807 | Val Loss: 1.5791
+Train Count Acc: 0.9807 | Val Count Acc: 0.7287
+Final Count Acc: 0.5117
+True Final Count Acc: 0.7812
+Joint MSE: 0.600327
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_213.pth
+Epoch [214] Batch [0/6] Loss: 0.1528 Count Loss: 0.0404 Motion Loss: 0.3746 Count Acc: 1.0000
+
+Epoch [214] - Time: 10.21s
+Train Loss: 0.1653 | Val Loss: 1.7344
+Train Count Acc: 0.9896 | Val Count Acc: 0.7386
+Final Count Acc: 0.5000
+True Final Count Acc: 0.5273
+Joint MSE: 0.625742
+学习率: 0.000100
+Epoch [215] Batch [0/6] Loss: 0.1483 Count Loss: 0.0461 Motion Loss: 0.3407 Count Acc: 0.9886
+
+Epoch [215] - Time: 10.37s
+Train Loss: 0.1604 | Val Loss: 1.3110
+Train Count Acc: 0.9881 | Val Count Acc: 0.7759
+Final Count Acc: 0.5430
+True Final Count Acc: 0.6328
+Joint MSE: 0.588733
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_215.pth
+Epoch [216] Batch [0/6] Loss: 0.1728 Count Loss: 0.0363 Motion Loss: 0.4549 Count Acc: 0.9943
+
+Epoch [216] - Time: 10.29s
+Train Loss: 0.2237 | Val Loss: 1.5694
+Train Count Acc: 0.9719 | Val Count Acc: 0.7724
+Final Count Acc: 0.6562
+True Final Count Acc: 0.5781
+Joint MSE: 0.618429
+学习率: 0.000100
+Epoch [217] Batch [0/6] Loss: 0.1582 Count Loss: 0.0590 Motion Loss: 0.3306 Count Acc: 0.9716
+
+Epoch [217] - Time: 10.28s
+Train Loss: 0.2208 | Val Loss: 1.9676
+Train Count Acc: 0.9773 | Val Count Acc: 0.7028
+Final Count Acc: 0.4492
+True Final Count Acc: 0.6602
+Joint MSE: 0.595537
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_217.pth
+Epoch [218] Batch [0/6] Loss: 0.1168 Count Loss: 0.0180 Motion Loss: 0.3293 Count Acc: 1.0000
+
+Epoch [218] - Time: 10.16s
+Train Loss: 0.1800 | Val Loss: 1.9092
+Train Count Acc: 0.9808 | Val Count Acc: 0.7067
+Final Count Acc: 0.4570
+True Final Count Acc: 0.6914
+Joint MSE: 0.576630
+学习率: 0.000100
+Epoch [219] Batch [0/6] Loss: 0.2057 Count Loss: 0.0924 Motion Loss: 0.3775 Count Acc: 0.9659
+
+Epoch [219] - Time: 10.44s
+Train Loss: 0.1729 | Val Loss: 1.6194
+Train Count Acc: 0.9847 | Val Count Acc: 0.7457
+Final Count Acc: 0.5117
+True Final Count Acc: 0.6172
+Joint MSE: 0.605436
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_219.pth
+Epoch [220] Batch [0/6] Loss: 0.1338 Count Loss: 0.0130 Motion Loss: 0.4026 Count Acc: 1.0000
+
+Epoch [220] - Time: 10.24s
+Train Loss: 0.1553 | Val Loss: 1.6827
+Train Count Acc: 0.9961 | Val Count Acc: 0.7401
+Final Count Acc: 0.5664
+True Final Count Acc: 0.8008
+Joint MSE: 0.570521
+学习率: 0.000100
+Epoch [221] Batch [0/6] Loss: 0.1540 Count Loss: 0.0385 Motion Loss: 0.3852 Count Acc: 0.9886
+
+Epoch [221] - Time: 9.96s
+Train Loss: 0.1580 | Val Loss: 1.6756
+Train Count Acc: 0.9873 | Val Count Acc: 0.7521
+Final Count Acc: 0.5312
+True Final Count Acc: 0.6133
+Joint MSE: 0.573857
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_221.pth
+Epoch [222] Batch [0/6] Loss: 0.1283 Count Loss: 0.0308 Motion Loss: 0.3250 Count Acc: 0.9943
+
+Epoch [222] - Time: 10.28s
+Train Loss: 0.1479 | Val Loss: 1.4764
+Train Count Acc: 0.9932 | Val Count Acc: 0.7536
+Final Count Acc: 0.5234
+True Final Count Acc: 0.6992
+Joint MSE: 0.578391
+学习率: 0.000100
+Epoch [223] Batch [0/6] Loss: 0.1314 Count Loss: 0.0183 Motion Loss: 0.3769 Count Acc: 1.0000
+
+Epoch [223] - Time: 9.97s
+Train Loss: 0.1701 | Val Loss: 1.5752
+Train Count Acc: 0.9915 | Val Count Acc: 0.7443
+Final Count Acc: 0.5156
+True Final Count Acc: 0.6875
+Joint MSE: 0.592286
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_223.pth
+Epoch [224] Batch [0/6] Loss: 0.1189 Count Loss: 0.0197 Motion Loss: 0.3309 Count Acc: 0.9943
+
+Epoch [224] - Time: 10.05s
+Train Loss: 0.1578 | Val Loss: 1.7953
+Train Count Acc: 0.9884 | Val Count Acc: 0.7418
+Final Count Acc: 0.5195
+True Final Count Acc: 0.7344
+Joint MSE: 0.550504
+学习率: 0.000100
+Epoch [225] Batch [0/6] Loss: 0.2024 Count Loss: 0.1077 Motion Loss: 0.3158 Count Acc: 0.9830
+
+Epoch [225] - Time: 10.10s
+Train Loss: 0.1608 | Val Loss: 1.5059
+Train Count Acc: 0.9928 | Val Count Acc: 0.7809
+Final Count Acc: 0.6055
+True Final Count Acc: 0.6172
+Joint MSE: 0.567641
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_225.pth
+Epoch [226] Batch [0/6] Loss: 0.1906 Count Loss: 0.0125 Motion Loss: 0.5936 Count Acc: 1.0000
+
+Epoch [226] - Time: 10.54s
+Train Loss: 0.2390 | Val Loss: 1.4148
+Train Count Acc: 0.9778 | Val Count Acc: 0.7688
+Final Count Acc: 0.5547
+True Final Count Acc: 0.6562
+Joint MSE: 0.615669
+学习率: 0.000100
+Epoch [227] Batch [0/6] Loss: 0.2826 Count Loss: 0.1817 Motion Loss: 0.3364 Count Acc: 0.9432
+
+Epoch [227] - Time: 10.08s
+Train Loss: 0.2184 | Val Loss: 1.6667
+Train Count Acc: 0.9665 | Val Count Acc: 0.7496
+Final Count Acc: 0.5312
+True Final Count Acc: 0.7266
+Joint MSE: 0.627057
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_227.pth
+Epoch [228] Batch [0/6] Loss: 0.1577 Count Loss: 0.0775 Motion Loss: 0.2674 Count Acc: 0.9659
+
+Epoch [228] - Time: 10.16s
+Train Loss: 0.2041 | Val Loss: 1.3248
+Train Count Acc: 0.9715 | Val Count Acc: 0.7738
+Final Count Acc: 0.5469
+True Final Count Acc: 0.5977
+Joint MSE: 0.606782
+学习率: 0.000100
+Epoch [229] Batch [0/6] Loss: 0.1269 Count Loss: 0.0167 Motion Loss: 0.3672 Count Acc: 1.0000
+
+Epoch [229] - Time: 10.27s
+Train Loss: 0.1637 | Val Loss: 1.7818
+Train Count Acc: 0.9888 | Val Count Acc: 0.7177
+Final Count Acc: 0.4805
+True Final Count Acc: 0.8203
+Joint MSE: 0.569070
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_229.pth
+Epoch [230] Batch [0/6] Loss: 0.3295 Count Loss: 0.2324 Motion Loss: 0.3235 Count Acc: 0.9205
+
+Epoch [230] - Time: 10.06s
+Train Loss: 0.1756 | Val Loss: 1.5036
+Train Count Acc: 0.9839 | Val Count Acc: 0.7560
+Final Count Acc: 0.5703
+True Final Count Acc: 0.7031
+Joint MSE: 0.584115
+学习率: 0.000100
+Epoch [231] Batch [0/6] Loss: 0.1166 Count Loss: 0.0134 Motion Loss: 0.3439 Count Acc: 1.0000
+
+Epoch [231] - Time: 10.24s
+Train Loss: 0.1337 | Val Loss: 1.5603
+Train Count Acc: 1.0000 | Val Count Acc: 0.7564
+Final Count Acc: 0.5625
+True Final Count Acc: 0.7227
+Joint MSE: 0.568340
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_231.pth
+Epoch [232] Batch [0/6] Loss: 0.1226 Count Loss: 0.0213 Motion Loss: 0.3377 Count Acc: 0.9943
+
+Epoch [232] - Time: 10.40s
+Train Loss: 0.1359 | Val Loss: 1.6298
+Train Count Acc: 0.9934 | Val Count Acc: 0.7539
+Final Count Acc: 0.5234
+True Final Count Acc: 0.7344
+Joint MSE: 0.573565
+学习率: 0.000100
+Epoch [233] Batch [0/6] Loss: 0.2251 Count Loss: 0.0407 Motion Loss: 0.6146 Count Acc: 0.9943
+
+Epoch [233] - Time: 10.02s
+Train Loss: 0.1734 | Val Loss: 1.3088
+Train Count Acc: 0.9779 | Val Count Acc: 0.7837
+Final Count Acc: 0.5664
+True Final Count Acc: 0.7227
+Joint MSE: 0.568919
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_233.pth
+Epoch [234] Batch [0/6] Loss: 0.0951 Count Loss: 0.0104 Motion Loss: 0.2825 Count Acc: 1.0000
+
+Epoch [234] - Time: 10.31s
+Train Loss: 0.2105 | Val Loss: 1.3563
+Train Count Acc: 0.9640 | Val Count Acc: 0.7891
+Final Count Acc: 0.5820
+True Final Count Acc: 0.7539
+Joint MSE: 0.570623
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [235] Batch [0/6] Loss: 0.1020 Count Loss: 0.0168 Motion Loss: 0.2841 Count Acc: 0.9943
+
+Epoch [235] - Time: 10.19s
+Train Loss: 0.1328 | Val Loss: 1.3571
+Train Count Acc: 0.9962 | Val Count Acc: 0.7777
+Final Count Acc: 0.5820
+True Final Count Acc: 0.7227
+Joint MSE: 0.557796
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_235.pth
+Epoch [236] Batch [0/6] Loss: 0.1284 Count Loss: 0.0158 Motion Loss: 0.3754 Count Acc: 1.0000
+
+Epoch [236] - Time: 10.54s
+Train Loss: 0.1341 | Val Loss: 1.6887
+Train Count Acc: 0.9932 | Val Count Acc: 0.7564
+Final Count Acc: 0.5625
+True Final Count Acc: 0.6133
+Joint MSE: 0.565791
+学习率: 0.000100
+Epoch [237] Batch [0/6] Loss: 0.2030 Count Loss: 0.0238 Motion Loss: 0.5975 Count Acc: 1.0000
+
+Epoch [237] - Time: 9.96s
+Train Loss: 0.1351 | Val Loss: 1.5665
+Train Count Acc: 0.9923 | Val Count Acc: 0.7543
+Final Count Acc: 0.5703
+True Final Count Acc: 0.6758
+Joint MSE: 0.582268
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_237.pth
+Epoch [238] Batch [0/6] Loss: 0.1463 Count Loss: 0.0376 Motion Loss: 0.3626 Count Acc: 0.9943
+
+Epoch [238] - Time: 10.02s
+Train Loss: 0.1296 | Val Loss: 1.6072
+Train Count Acc: 0.9950 | Val Count Acc: 0.7536
+Final Count Acc: 0.5664
+True Final Count Acc: 0.6836
+Joint MSE: 0.550105
+学习率: 0.000100
+Epoch [239] Batch [0/6] Loss: 0.1090 Count Loss: 0.0270 Motion Loss: 0.2731 Count Acc: 0.9943
+
+Epoch [239] - Time: 10.44s
+Train Loss: 0.1502 | Val Loss: 1.3987
+Train Count Acc: 0.9836 | Val Count Acc: 0.7710
+Final Count Acc: 0.6133
+True Final Count Acc: 0.7930
+Joint MSE: 0.568501
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_239.pth
+Epoch [240] Batch [0/6] Loss: 0.1333 Count Loss: 0.0243 Motion Loss: 0.3631 Count Acc: 0.9886
+
+Epoch [240] - Time: 10.18s
+Train Loss: 0.1367 | Val Loss: 1.5651
+Train Count Acc: 0.9931 | Val Count Acc: 0.7678
+Final Count Acc: 0.5391
+True Final Count Acc: 0.6367
+Joint MSE: 0.544016
+学习率: 0.000100
+Epoch [241] Batch [0/6] Loss: 0.1474 Count Loss: 0.0462 Motion Loss: 0.3374 Count Acc: 0.9886
+
+Epoch [241] - Time: 10.52s
+Train Loss: 0.1582 | Val Loss: 1.4289
+Train Count Acc: 0.9839 | Val Count Acc: 0.7830
+Final Count Acc: 0.5664
+True Final Count Acc: 0.6836
+Joint MSE: 0.581008
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_241.pth
+Epoch [242] Batch [0/6] Loss: 0.1388 Count Loss: 0.0176 Motion Loss: 0.4041 Count Acc: 0.9943
+
+Epoch [242] - Time: 10.21s
+Train Loss: 0.1269 | Val Loss: 1.4336
+Train Count Acc: 0.9950 | Val Count Acc: 0.7805
+Final Count Acc: 0.5977
+True Final Count Acc: 0.7969
+Joint MSE: 0.550828
+学习率: 0.000100
+Epoch [243] Batch [0/6] Loss: 0.1173 Count Loss: 0.0200 Motion Loss: 0.3243 Count Acc: 0.9943
+
+Epoch [243] - Time: 10.18s
+Train Loss: 0.1231 | Val Loss: 1.8214
+Train Count Acc: 0.9951 | Val Count Acc: 0.7472
+Final Count Acc: 0.5508
+True Final Count Acc: 0.7031
+Joint MSE: 0.544025
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_243.pth
+Epoch [244] Batch [0/6] Loss: 0.0807 Count Loss: 0.0084 Motion Loss: 0.2408 Count Acc: 1.0000
+
+Epoch [244] - Time: 10.10s
+Train Loss: 0.1237 | Val Loss: 1.7295
+Train Count Acc: 0.9923 | Val Count Acc: 0.7440
+Final Count Acc: 0.5039
+True Final Count Acc: 0.7148
+Joint MSE: 0.562318
+学习率: 0.000100
+Epoch [245] Batch [0/6] Loss: 0.1231 Count Loss: 0.0157 Motion Loss: 0.3579 Count Acc: 1.0000
+
+Epoch [245] - Time: 10.02s
+Train Loss: 0.1321 | Val Loss: 1.6564
+Train Count Acc: 0.9893 | Val Count Acc: 0.7738
+Final Count Acc: 0.5781
+True Final Count Acc: 0.7578
+Joint MSE: 0.559203
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_245.pth
+Epoch [246] Batch [0/6] Loss: 0.1004 Count Loss: 0.0236 Motion Loss: 0.2563 Count Acc: 0.9943
+
+Epoch [246] - Time: 10.05s
+Train Loss: 0.1177 | Val Loss: 1.7486
+Train Count Acc: 0.9972 | Val Count Acc: 0.7418
+Final Count Acc: 0.5312
+True Final Count Acc: 0.7344
+Joint MSE: 0.552050
+学习率: 0.000100
+Epoch [247] Batch [0/6] Loss: 0.1106 Count Loss: 0.0162 Motion Loss: 0.3147 Count Acc: 1.0000
+
+Epoch [247] - Time: 10.09s
+Train Loss: 0.1224 | Val Loss: 1.4744
+Train Count Acc: 0.9942 | Val Count Acc: 0.7752
+Final Count Acc: 0.5820
+True Final Count Acc: 0.7188
+Joint MSE: 0.541960
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_247.pth
+Epoch [248] Batch [0/6] Loss: 0.0915 Count Loss: 0.0068 Motion Loss: 0.2825 Count Acc: 1.0000
+
+Epoch [248] - Time: 10.82s
+Train Loss: 0.1066 | Val Loss: 1.5146
+Train Count Acc: 0.9991 | Val Count Acc: 0.7674
+Final Count Acc: 0.5273
+True Final Count Acc: 0.7539
+Joint MSE: 0.548509
+学习率: 0.000100
+Epoch [249] Batch [0/6] Loss: 0.1250 Count Loss: 0.0167 Motion Loss: 0.3611 Count Acc: 0.9943
+
+Epoch [249] - Time: 10.11s
+Train Loss: 0.1160 | Val Loss: 1.5502
+Train Count Acc: 0.9962 | Val Count Acc: 0.7844
+Final Count Acc: 0.6055
+True Final Count Acc: 0.6602
+Joint MSE: 0.554608
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_249.pth
+Epoch [250] Batch [0/6] Loss: 0.1117 Count Loss: 0.0153 Motion Loss: 0.3212 Count Acc: 0.9943
+
+Epoch [250] - Time: 10.34s
+Train Loss: 0.1262 | Val Loss: 1.5565
+Train Count Acc: 0.9930 | Val Count Acc: 0.7678
+Final Count Acc: 0.5234
+True Final Count Acc: 0.6250
+Joint MSE: 0.591323
+学习率: 0.000100
+Epoch [251] Batch [0/6] Loss: 0.0978 Count Loss: 0.0114 Motion Loss: 0.2880 Count Acc: 1.0000
+
+Epoch [251] - Time: 10.01s
+Train Loss: 0.1206 | Val Loss: 1.3819
+Train Count Acc: 0.9922 | Val Count Acc: 0.7923
+Final Count Acc: 0.5742
+True Final Count Acc: 0.6953
+Joint MSE: 0.546031
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_251.pth
+Epoch [252] Batch [0/6] Loss: 0.2202 Count Loss: 0.1434 Motion Loss: 0.2558 Count Acc: 0.9545
+
+Epoch [252] - Time: 9.94s
+Train Loss: 0.1339 | Val Loss: 1.4219
+Train Count Acc: 0.9896 | Val Count Acc: 0.7855
+Final Count Acc: 0.5742
+True Final Count Acc: 0.6719
+Joint MSE: 0.537132
+学习率: 0.000100
+Epoch [253] Batch [0/6] Loss: 0.1132 Count Loss: 0.0102 Motion Loss: 0.3433 Count Acc: 1.0000
+
+Epoch [253] - Time: 10.12s
+Train Loss: 0.1091 | Val Loss: 1.4447
+Train Count Acc: 0.9961 | Val Count Acc: 0.7813
+Final Count Acc: 0.6016
+True Final Count Acc: 0.6445
+Joint MSE: 0.534481
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_253.pth
+Epoch [254] Batch [0/6] Loss: 0.0759 Count Loss: 0.0125 Motion Loss: 0.2112 Count Acc: 1.0000
+
+Epoch [254] - Time: 10.33s
+Train Loss: 0.1032 | Val Loss: 1.6160
+Train Count Acc: 0.9972 | Val Count Acc: 0.7699
+Final Count Acc: 0.5703
+True Final Count Acc: 0.7695
+Joint MSE: 0.519205
+学习率: 0.000100
+Epoch [255] Batch [0/6] Loss: 0.1490 Count Loss: 0.0103 Motion Loss: 0.4624 Count Acc: 1.0000
+
+Epoch [255] - Time: 10.05s
+Train Loss: 0.1069 | Val Loss: 1.5397
+Train Count Acc: 0.9968 | Val Count Acc: 0.7724
+Final Count Acc: 0.5273
+True Final Count Acc: 0.5977
+Joint MSE: 0.547509
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_255.pth
+Epoch [256] Batch [0/6] Loss: 0.0960 Count Loss: 0.0227 Motion Loss: 0.2442 Count Acc: 0.9886
+
+Epoch [256] - Time: 10.14s
+Train Loss: 0.1131 | Val Loss: 1.6319
+Train Count Acc: 0.9923 | Val Count Acc: 0.7766
+Final Count Acc: 0.5820
+True Final Count Acc: 0.6523
+Joint MSE: 0.548436
+学习率: 0.000100
+Epoch [257] Batch [0/6] Loss: 0.1026 Count Loss: 0.0153 Motion Loss: 0.2911 Count Acc: 1.0000
+
+Epoch [257] - Time: 10.29s
+Train Loss: 0.1090 | Val Loss: 1.4068
+Train Count Acc: 0.9970 | Val Count Acc: 0.7972
+Final Count Acc: 0.5898
+True Final Count Acc: 0.6094
+Joint MSE: 0.586038
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_257.pth
+Epoch [258] Batch [0/6] Loss: 0.0981 Count Loss: 0.0122 Motion Loss: 0.2863 Count Acc: 1.0000
+
+Epoch [258] - Time: 10.40s
+Train Loss: 0.1383 | Val Loss: 1.9608
+Train Count Acc: 0.9857 | Val Count Acc: 0.7404
+Final Count Acc: 0.5469
+True Final Count Acc: 0.5195
+Joint MSE: 0.606428
+学习率: 0.000100
+Epoch [259] Batch [0/6] Loss: 0.0896 Count Loss: 0.0113 Motion Loss: 0.2609 Count Acc: 1.0000
+
+Epoch [259] - Time: 10.36s
+Train Loss: 0.1051 | Val Loss: 1.3461
+Train Count Acc: 1.0000 | Val Count Acc: 0.7869
+Final Count Acc: 0.5430
+True Final Count Acc: 0.6953
+Joint MSE: 0.525298
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_259.pth
+Epoch [260] Batch [0/6] Loss: 0.1056 Count Loss: 0.0121 Motion Loss: 0.3117 Count Acc: 1.0000
+
+Epoch [260] - Time: 10.03s
+Train Loss: 0.1023 | Val Loss: 1.6364
+Train Count Acc: 0.9991 | Val Count Acc: 0.7592
+Final Count Acc: 0.5469
+True Final Count Acc: 0.6719
+Joint MSE: 0.532592
+学习率: 0.000100
+Epoch [261] Batch [0/6] Loss: 0.1062 Count Loss: 0.0166 Motion Loss: 0.2988 Count Acc: 0.9943
+
+Epoch [261] - Time: 10.15s
+Train Loss: 0.1178 | Val Loss: 1.7320
+Train Count Acc: 0.9886 | Val Count Acc: 0.7496
+Final Count Acc: 0.5430
+True Final Count Acc: 0.8125
+Joint MSE: 0.517676
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_261.pth
+Epoch [262] Batch [0/6] Loss: 0.0725 Count Loss: 0.0055 Motion Loss: 0.2234 Count Acc: 1.0000
+
+Epoch [262] - Time: 10.10s
+Train Loss: 0.0998 | Val Loss: 1.4976
+Train Count Acc: 0.9970 | Val Count Acc: 0.7919
+Final Count Acc: 0.6133
+True Final Count Acc: 0.7070
+Joint MSE: 0.540029
+学习率: 0.000100
+Epoch [263] Batch [0/6] Loss: 0.2314 Count Loss: 0.0765 Motion Loss: 0.5163 Count Acc: 0.9602
+
+Epoch [263] - Time: 10.35s
+Train Loss: 0.1915 | Val Loss: 2.0001
+Train Count Acc: 0.9678 | Val Count Acc: 0.7333
+Final Count Acc: 0.5195
+True Final Count Acc: 0.7812
+Joint MSE: 0.535871
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_263.pth
+Epoch [264] Batch [0/6] Loss: 0.0842 Count Loss: 0.0191 Motion Loss: 0.2168 Count Acc: 0.9886
+
+Epoch [264] - Time: 10.30s
+Train Loss: 0.1191 | Val Loss: 1.7038
+Train Count Acc: 0.9922 | Val Count Acc: 0.7727
+Final Count Acc: 0.5742
+True Final Count Acc: 0.6016
+Joint MSE: 0.544300
+学习率: 0.000100
+Epoch [265] Batch [0/6] Loss: 0.1741 Count Loss: 0.0186 Motion Loss: 0.5186 Count Acc: 1.0000
+
+Epoch [265] - Time: 10.07s
+Train Loss: 0.1003 | Val Loss: 1.4392
+Train Count Acc: 0.9970 | Val Count Acc: 0.7777
+Final Count Acc: 0.5312
+True Final Count Acc: 0.7539
+Joint MSE: 0.535411
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_265.pth
+Epoch [266] Batch [0/6] Loss: 0.0729 Count Loss: 0.0080 Motion Loss: 0.2165 Count Acc: 1.0000
+
+Epoch [266] - Time: 9.99s
+Train Loss: 0.1023 | Val Loss: 1.2418
+Train Count Acc: 0.9981 | Val Count Acc: 0.7965
+Final Count Acc: 0.5742
+True Final Count Acc: 0.7109
+Joint MSE: 0.527422
+学习率: 0.000100
+Epoch [267] Batch [0/6] Loss: 0.1083 Count Loss: 0.0113 Motion Loss: 0.3234 Count Acc: 1.0000
+
+Epoch [267] - Time: 9.96s
+Train Loss: 0.1051 | Val Loss: 1.4510
+Train Count Acc: 0.9942 | Val Count Acc: 0.7901
+Final Count Acc: 0.5703
+True Final Count Acc: 0.6602
+Joint MSE: 0.515840
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_267.pth
+Epoch [268] Batch [0/6] Loss: 0.0728 Count Loss: 0.0030 Motion Loss: 0.2328 Count Acc: 1.0000
+
+Epoch [268] - Time: 10.09s
+Train Loss: 0.1017 | Val Loss: 1.3029
+Train Count Acc: 0.9961 | Val Count Acc: 0.8129
+Final Count Acc: 0.5859
+True Final Count Acc: 0.6914
+Joint MSE: 0.534217
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/best_model.pth
+Epoch [269] Batch [0/6] Loss: 0.1367 Count Loss: 0.0067 Motion Loss: 0.4331 Count Acc: 1.0000
+
+Epoch [269] - Time: 10.05s
+Train Loss: 0.1068 | Val Loss: 1.5234
+Train Count Acc: 0.9943 | Val Count Acc: 0.7734
+Final Count Acc: 0.5586
+True Final Count Acc: 0.6758
+Joint MSE: 0.510926
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_269.pth
+Epoch [270] Batch [0/6] Loss: 0.0701 Count Loss: 0.0155 Motion Loss: 0.1822 Count Acc: 0.9886
+
+Epoch [270] - Time: 10.60s
+Train Loss: 0.0951 | Val Loss: 1.5449
+Train Count Acc: 0.9953 | Val Count Acc: 0.7692
+Final Count Acc: 0.5156
+True Final Count Acc: 0.7344
+Joint MSE: 0.535123
+学习率: 0.000100
+Epoch [271] Batch [0/6] Loss: 0.0801 Count Loss: 0.0290 Motion Loss: 0.1704 Count Acc: 0.9943
+
+Epoch [271] - Time: 10.04s
+Train Loss: 0.0960 | Val Loss: 1.2875
+Train Count Acc: 0.9962 | Val Count Acc: 0.8011
+Final Count Acc: 0.5820
+True Final Count Acc: 0.6641
+Joint MSE: 0.526340
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_271.pth
+Epoch [272] Batch [0/6] Loss: 0.0649 Count Loss: 0.0031 Motion Loss: 0.2062 Count Acc: 1.0000
+
+Epoch [272] - Time: 10.37s
+Train Loss: 0.1074 | Val Loss: 1.5874
+Train Count Acc: 0.9923 | Val Count Acc: 0.7770
+Final Count Acc: 0.5391
+True Final Count Acc: 0.6172
+Joint MSE: 0.541357
+学习率: 0.000100
+Epoch [273] Batch [0/6] Loss: 0.0807 Count Loss: 0.0072 Motion Loss: 0.2450 Count Acc: 1.0000
+
+Epoch [273] - Time: 10.20s
+Train Loss: 0.1187 | Val Loss: 1.7101
+Train Count Acc: 0.9905 | Val Count Acc: 0.7706
+Final Count Acc: 0.5586
+True Final Count Acc: 0.5586
+Joint MSE: 0.537957
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_273.pth
+Epoch [274] Batch [0/6] Loss: 0.0787 Count Loss: 0.0062 Motion Loss: 0.2417 Count Acc: 1.0000
+
+Epoch [274] - Time: 10.10s
+Train Loss: 0.0908 | Val Loss: 1.5129
+Train Count Acc: 0.9972 | Val Count Acc: 0.7866
+Final Count Acc: 0.5664
+True Final Count Acc: 0.7031
+Joint MSE: 0.513911
+学习率: 0.000100
+Epoch [275] Batch [0/6] Loss: 0.0819 Count Loss: 0.0047 Motion Loss: 0.2574 Count Acc: 1.0000
+
+Epoch [275] - Time: 10.17s
+Train Loss: 0.1301 | Val Loss: 1.8461
+Train Count Acc: 0.9855 | Val Count Acc: 0.7422
+Final Count Acc: 0.5391
+True Final Count Acc: 0.8750
+Joint MSE: 0.543124
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_275.pth
+Epoch [276] Batch [0/6] Loss: 0.1807 Count Loss: 0.0975 Motion Loss: 0.2772 Count Acc: 0.9716
+
+Epoch [276] - Time: 10.12s
+Train Loss: 0.1130 | Val Loss: 1.8292
+Train Count Acc: 0.9923 | Val Count Acc: 0.7631
+Final Count Acc: 0.5703
+True Final Count Acc: 0.6055
+Joint MSE: 0.527460
+学习率: 0.000100
+Epoch [277] Batch [0/6] Loss: 0.0595 Count Loss: 0.0095 Motion Loss: 0.1666 Count Acc: 0.9943
+
+Epoch [277] - Time: 10.11s
+Train Loss: 0.0998 | Val Loss: 1.8218
+Train Count Acc: 0.9961 | Val Count Acc: 0.7404
+Final Count Acc: 0.4922
+True Final Count Acc: 0.6836
+Joint MSE: 0.549419
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_277.pth
+Epoch [278] Batch [0/6] Loss: 0.1434 Count Loss: 0.0095 Motion Loss: 0.4464 Count Acc: 1.0000
+
+Epoch [278] - Time: 10.56s
+Train Loss: 0.1057 | Val Loss: 1.8995
+Train Count Acc: 0.9959 | Val Count Acc: 0.7337
+Final Count Acc: 0.5195
+True Final Count Acc: 0.5742
+Joint MSE: 0.535490
+学习率: 0.000100
+Epoch [279] Batch [0/6] Loss: 0.2028 Count Loss: 0.0453 Motion Loss: 0.5249 Count Acc: 0.9830
+
+Epoch [279] - Time: 10.13s
+Train Loss: 0.1170 | Val Loss: 1.7434
+Train Count Acc: 0.9886 | Val Count Acc: 0.7539
+Final Count Acc: 0.5039
+True Final Count Acc: 0.7500
+Joint MSE: 0.545792
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_279.pth
+Epoch [280] Batch [0/6] Loss: 0.2005 Count Loss: 0.1463 Motion Loss: 0.1807 Count Acc: 0.9602
+
+Epoch [280] - Time: 10.31s
+Train Loss: 0.1578 | Val Loss: 1.4532
+Train Count Acc: 0.9839 | Val Count Acc: 0.7908
+Final Count Acc: 0.5938
+True Final Count Acc: 0.6562
+Joint MSE: 0.541268
+学习率: 0.000100
+Epoch [281] Batch [0/6] Loss: 0.0706 Count Loss: 0.0065 Motion Loss: 0.2135 Count Acc: 1.0000
+
+Epoch [281] - Time: 10.23s
+Train Loss: 0.0854 | Val Loss: 1.3626
+Train Count Acc: 1.0000 | Val Count Acc: 0.8097
+Final Count Acc: 0.6172
+True Final Count Acc: 0.6836
+Joint MSE: 0.499172
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_281.pth
+Epoch [282] Batch [0/6] Loss: 0.0547 Count Loss: 0.0027 Motion Loss: 0.1734 Count Acc: 1.0000
+
+Epoch [282] - Time: 10.10s
+Train Loss: 0.0838 | Val Loss: 1.4713
+Train Count Acc: 1.0000 | Val Count Acc: 0.7997
+Final Count Acc: 0.6016
+True Final Count Acc: 0.6953
+Joint MSE: 0.517120
+学习率: 0.000100
+Epoch [283] Batch [0/6] Loss: 0.0618 Count Loss: 0.0048 Motion Loss: 0.1900 Count Acc: 1.0000
+
+Epoch [283] - Time: 10.11s
+Train Loss: 0.0807 | Val Loss: 1.6010
+Train Count Acc: 0.9991 | Val Count Acc: 0.7869
+Final Count Acc: 0.6016
+True Final Count Acc: 0.6680
+Joint MSE: 0.500223
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_283.pth
+Epoch [284] Batch [0/6] Loss: 0.0679 Count Loss: 0.0032 Motion Loss: 0.2156 Count Acc: 1.0000
+
+Epoch [284] - Time: 10.21s
+Train Loss: 0.0793 | Val Loss: 1.6327
+Train Count Acc: 1.0000 | Val Count Acc: 0.7727
+Final Count Acc: 0.5312
+True Final Count Acc: 0.6992
+Joint MSE: 0.500315
+学习率: 0.000100
+Epoch [285] Batch [0/6] Loss: 0.1126 Count Loss: 0.0047 Motion Loss: 0.3599 Count Acc: 1.0000
+
+Epoch [285] - Time: 10.44s
+Train Loss: 0.0798 | Val Loss: 1.6941
+Train Count Acc: 1.0000 | Val Count Acc: 0.7670
+Final Count Acc: 0.5625
+True Final Count Acc: 0.6797
+Joint MSE: 0.493381
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_285.pth
+Epoch [286] Batch [0/6] Loss: 0.0445 Count Loss: 0.0021 Motion Loss: 0.1412 Count Acc: 1.0000
+
+Epoch [286] - Time: 10.10s
+Train Loss: 0.0998 | Val Loss: 1.8910
+Train Count Acc: 0.9913 | Val Count Acc: 0.7557
+Final Count Acc: 0.5391
+True Final Count Acc: 0.6953
+Joint MSE: 0.529733
+学习率: 0.000100
+Epoch [287] Batch [0/6] Loss: 0.0611 Count Loss: 0.0026 Motion Loss: 0.1949 Count Acc: 1.0000
+
+Epoch [287] - Time: 10.12s
+Train Loss: 0.1110 | Val Loss: 1.5180
+Train Count Acc: 0.9894 | Val Count Acc: 0.7894
+Final Count Acc: 0.5664
+True Final Count Acc: 0.7031
+Joint MSE: 0.482939
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_287.pth
+Epoch [288] Batch [0/6] Loss: 0.1752 Count Loss: 0.0083 Motion Loss: 0.5563 Count Acc: 1.0000
+
+Epoch [288] - Time: 10.19s
+Train Loss: 0.0883 | Val Loss: 1.6986
+Train Count Acc: 0.9961 | Val Count Acc: 0.7798
+Final Count Acc: 0.5742
+True Final Count Acc: 0.7070
+Joint MSE: 0.518731
+学习率: 0.000100
+Epoch [289] Batch [0/6] Loss: 0.0601 Count Loss: 0.0022 Motion Loss: 0.1929 Count Acc: 1.0000
+
+Epoch [289] - Time: 10.01s
+Train Loss: 0.0842 | Val Loss: 1.9527
+Train Count Acc: 0.9991 | Val Count Acc: 0.7486
+Final Count Acc: 0.5117
+True Final Count Acc: 0.6914
+Joint MSE: 0.507620
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_289.pth
+Epoch [290] Batch [0/6] Loss: 0.0681 Count Loss: 0.0056 Motion Loss: 0.2085 Count Acc: 1.0000
+
+Epoch [290] - Time: 10.46s
+Train Loss: 0.0770 | Val Loss: 1.9050
+Train Count Acc: 1.0000 | Val Count Acc: 0.7592
+Final Count Acc: 0.5508
+True Final Count Acc: 0.7344
+Joint MSE: 0.494269
+学习率: 0.000100
+Epoch [291] Batch [0/6] Loss: 0.0924 Count Loss: 0.0054 Motion Loss: 0.2899 Count Acc: 1.0000
+
+Epoch [291] - Time: 10.62s
+Train Loss: 0.0778 | Val Loss: 1.4616
+Train Count Acc: 0.9991 | Val Count Acc: 0.8033
+Final Count Acc: 0.5820
+True Final Count Acc: 0.7344
+Joint MSE: 0.524627
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_291.pth
+Epoch [292] Batch [0/6] Loss: 0.0620 Count Loss: 0.0071 Motion Loss: 0.1828 Count Acc: 1.0000
+
+Epoch [292] - Time: 10.51s
+Train Loss: 0.0775 | Val Loss: 1.5560
+Train Count Acc: 1.0000 | Val Count Acc: 0.7972
+Final Count Acc: 0.5625
+True Final Count Acc: 0.6914
+Joint MSE: 0.495180
+学习率: 0.000100
+Epoch [293] Batch [0/6] Loss: 0.1277 Count Loss: 0.0039 Motion Loss: 0.4127 Count Acc: 1.0000
+
+Epoch [293] - Time: 9.86s
+Train Loss: 0.0737 | Val Loss: 1.7415
+Train Count Acc: 1.0000 | Val Count Acc: 0.7717
+Final Count Acc: 0.5586
+True Final Count Acc: 0.7070
+Joint MSE: 0.513140
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_293.pth
+Epoch [294] Batch [0/6] Loss: 0.0752 Count Loss: 0.0262 Motion Loss: 0.1634 Count Acc: 0.9943
+
+Epoch [294] - Time: 10.20s
+Train Loss: 0.0907 | Val Loss: 1.6056
+Train Count Acc: 0.9961 | Val Count Acc: 0.7862
+Final Count Acc: 0.5508
+True Final Count Acc: 0.6953
+Joint MSE: 0.484067
+学习率: 0.000100
+Epoch [295] Batch [0/6] Loss: 0.0524 Count Loss: 0.0046 Motion Loss: 0.1593 Count Acc: 1.0000
+
+Epoch [295] - Time: 10.13s
+Train Loss: 0.0792 | Val Loss: 1.5356
+Train Count Acc: 0.9989 | Val Count Acc: 0.7969
+Final Count Acc: 0.5820
+True Final Count Acc: 0.6641
+Joint MSE: 0.564952
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_295.pth
+Epoch [296] Batch [0/6] Loss: 0.0432 Count Loss: 0.0019 Motion Loss: 0.1379 Count Acc: 1.0000
+
+Epoch [296] - Time: 10.11s
+Train Loss: 0.0955 | Val Loss: 1.5393
+Train Count Acc: 0.9924 | Val Count Acc: 0.7862
+Final Count Acc: 0.5625
+True Final Count Acc: 0.6562
+Joint MSE: 0.497713
+学习率: 0.000100
+Epoch [297] Batch [0/6] Loss: 0.1088 Count Loss: 0.0611 Motion Loss: 0.1591 Count Acc: 0.9545
+
+Epoch [297] - Time: 10.17s
+Train Loss: 0.0955 | Val Loss: 1.4937
+Train Count Acc: 0.9915 | Val Count Acc: 0.7915
+Final Count Acc: 0.5586
+True Final Count Acc: 0.6680
+Joint MSE: 0.530434
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_297.pth
+Epoch [298] Batch [0/6] Loss: 0.0528 Count Loss: 0.0044 Motion Loss: 0.1615 Count Acc: 1.0000
+
+Epoch [298] - Time: 10.27s
+Train Loss: 0.0762 | Val Loss: 1.6017
+Train Count Acc: 1.0000 | Val Count Acc: 0.7834
+Final Count Acc: 0.5586
+True Final Count Acc: 0.6367
+Joint MSE: 0.512395
+学习率: 0.000100
+Epoch [299] Batch [0/6] Loss: 0.0597 Count Loss: 0.0020 Motion Loss: 0.1924 Count Acc: 1.0000
+
+Epoch [299] - Time: 10.05s
+Train Loss: 0.0728 | Val Loss: 1.7835
+Train Count Acc: 0.9991 | Val Count Acc: 0.7560
+Final Count Acc: 0.4961
+True Final Count Acc: 0.6914
+Joint MSE: 0.500326
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_299.pth
+Epoch [300] Batch [0/6] Loss: 0.0651 Count Loss: 0.0041 Motion Loss: 0.2034 Count Acc: 1.0000
+
+Epoch [300] - Time: 10.53s
+Train Loss: 0.0778 | Val Loss: 1.7705
+Train Count Acc: 0.9972 | Val Count Acc: 0.7855
+Final Count Acc: 0.6016
+True Final Count Acc: 0.6211
+Joint MSE: 0.480147
+学习率: 0.000100
+Epoch [301] Batch [0/6] Loss: 0.2111 Count Loss: 0.1648 Motion Loss: 0.1544 Count Acc: 0.9545
+
+Epoch [301] - Time: 10.26s
+Train Loss: 0.1121 | Val Loss: 1.8140
+Train Count Acc: 0.9867 | Val Count Acc: 0.7496
+Final Count Acc: 0.5117
+True Final Count Acc: 0.7930
+Joint MSE: 0.482725
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_301.pth
+Epoch [302] Batch [0/6] Loss: 0.0521 Count Loss: 0.0067 Motion Loss: 0.1513 Count Acc: 1.0000
+
+Epoch [302] - Time: 9.94s
+Train Loss: 0.0760 | Val Loss: 1.6584
+Train Count Acc: 0.9981 | Val Count Acc: 0.7731
+Final Count Acc: 0.5352
+True Final Count Acc: 0.6523
+Joint MSE: 0.514529
+学习率: 0.000100
+Epoch [303] Batch [0/6] Loss: 0.0590 Count Loss: 0.0056 Motion Loss: 0.1779 Count Acc: 1.0000
+
+Epoch [303] - Time: 10.19s
+Train Loss: 0.0802 | Val Loss: 1.4193
+Train Count Acc: 0.9970 | Val Count Acc: 0.7969
+Final Count Acc: 0.5586
+True Final Count Acc: 0.7188
+Joint MSE: 0.495182
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_303.pth
+Epoch [304] Batch [0/6] Loss: 0.1524 Count Loss: 0.0066 Motion Loss: 0.4860 Count Acc: 1.0000
+
+Epoch [304] - Time: 10.06s
+Train Loss: 0.0851 | Val Loss: 1.7541
+Train Count Acc: 0.9968 | Val Count Acc: 0.7628
+Final Count Acc: 0.5391
+True Final Count Acc: 0.7422
+Joint MSE: 0.506502
+学习率: 0.000100
+Epoch [305] Batch [0/6] Loss: 0.0521 Count Loss: 0.0107 Motion Loss: 0.1378 Count Acc: 0.9943
+
+Epoch [305] - Time: 10.21s
+Train Loss: 0.0803 | Val Loss: 1.6333
+Train Count Acc: 0.9972 | Val Count Acc: 0.7862
+Final Count Acc: 0.5664
+True Final Count Acc: 0.6758
+Joint MSE: 0.511579
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_305.pth
+Epoch [306] Batch [0/6] Loss: 0.0454 Count Loss: 0.0015 Motion Loss: 0.1464 Count Acc: 1.0000
+
+Epoch [306] - Time: 10.14s
+Train Loss: 0.0761 | Val Loss: 2.0602
+Train Count Acc: 0.9972 | Val Count Acc: 0.7276
+Final Count Acc: 0.4688
+True Final Count Acc: 0.7266
+Joint MSE: 0.501574
+学习率: 0.000100
+Epoch [307] Batch [0/6] Loss: 0.0487 Count Loss: 0.0018 Motion Loss: 0.1562 Count Acc: 1.0000
+
+Epoch [307] - Time: 10.42s
+Train Loss: 0.0918 | Val Loss: 2.0921
+Train Count Acc: 0.9938 | Val Count Acc: 0.7354
+Final Count Acc: 0.5078
+True Final Count Acc: 0.6289
+Joint MSE: 0.513689
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_307.pth
+Epoch [308] Batch [0/6] Loss: 0.0806 Count Loss: 0.0232 Motion Loss: 0.1914 Count Acc: 0.9886
+
+Epoch [308] - Time: 10.26s
+Train Loss: 0.0968 | Val Loss: 1.5729
+Train Count Acc: 0.9922 | Val Count Acc: 0.7926
+Final Count Acc: 0.5742
+True Final Count Acc: 0.6133
+Joint MSE: 0.522762
+学习率: 0.000100
+Epoch [309] Batch [0/6] Loss: 0.0602 Count Loss: 0.0073 Motion Loss: 0.1763 Count Acc: 1.0000
+
+Epoch [309] - Time: 10.08s
+Train Loss: 0.0697 | Val Loss: 1.5435
+Train Count Acc: 1.0000 | Val Count Acc: 0.7894
+Final Count Acc: 0.5859
+True Final Count Acc: 0.7070
+Joint MSE: 0.478600
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_309.pth
+Epoch [310] Batch [0/6] Loss: 0.0503 Count Loss: 0.0060 Motion Loss: 0.1474 Count Acc: 1.0000
+
+Epoch [310] - Time: 10.23s
+Train Loss: 0.0783 | Val Loss: 1.6408
+Train Count Acc: 0.9946 | Val Count Acc: 0.7773
+Final Count Acc: 0.5352
+True Final Count Acc: 0.7188
+Joint MSE: 0.483612
+学习率: 0.000100
+Epoch [311] Batch [0/6] Loss: 0.1314 Count Loss: 0.0030 Motion Loss: 0.4278 Count Acc: 1.0000
+
+Epoch [311] - Time: 10.23s
+Train Loss: 0.0684 | Val Loss: 1.9728
+Train Count Acc: 0.9989 | Val Count Acc: 0.7411
+Final Count Acc: 0.4805
+True Final Count Acc: 0.7266
+Joint MSE: 0.474582
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_311.pth
+Epoch [312] Batch [0/6] Loss: 0.1127 Count Loss: 0.0028 Motion Loss: 0.3661 Count Acc: 1.0000
+
+Epoch [312] - Time: 9.91s
+Train Loss: 0.0715 | Val Loss: 1.8178
+Train Count Acc: 0.9991 | Val Count Acc: 0.7578
+Final Count Acc: 0.5352
+True Final Count Acc: 0.7227
+Joint MSE: 0.486931
+学习率: 0.000100
+Epoch [313] Batch [0/6] Loss: 0.0562 Count Loss: 0.0093 Motion Loss: 0.1563 Count Acc: 0.9943
+
+Epoch [313] - Time: 10.48s
+Train Loss: 0.0755 | Val Loss: 1.6678
+Train Count Acc: 0.9970 | Val Count Acc: 0.7678
+Final Count Acc: 0.5273
+True Final Count Acc: 0.7539
+Joint MSE: 0.471905
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_313.pth
+Epoch [314] Batch [0/6] Loss: 0.0432 Count Loss: 0.0015 Motion Loss: 0.1389 Count Acc: 1.0000
+
+Epoch [314] - Time: 10.35s
+Train Loss: 0.0966 | Val Loss: 1.6762
+Train Count Acc: 0.9913 | Val Count Acc: 0.7788
+Final Count Acc: 0.5469
+True Final Count Acc: 0.6055
+Joint MSE: 0.502368
+学习率: 0.000100
+Epoch [315] Batch [0/6] Loss: 0.1044 Count Loss: 0.0280 Motion Loss: 0.2547 Count Acc: 0.9886
+
+Epoch [315] - Time: 10.35s
+Train Loss: 0.1470 | Val Loss: 2.3535
+Train Count Acc: 0.9679 | Val Count Acc: 0.7077
+Final Count Acc: 0.4492
+True Final Count Acc: 0.7617
+Joint MSE: 0.489507
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_315.pth
+Epoch [316] Batch [0/6] Loss: 0.0571 Count Loss: 0.0020 Motion Loss: 0.1837 Count Acc: 1.0000
+
+Epoch [316] - Time: 9.89s
+Train Loss: 0.0725 | Val Loss: 2.0282
+Train Count Acc: 1.0000 | Val Count Acc: 0.7383
+Final Count Acc: 0.4922
+True Final Count Acc: 0.6641
+Joint MSE: 0.488461
+学习率: 0.000100
+Epoch [317] Batch [0/6] Loss: 0.0671 Count Loss: 0.0030 Motion Loss: 0.2135 Count Acc: 1.0000
+
+Epoch [317] - Time: 10.50s
+Train Loss: 0.0861 | Val Loss: 1.7210
+Train Count Acc: 0.9924 | Val Count Acc: 0.7656
+Final Count Acc: 0.5273
+True Final Count Acc: 0.6797
+Joint MSE: 0.508302
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_317.pth
+Epoch [318] Batch [0/6] Loss: 0.0750 Count Loss: 0.0123 Motion Loss: 0.2089 Count Acc: 0.9943
+
+Epoch [318] - Time: 10.19s
+Train Loss: 0.0671 | Val Loss: 1.5945
+Train Count Acc: 0.9991 | Val Count Acc: 0.7798
+Final Count Acc: 0.5586
+True Final Count Acc: 0.7305
+Joint MSE: 0.491909
+学习率: 0.000100
+Epoch [319] Batch [0/6] Loss: 0.0321 Count Loss: 0.0016 Motion Loss: 0.1017 Count Acc: 1.0000
+
+Epoch [319] - Time: 10.53s
+Train Loss: 0.0669 | Val Loss: 1.5818
+Train Count Acc: 1.0000 | Val Count Acc: 0.7873
+Final Count Acc: 0.5430
+True Final Count Acc: 0.7109
+Joint MSE: 0.500854
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_319.pth
+Epoch [320] Batch [0/6] Loss: 0.0838 Count Loss: 0.0134 Motion Loss: 0.2347 Count Acc: 1.0000
+
+Epoch [320] - Time: 10.50s
+Train Loss: 0.0726 | Val Loss: 2.1107
+Train Count Acc: 0.9981 | Val Count Acc: 0.7543
+Final Count Acc: 0.5664
+True Final Count Acc: 0.7031
+Joint MSE: 0.507030
+学习率: 0.000100
+Epoch [321] Batch [0/6] Loss: 0.0413 Count Loss: 0.0036 Motion Loss: 0.1258 Count Acc: 1.0000
+
+Epoch [321] - Time: 9.96s
+Train Loss: 0.0811 | Val Loss: 1.6850
+Train Count Acc: 0.9970 | Val Count Acc: 0.7617
+Final Count Acc: 0.5000
+True Final Count Acc: 0.7305
+Joint MSE: 0.481262
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_321.pth
+Epoch [322] Batch [0/6] Loss: 0.0388 Count Loss: 0.0030 Motion Loss: 0.1192 Count Acc: 1.0000
+
+Epoch [322] - Time: 10.51s
+Train Loss: 0.0717 | Val Loss: 1.7177
+Train Count Acc: 0.9991 | Val Count Acc: 0.7816
+Final Count Acc: 0.5664
+True Final Count Acc: 0.6016
+Joint MSE: 0.479638
+学习率: 0.000100
+Epoch [323] Batch [0/6] Loss: 0.0816 Count Loss: 0.0075 Motion Loss: 0.2471 Count Acc: 1.0000
+
+Epoch [323] - Time: 10.32s
+Train Loss: 0.0685 | Val Loss: 1.5008
+Train Count Acc: 1.0000 | Val Count Acc: 0.7816
+Final Count Acc: 0.5547
+True Final Count Acc: 0.7695
+Joint MSE: 0.496867
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_323.pth
+Epoch [324] Batch [0/6] Loss: 0.0548 Count Loss: 0.0126 Motion Loss: 0.1406 Count Acc: 1.0000
+
+Epoch [324] - Time: 10.41s
+Train Loss: 0.0700 | Val Loss: 1.5814
+Train Count Acc: 1.0000 | Val Count Acc: 0.7763
+Final Count Acc: 0.5469
+True Final Count Acc: 0.6562
+Joint MSE: 0.491923
+学习率: 0.000100
+Epoch [325] Batch [0/6] Loss: 0.0846 Count Loss: 0.0086 Motion Loss: 0.2533 Count Acc: 1.0000
+
+Epoch [325] - Time: 10.10s
+Train Loss: 0.2725 | Val Loss: 2.5320
+Train Count Acc: 0.9531 | Val Count Acc: 0.7425
+Final Count Acc: 0.5391
+True Final Count Acc: 0.5312
+Joint MSE: 0.546279
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_325.pth
+Epoch [326] Batch [0/6] Loss: 0.0530 Count Loss: 0.0053 Motion Loss: 0.1589 Count Acc: 1.0000
+
+Epoch [326] - Time: 10.32s
+Train Loss: 0.0814 | Val Loss: 1.7700
+Train Count Acc: 0.9962 | Val Count Acc: 0.7678
+Final Count Acc: 0.5352
+True Final Count Acc: 0.7539
+Joint MSE: 0.475408
+学习率: 0.000100
+Epoch [327] Batch [0/6] Loss: 0.1350 Count Loss: 0.0070 Motion Loss: 0.4266 Count Acc: 1.0000
+
+Epoch [327] - Time: 10.17s
+Train Loss: 0.0653 | Val Loss: 1.6623
+Train Count Acc: 1.0000 | Val Count Acc: 0.7898
+Final Count Acc: 0.5898
+True Final Count Acc: 0.6562
+Joint MSE: 0.492351
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_327.pth
+Epoch [328] Batch [0/6] Loss: 0.1160 Count Loss: 0.0057 Motion Loss: 0.3676 Count Acc: 1.0000
+
+Epoch [328] - Time: 10.21s
+Train Loss: 0.0711 | Val Loss: 2.0416
+Train Count Acc: 0.9972 | Val Count Acc: 0.7493
+Final Count Acc: 0.5156
+True Final Count Acc: 0.7422
+Joint MSE: 0.485429
+学习率: 0.000100
+Epoch [329] Batch [0/6] Loss: 0.0393 Count Loss: 0.0017 Motion Loss: 0.1253 Count Acc: 1.0000
+
+Epoch [329] - Time: 10.76s
+Train Loss: 0.0671 | Val Loss: 1.9157
+Train Count Acc: 1.0000 | Val Count Acc: 0.7688
+Final Count Acc: 0.5547
+True Final Count Acc: 0.6875
+Joint MSE: 0.488319
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_329.pth
+Epoch [330] Batch [0/6] Loss: 0.0612 Count Loss: 0.0024 Motion Loss: 0.1960 Count Acc: 1.0000
+
+Epoch [330] - Time: 10.11s
+Train Loss: 0.0618 | Val Loss: 2.0696
+Train Count Acc: 1.0000 | Val Count Acc: 0.7479
+Final Count Acc: 0.5352
+True Final Count Acc: 0.7383
+Joint MSE: 0.503185
+学习率: 0.000100
+Epoch [331] Batch [0/6] Loss: 0.0548 Count Loss: 0.0013 Motion Loss: 0.1783 Count Acc: 1.0000
+
+Epoch [331] - Time: 10.30s
+Train Loss: 0.0616 | Val Loss: 1.7951
+Train Count Acc: 0.9991 | Val Count Acc: 0.7915
+Final Count Acc: 0.5977
+True Final Count Acc: 0.6602
+Joint MSE: 0.497234
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_331.pth
+Epoch [332] Batch [0/6] Loss: 0.0325 Count Loss: 0.0008 Motion Loss: 0.1055 Count Acc: 1.0000
+
+Epoch [332] - Time: 10.29s
+Train Loss: 0.0640 | Val Loss: 1.6521
+Train Count Acc: 0.9991 | Val Count Acc: 0.7788
+Final Count Acc: 0.5742
+True Final Count Acc: 0.7070
+Joint MSE: 0.481410
+学习率: 0.000100
+Epoch [333] Batch [0/6] Loss: 0.0441 Count Loss: 0.0011 Motion Loss: 0.1434 Count Acc: 1.0000
+
+Epoch [333] - Time: 10.35s
+Train Loss: 0.0606 | Val Loss: 1.9753
+Train Count Acc: 1.0000 | Val Count Acc: 0.7674
+Final Count Acc: 0.5547
+True Final Count Acc: 0.6953
+Joint MSE: 0.492484
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_333.pth
+Epoch [334] Batch [0/6] Loss: 0.0719 Count Loss: 0.0075 Motion Loss: 0.2145 Count Acc: 1.0000
+
+Epoch [334] - Time: 10.16s
+Train Loss: 0.0613 | Val Loss: 1.7487
+Train Count Acc: 1.0000 | Val Count Acc: 0.7741
+Final Count Acc: 0.5391
+True Final Count Acc: 0.6836
+Joint MSE: 0.472348
+学习率: 0.000100
+Epoch [335] Batch [0/6] Loss: 0.0678 Count Loss: 0.0023 Motion Loss: 0.2181 Count Acc: 1.0000
+
+Epoch [335] - Time: 10.15s
+Train Loss: 0.0640 | Val Loss: 1.8341
+Train Count Acc: 1.0000 | Val Count Acc: 0.7678
+Final Count Acc: 0.5234
+True Final Count Acc: 0.6953
+Joint MSE: 0.504359
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_335.pth
+Epoch [336] Batch [0/6] Loss: 0.0581 Count Loss: 0.0112 Motion Loss: 0.1565 Count Acc: 1.0000
+
+Epoch [336] - Time: 10.70s
+Train Loss: 0.0655 | Val Loss: 1.9361
+Train Count Acc: 0.9991 | Val Count Acc: 0.7741
+Final Count Acc: 0.6016
+True Final Count Acc: 0.6836
+Joint MSE: 0.485088
+学习率: 0.000100
+Epoch [337] Batch [0/6] Loss: 0.0433 Count Loss: 0.0016 Motion Loss: 0.1391 Count Acc: 1.0000
+
+Epoch [337] - Time: 10.41s
+Train Loss: 0.0701 | Val Loss: 1.5687
+Train Count Acc: 0.9981 | Val Count Acc: 0.7983
+Final Count Acc: 0.5859
+True Final Count Acc: 0.6836
+Joint MSE: 0.493288
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_337.pth
+Epoch [338] Batch [0/6] Loss: 0.1019 Count Loss: 0.0032 Motion Loss: 0.3289 Count Acc: 1.0000
+
+Epoch [338] - Time: 10.34s
+Train Loss: 0.0605 | Val Loss: 2.0649
+Train Count Acc: 0.9991 | Val Count Acc: 0.7567
+Final Count Acc: 0.5312
+True Final Count Acc: 0.7500
+Joint MSE: 0.452839
+学习率: 0.000100
+Epoch [339] Batch [0/6] Loss: 0.0333 Count Loss: 0.0018 Motion Loss: 0.1049 Count Acc: 1.0000
+
+Epoch [339] - Time: 10.04s
+Train Loss: 0.0597 | Val Loss: 1.7444
+Train Count Acc: 0.9991 | Val Count Acc: 0.7841
+Final Count Acc: 0.5547
+True Final Count Acc: 0.7148
+Joint MSE: 0.450633
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_339.pth
+Epoch [340] Batch [0/6] Loss: 0.1062 Count Loss: 0.0020 Motion Loss: 0.3473 Count Acc: 1.0000
+
+Epoch [340] - Time: 10.08s
+Train Loss: 0.0640 | Val Loss: 1.7332
+Train Count Acc: 1.0000 | Val Count Acc: 0.7788
+Final Count Acc: 0.5508
+True Final Count Acc: 0.5859
+Joint MSE: 0.495769
+学习率: 0.000100
+Epoch [341] Batch [0/6] Loss: 0.0480 Count Loss: 0.0019 Motion Loss: 0.1536 Count Acc: 1.0000
+
+Epoch [341] - Time: 10.37s
+Train Loss: 0.0600 | Val Loss: 2.0718
+Train Count Acc: 0.9991 | Val Count Acc: 0.7550
+Final Count Acc: 0.5469
+True Final Count Acc: 0.7188
+Joint MSE: 0.463498
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_341.pth
+Epoch [342] Batch [0/6] Loss: 0.0349 Count Loss: 0.0010 Motion Loss: 0.1130 Count Acc: 1.0000
+
+Epoch [342] - Time: 10.66s
+Train Loss: 0.0625 | Val Loss: 1.9176
+Train Count Acc: 0.9972 | Val Count Acc: 0.7699
+Final Count Acc: 0.5430
+True Final Count Acc: 0.6484
+Joint MSE: 0.465887
+学习率: 0.000100
+Epoch [343] Batch [0/6] Loss: 0.0394 Count Loss: 0.0020 Motion Loss: 0.1247 Count Acc: 1.0000
+
+Epoch [343] - Time: 10.03s
+Train Loss: 0.0589 | Val Loss: 1.6153
+Train Count Acc: 1.0000 | Val Count Acc: 0.7919
+Final Count Acc: 0.5859
+True Final Count Acc: 0.6406
+Joint MSE: 0.462129
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_343.pth
+Epoch [344] Batch [0/6] Loss: 0.1031 Count Loss: 0.0040 Motion Loss: 0.3305 Count Acc: 1.0000
+
+Epoch [344] - Time: 10.41s
+Train Loss: 0.0583 | Val Loss: 1.8223
+Train Count Acc: 1.0000 | Val Count Acc: 0.7653
+Final Count Acc: 0.5625
+True Final Count Acc: 0.6797
+Joint MSE: 0.465947
+学习率: 0.000100
+Epoch [345] Batch [0/6] Loss: 0.1001 Count Loss: 0.0015 Motion Loss: 0.3286 Count Acc: 1.0000
+
+Epoch [345] - Time: 10.47s
+Train Loss: 0.0575 | Val Loss: 1.8797
+Train Count Acc: 1.0000 | Val Count Acc: 0.7585
+Final Count Acc: 0.5078
+True Final Count Acc: 0.6953
+Joint MSE: 0.456005
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_345.pth
+Epoch [346] Batch [0/6] Loss: 0.0394 Count Loss: 0.0026 Motion Loss: 0.1228 Count Acc: 1.0000
+
+Epoch [346] - Time: 10.23s
+Train Loss: 0.0538 | Val Loss: 1.6826
+Train Count Acc: 0.9991 | Val Count Acc: 0.7791
+Final Count Acc: 0.5391
+True Final Count Acc: 0.7227
+Joint MSE: 0.455234
+学习率: 0.000100
+Epoch [347] Batch [0/6] Loss: 0.1194 Count Loss: 0.0028 Motion Loss: 0.3888 Count Acc: 1.0000
+
+Epoch [347] - Time: 10.36s
+Train Loss: 0.0688 | Val Loss: 1.6857
+Train Count Acc: 0.9972 | Val Count Acc: 0.7884
+Final Count Acc: 0.5859
+True Final Count Acc: 0.6719
+Joint MSE: 0.464864
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_347.pth
+Epoch [348] Batch [0/6] Loss: 0.0342 Count Loss: 0.0007 Motion Loss: 0.1117 Count Acc: 1.0000
+
+Epoch [348] - Time: 10.43s
+Train Loss: 0.0654 | Val Loss: 2.1088
+Train Count Acc: 0.9980 | Val Count Acc: 0.7404
+Final Count Acc: 0.4844
+True Final Count Acc: 0.7773
+Joint MSE: 0.485784
+学习率: 0.000100
+Epoch [349] Batch [0/6] Loss: 0.0449 Count Loss: 0.0039 Motion Loss: 0.1364 Count Acc: 1.0000
+
+Epoch [349] - Time: 10.25s
+Train Loss: 0.0592 | Val Loss: 1.8595
+Train Count Acc: 1.0000 | Val Count Acc: 0.7731
+Final Count Acc: 0.5703
+True Final Count Acc: 0.6992
+Joint MSE: 0.468685
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Full/10data/check_points/checkpoint_epoch_349.pth
+
+=== 开始 stage_3: 精调计数 ===
+模块 'visual' 已解冻
+模块 'embodiment' 已解冻
+模块 'fusion' 已解冻
+模块 'lstm' 已解冻
+模块 'counting' 已解冻
+模块 'motion' 已冻结
+冻结模块: ['motion']
+损失权重: {'motion': 0.0, 'count': 1.0}
+学习率已重置为 0.0001
+
+训练完成!
+最佳验证准确率: 0.8129
+最佳验证损失: 1.3029
+
+训练成功完成！
+程序结束。
+=== 完成 ===
+结束时间: Sun 20 Jul 20:34:08 BST 2025

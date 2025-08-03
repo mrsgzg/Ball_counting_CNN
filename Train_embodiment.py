@@ -24,7 +24,7 @@ class ModelTrainer:
     def __init__(self, config):
         self.config = config
         self.device = torch.device(config['device'])
-        
+        self.embodiment_loss_weight = config.get('embodiment_loss_weight', 0.3)  # 新增具身损失权重
         # 修改训练阶段配置 - 更适合counting任务
         self.training_stages = {
             'stage_1': {
@@ -37,7 +37,7 @@ class ModelTrainer:
                 'epochs': (config['stage_1_epochs'], config['stage_2_epochs']),
                 'description': '联合训练',
                 'frozen_modules': [],
-                'loss_weights': {'motion': 0.3, 'count': 1.0}  # 更重视计数
+                'loss_weights': {'motion': self.embodiment_loss_weight, 'count': 1.0}  # 更重视计数
             },
             'stage_3': {
                 'epochs': (config['stage_2_epochs'], config['total_epochs']),

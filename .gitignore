@@ -3,3 +3,7 @@ ball_data_collection/
 Tools_script/
 __pycache__/
 Emobdiment_analysis/
+single_image_visualization_results/
+dynamic_vis/
+Final_result/
+pca_analysis

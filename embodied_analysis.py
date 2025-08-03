@@ -76,7 +76,8 @@ class FeatureExtractor:
             'lstm',                # 时序处理层
             'counting_decoder',    # 计数解码层
             'visual_encoder',      # 视觉编码层
-            'embodiment_encoder'   # 具身编码层
+            'embodiment_encoder',
+            'motion_decoder'  # 具身编码层
         ]
         
         detected_layers = []
@@ -867,7 +868,7 @@ def analyze_embodied_counting_model_enhanced(checkpoint_path, val_csv, data_root
             print("🔍 自动检测关键层...")
             key_layers = analyzer.feature_extractor.auto_detect_key_layers()
             if not key_layers:
-                key_layers = ['fusion', 'lstm', 'counting_decoder', 'visual_encoder', 'embodiment_encoder']
+                key_layers = ['fusion', 'lstm', 'counting_decoder', 'visual_encoder', 'embodiment_encoder','motion_decoder']
         else:
             key_layers = specific_layers
         

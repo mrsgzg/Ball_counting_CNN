@@ -1,5 +1,5 @@
 """
-主文件 - 具身计数模型训练程序 (修改版 - 移除纯视觉模式)
+主文件 - 具身计数模型消融实验训练程序
 """
 
 import argparse
@@ -8,12 +8,17 @@ import torch
 import numpy as np
 import random
 import json
-from Train_embodiment import create_trainer
+from Train_embodiment_ablation import create_ablation_trainer
 
 
 def parse_arguments():
     """解析命令行参数"""
-    parser = argparse.ArgumentParser(description='Embodied Counting Model Training')
+    parser = argparse.ArgumentParser(description='Embodied Counting Model Ablation Study')
+    
+    # 消融实验配置
+    parser.add_argument('--model_type', type=str, required=True,
+                        choices=['counting_only', 'visual_only'],
+                        help='Ablation model type: counting_only (embodied but no motion) or visual_only (no embodiment)')
     
     # 基础配置
     parser.add_argument('--resume', type=str, default=None,
@@ -21,7 +26,7 @@ def parse_arguments():
     parser.add_argument('--device', type=str, default='cuda',
                         help='Device to use (cuda/cpu)')
     
-    # 数据路径 - 更新为你的路径
+    # 数据路径
     parser.add_argument('--data_root', type=str, 
                         default='/mnt/iusers01/fatpou01/compsci01/k09562zs/scratch/Ball_counting_CNN/ball_data_collection',
                         help='Data root directory')
@@ -41,14 +46,8 @@ def parse_arguments():
                         help='Weight decay for Adam optimizer')
     parser.add_argument('--grad_clip_norm', type=float, default=1.0,
                         help='Gradient clipping norm')
-    parser.add_argument('--total_epochs', type=int, default=150,
-                        help='Total training epochs')
-    
-    # 具身模型训练阶段参数
-    parser.add_argument('--stage_1_epochs', type=int, default=0,
-                        help='Epochs for stage 1 (visual+embodiment pretraining)')
-    parser.add_argument('--stage_2_epochs', type=int, default=350,
-                        help='Epochs for stage 2 (joint training)')
+    parser.add_argument('--total_epochs', type=int, default=300,
+                        help='Total training epochs (reduced for ablation)')
     
     # 模型参数
     parser.add_argument('--cnn_layers', type=int, default=3,
@@ -61,27 +60,24 @@ def parse_arguments():
                         help='LSTM hidden size')
     parser.add_argument('--feature_dim', type=int, default=256,
                         help='Feature dimension')
-    parser.add_argument('--attention_heads', type=int, default=1,
+    parser.add_argument('--attention_heads', type=int, default=2,
                         help='Number of attention heads')
-    parser.add_argument('--joint_dim', type=int, default=7,  # 修改默认值为7
+    parser.add_argument('--joint_dim', type=int, default=7,
                         help='Joint dimension (7 for your robot joints)')
     parser.add_argument('--dropout', type=float, default=0.1,
                         help='Dropout rate')
     
-    # 图像处理参数 - 新增
+    # 图像处理参数
     parser.add_argument('--image_mode', type=str, default='rgb',
                         choices=['rgb', 'grayscale'],
                         help='Image processing mode (rgb or grayscale)')
     
     # 学习率调度参数
-    parser.add_argument('--scheduler_type', type=str, default='none',
+    parser.add_argument('--scheduler_type', type=str, default='cosine',
                         choices=['cosine', 'plateau', 'none'],
                         help='LR scheduler type')
     parser.add_argument('--scheduler_patience', type=int, default=5,
                         help='Patience for plateau scheduler')
-
-    parser.add_argument('--embodiment_loss_weight', type=float, default=0.3,
-                        help='Weight for embodiment loss in joint training')
     
     # 数据处理参数
     parser.add_argument('--sequence_length', type=int, default=11,
@@ -90,11 +86,11 @@ def parse_arguments():
                         help='Normalize input data')
     
     # 保存和日志参数
-    parser.add_argument('--save_dir', type=str, default='./scratch/Ball_counting_CNN/Result_data/Embodiment/2025_07_08/Directly_train_stage2/checkpoints',
+    parser.add_argument('--save_dir', type=str, default='./scratch/Ball_counting_CNN/Result_data/checkpoints/ablation',
                         help='Directory to save checkpoints')
-    parser.add_argument('--log_dir', type=str, default='./scratch/Ball_counting_CNN/Result_data/Embodiment/2025_07_08/Directly_train_stage2/logs',
+    parser.add_argument('--log_dir', type=str, default='./scratch/Ball_counting_CNN/Result_data/logs/ablation',
                         help='Directory to save logs')
-    parser.add_argument('--save_every', type=int, default=2,
+    parser.add_argument('--save_every', type=int, default=10,
                         help='Save checkpoint every N epochs')
     parser.add_argument('--print_freq', type=int, default=10,
                         help='Print frequency (in batches)')
@@ -119,14 +115,25 @@ def set_random_seed(seed):
     torch.backends.cudnn.benchmark = False
 
 
-def print_config(config):
+def print_config(config, model_type):
     """打印配置信息"""
     print("="*60)
-    print("具身计数模型训练配置")
+    print(f"具身计数模型消融实验 - {model_type.upper()}")
     print("="*60)
     
+    # 消融实验信息
+    print("消融实验信息:")
+    if model_type == 'counting_only':
+        print("  模型类型: 纯计数具身模型")
+        print("  特点: 保留具身信息，移除关节预测")
+        print("  目的: 验证关节预测任务对计数性能的影响")
+    elif model_type == 'visual_only':
+        print("  模型类型: 纯视觉计数模型")
+        print("  特点: 移除具身信息，只使用视觉")
+        print("  目的: 验证具身信息对计数性能的价值")
+    
     # 基础配置
-    print("基础配置:")
+    print("\n基础配置:")
     basic_keys = ['device', 'batch_size', 'learning_rate', 'total_epochs', 'image_mode']
     for key in basic_keys:
         if key in config:
@@ -136,13 +143,6 @@ def print_config(config):
     print("\n数据配置:")
     data_keys = ['data_root', 'train_csv', 'val_csv', 'sequence_length', 'normalize']
     for key in data_keys:
-        if key in config:
-            print(f"  {key}: {config[key]}")
-    
-    # 训练阶段配置
-    print("\n训练阶段:")
-    stage_keys = ['stage_1_epochs', 'stage_2_epochs']
-    for key in stage_keys:
         if key in config:
             print(f"  {key}: {config[key]}")
     
@@ -186,12 +186,16 @@ def validate_paths(config):
     return True
 
 
-def save_config(config, save_path):
+def save_config(config, save_path, model_type):
     """保存配置文件"""
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     
     # 创建可序列化的配置副本
-    serializable_config = {}
+    serializable_config = {
+        'model_type': model_type,
+        'experiment_type': 'ablation_study'
+    }
+    
     for key, value in config.items():
         if isinstance(value, dict):
             serializable_config[key] = dict(value)
@@ -229,7 +233,7 @@ def build_config_from_args(args):
         'val_csv': args.val_csv,
         'sequence_length': args.sequence_length,
         'normalize': args.normalize,
-        'image_mode': args.image_mode,  # 新增
+        'image_mode': args.image_mode,
         
         # 模型配置
         'model_config': model_config,
@@ -241,13 +245,11 @@ def build_config_from_args(args):
         'adam_betas': (0.9, 0.999),
         'grad_clip_norm': args.grad_clip_norm,
         'total_epochs': args.total_epochs,
-        'stage_1_epochs': args.stage_1_epochs,
-        'stage_2_epochs': args.stage_2_epochs,
         
         # 学习率调度器
         'scheduler_type': args.scheduler_type,
         'scheduler_patience': args.scheduler_patience,
-        'embodiment_loss_weight': args.embodiment_loss_weight,
+        
         # 保存和日志
         'save_dir': args.save_dir,
         'log_dir': args.log_dir,
@@ -270,12 +272,13 @@ def main():
     # 解析命令行参数并构建配置
     args = parse_arguments()
     config = build_config_from_args(args)
+    model_type = args.model_type
     
     # 设置随机种子
     set_random_seed(config['seed'])
     
     # 打印配置
-    print_config(config)
+    print_config(config, model_type)
     
     # 验证路径
     if not validate_paths(config):
@@ -287,16 +290,16 @@ def main():
     os.makedirs(config['log_dir'], exist_ok=True)
     
     # 保存当前配置
-    config_save_path = os.path.join(config['save_dir'], 'embodied_config.json')
-    save_config(config, config_save_path)
+    config_save_path = os.path.join(config['save_dir'], f'{model_type}_config.json')
+    save_config(config, config_save_path, model_type)
     
-    # 创建具身模型训练器
-    print(f"\n正在初始化具身计数模型训练器...")
+    # 创建消融实验训练器
+    print(f"\n正在初始化消融实验训练器...")
+    print(f"模型类型: {model_type}")
     print(f"图像模式: {config['image_mode'].upper()}")
-    print(f"关节维度: {config['model_config']['joint_dim']}")
     
     try:
-        trainer = create_trainer(config)
+        trainer = create_ablation_trainer(config, model_type)
     except Exception as e:
         print(f"初始化训练器失败: {e}")
         import traceback
@@ -313,15 +316,30 @@ def main():
             return
     
     # 开始训练
-    print(f"\n开始训练具身计数模型...")
-    print(f"训练阶段:")
-    print(f"  阶段1 (0-{config['stage_1_epochs']}): 预训练视觉特征+具身编码")
-    print(f"  阶段2 ({config['stage_1_epochs']}-{config['stage_2_epochs']}): 联合训练")
-    print(f"  阶段3 ({config['stage_2_epochs']}-{config['total_epochs']}): 精调计数")
+    print(f"\n开始训练消融实验模型...")
+    
+    if model_type == 'counting_only':
+        print("实验目标: 验证关节预测任务对计数性能的影响")
+        print("对比对象: 完整具身模型 vs 纯计数具身模型")
+    elif model_type == 'visual_only':
+        print("实验目标: 验证具身信息对计数性能的价值")
+        print("对比对象: 完整具身模型 vs 纯视觉模型")
     
     try:
         trainer.train()
         print("\n训练成功完成！")
+        
+        # 打印实验结果总结
+        print(f"\n=== 实验结果总结 ===")
+        print(f"模型类型: {model_type}")
+        print(f"最佳验证准确率: {trainer.best_val_accuracy:.4f}")
+        print(f"最佳验证损失: {trainer.best_val_loss:.4f}")
+        
+        if model_type == 'counting_only':
+            print("结论: 请与完整具身模型对比，分析关节预测任务的影响")
+        elif model_type == 'visual_only':
+            print("结论: 请与完整具身模型对比，分析具身信息的价值")
+        
     except KeyboardInterrupt:
         print("\n训练被用户中断")
         # 保存当前状态
@@ -359,29 +377,52 @@ def print_usage_examples():
     print("\n使用示例:")
     print("="*60)
     
-    print("1. 基础训练 (RGB模式):")
-    print("python Main.py --image_mode rgb --batch_size 8")
+    print("1. 训练纯计数具身模型 (有具身信息，无关节预测):")
+    print("python Main_embodiment_ablation.py --model_type counting_only")
     
-    print("\n2. 灰度模式训练:")
-    print("python Main.py --image_mode grayscale --batch_size 16")
+    print("\n2. 训练纯视觉模型 (无具身信息):")
+    print("python Main_embodiment_ablation.py --model_type visual_only")
     
     print("\n3. 自定义训练参数:")
-    print("python Main.py --learning_rate 5e-5 --total_epochs 300 --stage_1_epochs 30")
+    print("python Main_embodiment_ablation.py --model_type counting_only --batch_size 16 --learning_rate 5e-5")
     
-    print("\n4. 从检查点恢复:")
-    print("python Main.py --resume ./checkpoints/embodied/best_model.pth")
+    print("\n4. 灰度模式训练:")
+    print("python Main_embodiment_ablation.py --model_type visual_only --image_mode grayscale")
     
-    print("\n5. 自定义数据路径:")
-    print("python Main.py --data_root /path/to/data --train_csv /path/to/train.csv")
+    print("\n5. 从检查点恢复:")
+    print("python Main_embodiment_ablation.py --model_type counting_only --resume ./checkpoints/counting_only_checkpoint.pth")
+    
+    print("\n6. 完整的消融实验流程:")
+    print("# 第一步: 训练纯计数具身模型")
+    print("python Main_embodiment_ablation.py --model_type counting_only --total_epochs 200")
+    print()
+    print("# 第二步: 训练纯视觉模型")
+    print("python Main_embodiment_ablation.py --model_type visual_only --total_epochs 200")
+    print()
+    print("# 第三步: 对比三个模型的结果")
+    print("# - 完整具身模型 (从 Main.py 训练)")
+    print("# - 纯计数具身模型 (从上面第一步)")
+    print("# - 纯视觉模型 (从上面第二步)")
+    
+    print("\n7. 快速测试 (较少epoch):")
+    print("python Main_embodiment_ablation.py --model_type counting_only --total_epochs 50 --save_every 5")
     
     print("="*60)
+    print("\n消融实验设计说明:")
+    print("- counting_only: 验证多任务学习的影响 (关节预测是否有助于计数)")
+    print("- visual_only: 验证具身信息的价值 (关节位置信息是否重要)")
+    print("- 通过对比三个模型可以回答:")
+    print("  1. 具身信息对计数任务的贡献")
+    print("  2. 多任务学习(计数+关节预测)的效果")
+    print("  3. 哪个组件对性能影响最大")
 
 
 if __name__ == '__main__':
     # 检查是否请求帮助
     import sys
     if len(sys.argv) == 1:
-        print("具身计数模型训练程序")
+        print("具身计数模型消融实验程序")
+        print("用于验证具身信息和多任务学习的价值")
         print("使用 --help 查看完整参数列表")
         print_usage_examples()
     else:

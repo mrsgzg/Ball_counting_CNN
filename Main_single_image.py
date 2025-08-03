@@ -1,5 +1,5 @@
 """
-主文件 - 单图像分类模型训练程序
+主文件 - 单图像分类模型训练程序 (清理版)
 """
 
 import argparse
@@ -33,7 +33,7 @@ def parse_arguments():
                         help='Validation CSV file path')
     
     # 训练参数
-    parser.add_argument('--batch_size', type=int, default=16,
+    parser.add_argument('--batch_size', type=int, default=32,
                         help='Batch size')
     parser.add_argument('--learning_rate', type=float, default=1e-4,
                         help='Learning rate')
@@ -41,7 +41,7 @@ def parse_arguments():
                         help='Weight decay for Adam optimizer')
     parser.add_argument('--grad_clip_norm', type=float, default=1.0,
                         help='Gradient clipping norm')
-    parser.add_argument('--total_epochs', type=int, default=500,
+    parser.add_argument('--total_epochs', type=int, default=250,
                         help='Total training epochs')
     
     # 模型参数
@@ -55,16 +55,11 @@ def parse_arguments():
                         help='Number of attention heads')
     parser.add_argument('--dropout', type=float, default=0.1,
                         help='Dropout rate')
-    parser.add_argument('--num_classes', type=int, default=10,
-                        help='Number of output classes (0-10 balls)')
     
     # 图像处理参数
     parser.add_argument('--image_mode', type=str, default='rgb',
                         choices=['rgb', 'grayscale'],
                         help='Image processing mode (rgb or grayscale)')
-    parser.add_argument('--frame_selection', type=str, default='all',
-                        choices=['all', 'final', 'keyframes'],
-                        help='Frame selection strategy')
     
     # 注意力机制
     parser.add_argument('--use_attention', action='store_true', default=True,
@@ -90,9 +85,9 @@ def parse_arguments():
                         help='Directory to save checkpoints')
     parser.add_argument('--log_dir', type=str, default='./scratch/Ball_counting_CNN/Result_data/logs/single_image',
                         help='Directory to save logs')
-    parser.add_argument('--save_every', type=int, default=20,
+    parser.add_argument('--save_every', type=int, default=10,
                         help='Save checkpoint every N epochs')
-    parser.add_argument('--print_freq', type=int, default=50,
+    parser.add_argument('--print_freq', type=int, default=10,
                         help='Print frequency (in batches)')
     
     # 其他
@@ -123,7 +118,7 @@ def print_config(config):
     
     # 基础配置
     print("基础配置:")
-    basic_keys = ['device', 'batch_size', 'learning_rate', 'total_epochs', 'image_mode', 'frame_selection']
+    basic_keys = ['device', 'batch_size', 'learning_rate', 'total_epochs', 'image_mode']
     for key in basic_keys:
         if key in config:
             print(f"  {key}: {config[key]}")
@@ -137,6 +132,7 @@ def print_config(config):
     
     # 模型配置
     print("\n模型配置:")
+    print(f"  use_attention: {config['use_attention']}")
     for key, value in config['model_config'].items():
         print(f"  {key}: {value}")
     
@@ -223,11 +219,9 @@ def build_config_from_args(args):
         'train_csv': args.train_csv,
         'val_csv': args.val_csv,
         'image_mode': args.image_mode,
-        'frame_selection': args.frame_selection,
         
         # 模型配置
         'model_config': model_config,
-        'num_classes': args.num_classes,
         'use_attention': use_attention,
         
         # 训练配置
@@ -289,8 +283,8 @@ def main():
     # 创建训练器
     print(f"\n正在初始化单图像分类模型训练器...")
     print(f"图像模式: {config['image_mode'].upper()}")
-    print(f"帧选择策略: {config['frame_selection']}")
     print(f"使用注意力机制: {config['use_attention']}")
+    print(f"标签范围: 1-10 (对应10个类别)")
     
     try:
         trainer = create_single_image_trainer(config)
@@ -311,8 +305,8 @@ def main():
     
     # 开始训练
     print(f"\n开始训练单图像分类模型...")
-    print(f"对比基线: 纯视觉CNN分类器")
-    print(f"目标: 评估embodiment信息的价值")
+    print(f"目标: 作为具身计数模型的对比基线")
+    print(f"使用所有帧图像，标签为对应序列的ball_count")
     
     try:
         trainer.train()
@@ -354,14 +348,14 @@ def print_usage_examples():
     print("\n使用示例:")
     print("="*60)
     
-    print("1. 基础训练 (RGB模式，使用所有帧):")
-    print("python Main_single_image.py --image_mode rgb --frame_selection all")
+    print("1. 基础训练 (RGB模式):")
+    print("python Main_single_image.py --image_mode rgb --batch_size 32")
     
     print("\n2. 灰度模式训练:")
-    print("python Main_single_image.py --image_mode grayscale --batch_size 128")
+    print("python Main_single_image.py --image_mode grayscale --batch_size 64")
     
-    print("\n3. 只使用最终帧训练:")
-    print("python Main_single_image.py --frame_selection final --learning_rate 5e-4")
+    print("\n3. 快速测试 (少量epoch):")
+    print("python Main_single_image.py --total_epochs 10 --batch_size 16")
     
     print("\n4. 不使用注意力机制:")
     print("python Main_single_image.py --no_attention")
@@ -369,16 +363,22 @@ def print_usage_examples():
     print("\n5. 从检查点恢复:")
     print("python Main_single_image.py --resume ./checkpoints/single_image/best_single_image_model.pth")
     
-    print("\n6. 自定义训练参数:")
-    print("python Main_single_image.py --learning_rate 2e-3 --total_epochs 150 --batch_size 32")
+    print("\n6. 自定义学习率和优化:")
+    print("python Main_single_image.py --learning_rate 2e-4 --scheduler_type plateau")
     
-    print("\n7. 使用关键帧策略:")
-    print("python Main_single_image.py --frame_selection keyframes --attention_heads 8")
+    print("\n7. 带标签平滑的训练:")
+    print("python Main_single_image.py --label_smoothing 0.1")
     
-    print("\n8. 带标签平滑的训练:")
-    print("python Main_single_image.py --label_smoothing 0.1 --scheduler_type plateau")
+    print("\n8. 大批次训练:")
+    print("python Main_single_image.py --batch_size 128 --learning_rate 2e-4")
     
     print("="*60)
+    
+    print("\n注意事项:")
+    print("- 数据标签范围: 1-10")
+    print("- 模型输出: 10个类别 (对应标签1-10)")
+    print("- 所有帧图像都会被使用，标签统一为序列的ball_count")
+    print("- 适合与具身计数模型进行对比实验")
 
 
 if __name__ == '__main__':

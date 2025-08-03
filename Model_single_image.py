@@ -129,13 +129,13 @@ class SpatialAttention(nn.Module):
 
 
 class SingleImageClassifier(nn.Module):
-    """单图像分类模型 - 带空间注意力的CNN分类器"""
+    """单图像分类模型 - 带空间注意力的CNN分类器 (标签1-10)"""
     
     def __init__(self, 
                  cnn_layers=3,
                  cnn_channels=[64, 128, 256],
                  input_channels=3,
-                 num_classes=11,
+                 num_classes=10,  # 修改：对应1-10的10个类别
                  hidden_dim=256,
                  attention_heads=4,
                  use_attention=True,
@@ -173,7 +173,7 @@ class SingleImageClassifier(nn.Module):
             nn.Linear(hidden_dim, hidden_dim // 2),
             nn.ReLU(),
             nn.Dropout(dropout),
-            nn.Linear(hidden_dim // 2, num_classes)
+            nn.Linear(hidden_dim // 2, num_classes)  # 输出10个类别 (对应标签1-10)
         )
         
         # 用于存储可视化数据
@@ -184,7 +184,7 @@ class SingleImageClassifier(nn.Module):
         print(f"  CNN层数: {cnn_layers}")
         print(f"  CNN通道: {cnn_channels}")
         print(f"  输入通道: {input_channels}")
-        print(f"  输出类别: {num_classes}")
+        print(f"  输出类别: {num_classes} (对应标签1-10)")
         print(f"  特征维度: {feature_dim}")
         print(f"  隐藏维度: {hidden_dim}")
         print(f"  使用注意力: {use_attention}")
@@ -201,7 +201,7 @@ class SingleImageClassifier(nn.Module):
             return_attention: 是否返回注意力权重
             
         Returns:
-            logits: [batch, num_classes]
+            logits: [batch, num_classes] - 输出10个类别的logits (对应标签1-10)
             features: [batch, feature_dim] (如果return_features=True)
             attention_weights: [batch, heads, HW, HW] (如果return_attention=True且使用attention)
         """
@@ -224,7 +224,7 @@ class SingleImageClassifier(nn.Module):
         self.last_features = pooled_features.detach()
         
         # 分类
-        logits = self.classifier(pooled_features)  # [batch, num_classes]
+        logits = self.classifier(pooled_features)  # [batch, num_classes] (10个类别)
         
         # 根据需要返回额外信息
         results = [logits]
@@ -239,16 +239,20 @@ class SingleImageClassifier(nn.Module):
             return tuple(results)
     
     def predict(self, images):
-        """预测函数"""
+        """
+        预测函数 - 返回原始标签值 (1-10)
+        """
         with torch.no_grad():
             logits = self.forward(images)
             probs = F.softmax(logits, dim=-1)
-            predictions = torch.argmax(logits, dim=-1)
+            class_indices = torch.argmax(logits, dim=-1)  # 0-9
+            predictions = class_indices + 1  # 转换为1-10标签
             
         return {
             'logits': logits,
             'probabilities': probs,
-            'predictions': predictions
+            'class_indices': class_indices,  # 0-9 (用于计算loss)
+            'predictions': predictions       # 1-10 (实际标签)
         }
     
     def get_features(self, images):
@@ -329,7 +333,7 @@ def create_single_image_model(config):
         'cnn_layers': model_config.get('cnn_layers', 3),
         'cnn_channels': model_config.get('cnn_channels', [64, 128, 256]),
         'input_channels': input_channels,
-        'num_classes': config.get('num_classes', 11),
+        'num_classes': 10,  # 固定为10个类别 (对应标签1-10)
         'hidden_dim': model_config.get('feature_dim', 256),
         'attention_heads': model_config.get('attention_heads', 4),
         'use_attention': config.get('use_attention', True),
@@ -337,9 +341,33 @@ def create_single_image_model(config):
     }
     
     model = SingleImageClassifier(**model_params)
-    print("创建带注意力机制的单图像分类模型")
+    print("创建带注意力机制的单图像分类模型 (标签1-10)")
     
     return model
+
+
+def convert_labels_for_loss(labels):
+    """
+    将标签从1-10转换为0-9用于计算loss
+    
+    Args:
+        labels: [batch] - 标签值1-10
+    Returns:
+        class_indices: [batch] - 类别索引0-9
+    """
+    return labels - 1
+
+
+def convert_predictions_to_labels(class_indices):
+    """
+    将类别索引从0-9转换为标签1-10
+    
+    Args:
+        class_indices: [batch] - 类别索引0-9
+    Returns:
+        labels: [batch] - 标签值1-10
+    """
+    return class_indices + 1
 
 
 # 测试代码
@@ -349,14 +377,14 @@ if __name__ == "__main__":
     # 测试配置
     config = {
         'image_mode': 'rgb',
-        'num_classes': 10,
         'model_config': {
             'cnn_layers': 3,
             'cnn_channels': [64, 128, 256],
             'feature_dim': 256,
-            'dropout': 0.1
+            'dropout': 0.1,
+            'attention_heads': 4
         },
-        'use_regularization': False
+        'use_attention': True
     }
     
     # 创建模型
@@ -387,5 +415,24 @@ if __name__ == "__main__":
     print(f"RGB输入形状: {rgb_input.shape}")
     print(f"RGB输出形状: {rgb_output.shape}")
     print(f"RGB预测形状: {rgb_pred['predictions'].shape}")
-    print(f"预测范围: [{rgb_pred['predictions'].min()}, {rgb_pred['predictions'].max()}]")
+    print(f"类别索引范围: [{rgb_pred['class_indices'].min()}, {rgb_pred['class_indices'].max()}]")
+    print(f"预测标签范围: [{rgb_pred['predictions'].min()}, {rgb_pred['predictions'].max()}]")
     
+    # 测试标签转换
+    print(f"\n=== 标签转换测试 ===")
+    test_labels = torch.tensor([1, 5, 10], device=device)
+    class_indices = convert_labels_for_loss(test_labels)
+    back_to_labels = convert_predictions_to_labels(class_indices)
+    
+    print(f"原始标签: {test_labels}")
+    print(f"类别索引: {class_indices}")
+    print(f"转换回标签: {back_to_labels}")
+    
+    print("\n=== 训练时的使用方法 ===")
+    print("# 计算loss时:")
+    print("class_indices = convert_labels_for_loss(labels)  # 1-10 -> 0-9")
+    print("loss = F.cross_entropy(logits, class_indices)")
+    print()
+    print("# 预测时:")
+    print("pred_result = model.predict(images)")
+    print("predictions = pred_result['predictions']  # 直接得到1-10的标签")

@@ -1,0 +1,3809 @@
+=== 作业信息 ===
+节点: node802
+GPU: 1 (ID: 0)
+CPU核心: 4
+内存: 20480 MB
+开始时间: Mon 21 Jul 17:37:47 BST 2025
+=== 激活环境 ===
+/var/spool/slurmd/job3597684/slurm_script: line 25: --version: command not found
+Python版本: 
+当前环境: cgtest
+=== 开始训练 ===
+============================================================
+具身计数模型消融实验 - VISUAL_ONLY
+============================================================
+消融实验信息:
+  模型类型: 纯视觉计数模型
+  特点: 移除具身信息，只使用视觉
+  目的: 验证具身信息对计数性能的价值
+
+基础配置:
+  device: cuda
+  batch_size: 16
+  learning_rate: 0.0001
+  total_epochs: 350
+  image_mode: rgb
+
+数据配置:
+  data_root: /mnt/iusers01/fatpou01/compsci01/k09562zs/scratch/Ball_counting_CNN/ball_data_collection
+  train_csv: scratch/Ball_counting_CNN/Tools_script/ball_counting_dataset_train_50.csv
+  val_csv: scratch/Ball_counting_CNN/Tools_script/ball_counting_dataset_val.csv
+  sequence_length: 11
+  normalize: True
+
+模型配置:
+  cnn_layers: 3
+  cnn_channels: [64, 128, 256]
+  lstm_layers: 1
+  lstm_hidden_size: 512
+  feature_dim: 256
+  attention_heads: 1
+  joint_dim: 7
+  dropout: 0.1
+
+保存配置:
+  save_dir: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points
+  log_dir: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/logs
+  save_every: 2
+============================================================
+所有路径验证通过
+配置保存到: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_config.json
+
+正在初始化消融实验训练器...
+模型类型: visual_only
+图像模式: RGB
+VisualOnlyCountingModel 初始化完成 - 只使用视觉信息进行计数
+创建纯视觉计数模型 (无具身信息，无关节预测)
+=== 创建数据加载器 - 图像模式: RGB ===
+归一化统计信息已从 /mnt/iusers01/fatpou01/compsci01/k09562zs/scratch/Ball_counting_CNN/ball_data_collection/ball_normalization_stats.json 加载
+图像处理模式: rgb
+图像标准化: True
+使用ImageNet标准化参数
+归一化统计信息已从 /mnt/iusers01/fatpou01/compsci01/k09562zs/scratch/Ball_counting_CNN/ball_data_collection/ball_normalization_stats.json 加载
+图像处理模式: rgb
+图像标准化: True
+使用ImageNet标准化参数
+AblationTrainer initialized:
+  Model Type: visual_only
+  Model Name: VisualOnlyCountingModel
+  Has Embodiment: False
+  Has Motion Decoder: False
+  Model parameters: 2,245,899
+  Training samples: 472
+  Validation samples: 242
+  Image mode: RGB
+
+开始训练消融实验模型...
+实验目标: 验证具身信息对计数性能的价值
+对比对象: 完整具身模型 vs 纯视觉模型
+
+开始训练 VisualOnlyCountingModel
+总计 350 个epoch
+设备: cuda
+模型类型: visual_only
+进行初始验证...
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/initial_visual_only_model.pth
+初始模型已保存，初始验证准确率: 0.0142
+Epoch [0] Batch [0/30] Loss: 2.4050 Count Acc: 0.0057
+Epoch [0] Batch [10/30] Loss: 2.3798 Count Acc: 0.3409
+Epoch [0] Batch [20/30] Loss: 2.3120 Count Acc: 0.2955
+
+Epoch [0] - Time: 49.99s
+Train Loss: 2.3205 | Val Loss: 2.1371
+Train Count Acc: 0.2818 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.3498
+Epoch [1] Batch [0/30] Loss: 2.2257 Count Acc: 0.2955
+Epoch [1] Batch [10/30] Loss: 2.1570 Count Acc: 0.2443
+Epoch [1] Batch [20/30] Loss: 1.7915 Count Acc: 0.4489
+
+Epoch [1] - Time: 21.28s
+Train Loss: 1.9493 | Val Loss: 1.8427
+Train Count Acc: 0.3670 | Val Count Acc: 0.3498
+Final Count Acc: 0.3164
+True Final Count Acc: 0.3164
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_1.pth
+Epoch [2] Batch [0/30] Loss: 1.9780 Count Acc: 0.2955
+Epoch [2] Batch [10/30] Loss: 1.8258 Count Acc: 0.2614
+Epoch [2] Batch [20/30] Loss: 1.7264 Count Acc: 0.3011
+
+Epoch [2] - Time: 20.73s
+Train Loss: 1.5886 | Val Loss: 1.4403
+Train Count Acc: 0.4038 | Val Count Acc: 0.4148
+Final Count Acc: 0.4297
+True Final Count Acc: 0.3164
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.4148
+Epoch [3] Batch [0/30] Loss: 1.5641 Count Acc: 0.3693
+Epoch [3] Batch [10/30] Loss: 1.2794 Count Acc: 0.5000
+Epoch [3] Batch [20/30] Loss: 1.3889 Count Acc: 0.4148
+
+Epoch [3] - Time: 20.96s
+Train Loss: 1.3339 | Val Loss: 1.3003
+Train Count Acc: 0.4583 | Val Count Acc: 0.3938
+Final Count Acc: 0.3828
+True Final Count Acc: 0.3164
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_3.pth
+Epoch [4] Batch [0/30] Loss: 1.0693 Count Acc: 0.5852
+Epoch [4] Batch [10/30] Loss: 1.2518 Count Acc: 0.4318
+Epoch [4] Batch [20/30] Loss: 0.9543 Count Acc: 0.6307
+
+Epoch [4] - Time: 20.02s
+Train Loss: 1.1143 | Val Loss: 0.9957
+Train Count Acc: 0.5511 | Val Count Acc: 0.5824
+Final Count Acc: 0.5938
+True Final Count Acc: 0.3164
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.5824
+Epoch [5] Batch [0/30] Loss: 1.0877 Count Acc: 0.5909
+Epoch [5] Batch [10/30] Loss: 1.0773 Count Acc: 0.4659
+Epoch [5] Batch [20/30] Loss: 0.9681 Count Acc: 0.5568
+
+Epoch [5] - Time: 19.35s
+Train Loss: 0.9318 | Val Loss: 0.8385
+Train Count Acc: 0.6267 | Val Count Acc: 0.7553
+Final Count Acc: 0.5898
+True Final Count Acc: 0.3633
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.7553
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_5.pth
+Epoch [6] Batch [0/30] Loss: 1.2295 Count Acc: 0.4773
+Epoch [6] Batch [10/30] Loss: 1.9109 Count Acc: 0.3636
+Epoch [6] Batch [20/30] Loss: 0.8857 Count Acc: 0.5795
+
+Epoch [6] - Time: 19.39s
+Train Loss: 0.9076 | Val Loss: 0.6902
+Train Count Acc: 0.6665 | Val Count Acc: 0.7773
+Final Count Acc: 0.7305
+True Final Count Acc: 0.3164
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.7773
+Epoch [7] Batch [0/30] Loss: 0.5636 Count Acc: 0.8182
+Epoch [7] Batch [10/30] Loss: 1.1122 Count Acc: 0.5341
+Epoch [7] Batch [20/30] Loss: 0.5857 Count Acc: 0.8182
+
+Epoch [7] - Time: 19.43s
+Train Loss: 0.7543 | Val Loss: 0.6282
+Train Count Acc: 0.7313 | Val Count Acc: 0.7670
+Final Count Acc: 0.6523
+True Final Count Acc: 0.3164
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_7.pth
+Epoch [8] Batch [0/30] Loss: 0.4903 Count Acc: 0.8750
+Epoch [8] Batch [10/30] Loss: 0.5558 Count Acc: 0.7784
+Epoch [8] Batch [20/30] Loss: 0.8660 Count Acc: 0.6080
+
+Epoch [8] - Time: 19.34s
+Train Loss: 0.6359 | Val Loss: 0.5234
+Train Count Acc: 0.7720 | Val Count Acc: 0.8771
+Final Count Acc: 0.6289
+True Final Count Acc: 0.5391
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.8771
+Epoch [9] Batch [0/30] Loss: 1.2286 Count Acc: 0.5057
+Epoch [9] Batch [10/30] Loss: 0.6316 Count Acc: 0.7557
+Epoch [9] Batch [20/30] Loss: 0.4949 Count Acc: 0.8239
+
+Epoch [9] - Time: 19.16s
+Train Loss: 0.5603 | Val Loss: 0.4486
+Train Count Acc: 0.8011 | Val Count Acc: 0.8512
+Final Count Acc: 0.6953
+True Final Count Acc: 0.4961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_9.pth
+Epoch [10] Batch [0/30] Loss: 0.7387 Count Acc: 0.6932
+Epoch [10] Batch [10/30] Loss: 0.4352 Count Acc: 0.8864
+Epoch [10] Batch [20/30] Loss: 0.3796 Count Acc: 0.9091
+
+Epoch [10] - Time: 19.15s
+Train Loss: 0.5120 | Val Loss: 0.3784
+Train Count Acc: 0.8197 | Val Count Acc: 0.9343
+Final Count Acc: 0.7930
+True Final Count Acc: 0.7422
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.9343
+Epoch [11] Batch [0/30] Loss: 0.3658 Count Acc: 0.8977
+Epoch [11] Batch [10/30] Loss: 0.4537 Count Acc: 0.8580
+Epoch [11] Batch [20/30] Loss: 0.4107 Count Acc: 0.8182
+
+Epoch [11] - Time: 19.16s
+Train Loss: 0.5196 | Val Loss: 0.3234
+Train Count Acc: 0.8197 | Val Count Acc: 0.9109
+Final Count Acc: 0.7930
+True Final Count Acc: 0.5391
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_11.pth
+Epoch [12] Batch [0/30] Loss: 0.6763 Count Acc: 0.7159
+Epoch [12] Batch [10/30] Loss: 0.2988 Count Acc: 0.9602
+Epoch [12] Batch [20/30] Loss: 1.2616 Count Acc: 0.5682
+
+Epoch [12] - Time: 19.24s
+Train Loss: 0.5998 | Val Loss: 0.3466
+Train Count Acc: 0.7858 | Val Count Acc: 0.8874
+Final Count Acc: 0.7891
+True Final Count Acc: 0.7656
+学习率: 0.000100
+Epoch [13] Batch [0/30] Loss: 1.5207 Count Acc: 0.3864
+Epoch [13] Batch [10/30] Loss: 0.4175 Count Acc: 0.8011
+Epoch [13] Batch [20/30] Loss: 0.6964 Count Acc: 0.7045
+
+Epoch [13] - Time: 19.62s
+Train Loss: 0.9814 | Val Loss: 0.6411
+Train Count Acc: 0.6598 | Val Count Acc: 0.6932
+Final Count Acc: 0.4805
+True Final Count Acc: 0.3164
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_13.pth
+Epoch [14] Batch [0/30] Loss: 0.4844 Count Acc: 0.7614
+Epoch [14] Batch [10/30] Loss: 0.3702 Count Acc: 0.8977
+Epoch [14] Batch [20/30] Loss: 0.6952 Count Acc: 0.6420
+
+Epoch [14] - Time: 19.49s
+Train Loss: 0.5343 | Val Loss: 0.5749
+Train Count Acc: 0.7847 | Val Count Acc: 0.7646
+Final Count Acc: 0.5391
+True Final Count Acc: 0.8750
+学习率: 0.000100
+Epoch [15] Batch [0/30] Loss: 0.3509 Count Acc: 0.8920
+Epoch [15] Batch [10/30] Loss: 0.1783 Count Acc: 0.9886
+Epoch [15] Batch [20/30] Loss: 0.5148 Count Acc: 0.7898
+
+Epoch [15] - Time: 19.54s
+Train Loss: 0.4291 | Val Loss: 0.3731
+Train Count Acc: 0.8502 | Val Count Acc: 0.8345
+Final Count Acc: 0.6797
+True Final Count Acc: 0.7422
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_15.pth
+Epoch [16] Batch [0/30] Loss: 0.4401 Count Acc: 0.8352
+Epoch [16] Batch [10/30] Loss: 0.3889 Count Acc: 0.8182
+Epoch [16] Batch [20/30] Loss: 0.2756 Count Acc: 0.9034
+
+Epoch [16] - Time: 19.90s
+Train Loss: 0.5444 | Val Loss: 0.6046
+Train Count Acc: 0.7928 | Val Count Acc: 0.7337
+Final Count Acc: 0.5586
+True Final Count Acc: 0.3242
+学习率: 0.000100
+Epoch [17] Batch [0/30] Loss: 0.8021 Count Acc: 0.6364
+Epoch [17] Batch [10/30] Loss: 0.3843 Count Acc: 0.8352
+Epoch [17] Batch [20/30] Loss: 0.1728 Count Acc: 0.9489
+
+Epoch [17] - Time: 19.17s
+Train Loss: 0.4348 | Val Loss: 0.4145
+Train Count Acc: 0.8125 | Val Count Acc: 0.8011
+Final Count Acc: 0.6250
+True Final Count Acc: 0.9141
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_17.pth
+Epoch [18] Batch [0/30] Loss: 0.3255 Count Acc: 0.8409
+Epoch [18] Batch [10/30] Loss: 0.2296 Count Acc: 0.9091
+Epoch [18] Batch [20/30] Loss: 0.5742 Count Acc: 0.7330
+
+Epoch [18] - Time: 19.57s
+Train Loss: 0.4513 | Val Loss: 0.4568
+Train Count Acc: 0.8307 | Val Count Acc: 0.8228
+Final Count Acc: 0.5273
+True Final Count Acc: 0.9102
+学习率: 0.000100
+Epoch [19] Batch [0/30] Loss: 0.1634 Count Acc: 0.9716
+Epoch [19] Batch [10/30] Loss: 0.5536 Count Acc: 0.7670
+Epoch [19] Batch [20/30] Loss: 0.3568 Count Acc: 0.8068
+
+Epoch [19] - Time: 19.69s
+Train Loss: 0.3622 | Val Loss: 0.2335
+Train Count Acc: 0.8725 | Val Count Acc: 0.8846
+Final Count Acc: 0.8008
+True Final Count Acc: 0.6602
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_19.pth
+Epoch [20] Batch [0/30] Loss: 0.1717 Count Acc: 0.9489
+Epoch [20] Batch [10/30] Loss: 0.2831 Count Acc: 0.8807
+Epoch [20] Batch [20/30] Loss: 0.4270 Count Acc: 0.8523
+
+Epoch [20] - Time: 19.40s
+Train Loss: 0.4377 | Val Loss: 0.6027
+Train Count Acc: 0.8366 | Val Count Acc: 0.7525
+Final Count Acc: 0.5000
+True Final Count Acc: 0.4609
+学习率: 0.000100
+Epoch [21] Batch [0/30] Loss: 0.7659 Count Acc: 0.6534
+Epoch [21] Batch [10/30] Loss: 0.2856 Count Acc: 0.8864
+Epoch [21] Batch [20/30] Loss: 0.5279 Count Acc: 0.7045
+
+Epoch [21] - Time: 19.81s
+Train Loss: 0.5400 | Val Loss: 0.1701
+Train Count Acc: 0.7939 | Val Count Acc: 0.9648
+Final Count Acc: 0.8789
+True Final Count Acc: 0.7930
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.9648
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_21.pth
+Epoch [22] Batch [0/30] Loss: 0.1387 Count Acc: 0.9545
+Epoch [22] Batch [10/30] Loss: 0.2727 Count Acc: 0.8466
+Epoch [22] Batch [20/30] Loss: 0.2066 Count Acc: 0.9318
+
+Epoch [22] - Time: 19.35s
+Train Loss: 0.3727 | Val Loss: 0.8522
+Train Count Acc: 0.8623 | Val Count Acc: 0.7127
+Final Count Acc: 0.4688
+True Final Count Acc: 0.3984
+学习率: 0.000100
+Epoch [23] Batch [0/30] Loss: 0.2760 Count Acc: 0.8807
+Epoch [23] Batch [10/30] Loss: 0.1590 Count Acc: 0.9716
+Epoch [23] Batch [20/30] Loss: 0.7163 Count Acc: 0.7273
+
+Epoch [23] - Time: 19.40s
+Train Loss: 0.3366 | Val Loss: 0.1882
+Train Count Acc: 0.8792 | Val Count Acc: 0.9517
+Final Count Acc: 0.8359
+True Final Count Acc: 0.9258
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_23.pth
+Epoch [24] Batch [0/30] Loss: 0.1063 Count Acc: 0.9830
+Epoch [24] Batch [10/30] Loss: 0.3292 Count Acc: 0.8864
+Epoch [24] Batch [20/30] Loss: 0.1906 Count Acc: 0.9091
+
+Epoch [24] - Time: 19.72s
+Train Loss: 0.2865 | Val Loss: 0.1520
+Train Count Acc: 0.9017 | Val Count Acc: 0.9506
+Final Count Acc: 0.8125
+True Final Count Acc: 0.8984
+学习率: 0.000100
+Epoch [25] Batch [0/30] Loss: 0.3735 Count Acc: 0.8523
+Epoch [25] Batch [10/30] Loss: 0.0955 Count Acc: 0.9886
+Epoch [25] Batch [20/30] Loss: 0.1377 Count Acc: 0.9432
+
+Epoch [25] - Time: 19.66s
+Train Loss: 0.3504 | Val Loss: 0.8355
+Train Count Acc: 0.8809 | Val Count Acc: 0.7290
+Final Count Acc: 0.4805
+True Final Count Acc: 0.4141
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_25.pth
+Epoch [26] Batch [0/30] Loss: 0.1159 Count Acc: 0.9489
+Epoch [26] Batch [10/30] Loss: 0.4947 Count Acc: 0.7841
+Epoch [26] Batch [20/30] Loss: 0.5935 Count Acc: 0.7500
+
+Epoch [26] - Time: 19.30s
+Train Loss: 0.3016 | Val Loss: 0.2021
+Train Count Acc: 0.8987 | Val Count Acc: 0.9013
+Final Count Acc: 0.7148
+True Final Count Acc: 0.6445
+学习率: 0.000100
+Epoch [27] Batch [0/30] Loss: 0.0806 Count Acc: 0.9773
+Epoch [27] Batch [10/30] Loss: 0.1065 Count Acc: 0.9886
+Epoch [27] Batch [20/30] Loss: 0.2283 Count Acc: 0.8807
+
+Epoch [27] - Time: 19.74s
+Train Loss: 0.2267 | Val Loss: 0.3030
+Train Count Acc: 0.9222 | Val Count Acc: 0.8374
+Final Count Acc: 0.6836
+True Final Count Acc: 0.5586
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_27.pth
+Epoch [28] Batch [0/30] Loss: 0.5802 Count Acc: 0.7670
+Epoch [28] Batch [10/30] Loss: 0.2508 Count Acc: 0.8920
+Epoch [28] Batch [20/30] Loss: 1.4135 Count Acc: 0.6307
+
+Epoch [28] - Time: 19.87s
+Train Loss: 0.3943 | Val Loss: 0.1870
+Train Count Acc: 0.8684 | Val Count Acc: 0.9336
+Final Count Acc: 0.7852
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [29] Batch [0/30] Loss: 0.1283 Count Acc: 0.9545
+Epoch [29] Batch [10/30] Loss: 0.0821 Count Acc: 0.9773
+Epoch [29] Batch [20/30] Loss: 0.5539 Count Acc: 0.8068
+
+Epoch [29] - Time: 19.45s
+Train Loss: 0.2656 | Val Loss: 0.1153
+Train Count Acc: 0.9053 | Val Count Acc: 0.9588
+Final Count Acc: 0.8398
+True Final Count Acc: 0.7305
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_29.pth
+Epoch [30] Batch [0/30] Loss: 0.7082 Count Acc: 0.6932
+Epoch [30] Batch [10/30] Loss: 0.0845 Count Acc: 0.9716
+Epoch [30] Batch [20/30] Loss: 0.0750 Count Acc: 0.9830
+
+Epoch [30] - Time: 19.38s
+Train Loss: 0.3614 | Val Loss: 0.1114
+Train Count Acc: 0.8835 | Val Count Acc: 0.9616
+Final Count Acc: 0.8125
+True Final Count Acc: 0.9258
+学习率: 0.000100
+Epoch [31] Batch [0/30] Loss: 0.1194 Count Acc: 0.9489
+Epoch [31] Batch [10/30] Loss: 0.6280 Count Acc: 0.8295
+Epoch [31] Batch [20/30] Loss: 0.0733 Count Acc: 0.9886
+
+Epoch [31] - Time: 19.45s
+Train Loss: 0.4647 | Val Loss: 1.1723
+Train Count Acc: 0.8580 | Val Count Acc: 0.6772
+Final Count Acc: 0.4570
+True Final Count Acc: 0.9219
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_31.pth
+Epoch [32] Batch [0/30] Loss: 0.2379 Count Acc: 0.8977
+Epoch [32] Batch [10/30] Loss: 0.1524 Count Acc: 0.9091
+Epoch [32] Batch [20/30] Loss: 0.3796 Count Acc: 0.8807
+
+Epoch [32] - Time: 19.86s
+Train Loss: 0.7672 | Val Loss: 2.3749
+Train Count Acc: 0.7956 | Val Count Acc: 0.5785
+Final Count Acc: 0.3281
+True Final Count Acc: 0.3164
+学习率: 0.000100
+Epoch [33] Batch [0/30] Loss: 0.2492 Count Acc: 0.8864
+Epoch [33] Batch [10/30] Loss: 0.2299 Count Acc: 0.9205
+Epoch [33] Batch [20/30] Loss: 1.2698 Count Acc: 0.6193
+
+Epoch [33] - Time: 19.02s
+Train Loss: 0.5767 | Val Loss: 0.0984
+Train Count Acc: 0.8205 | Val Count Acc: 0.9783
+Final Count Acc: 0.8906
+True Final Count Acc: 0.8633
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.9783
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_33.pth
+Epoch [34] Batch [0/30] Loss: 0.8746 Count Acc: 0.7841
+Epoch [34] Batch [10/30] Loss: 0.1411 Count Acc: 0.9205
+Epoch [34] Batch [20/30] Loss: 0.2107 Count Acc: 0.9091
+
+Epoch [34] - Time: 20.07s
+Train Loss: 0.3438 | Val Loss: 0.1018
+Train Count Acc: 0.8905 | Val Count Acc: 0.9730
+Final Count Acc: 0.8320
+True Final Count Acc: 0.9023
+学习率: 0.000100
+Epoch [35] Batch [0/30] Loss: 0.0629 Count Acc: 1.0000
+Epoch [35] Batch [10/30] Loss: 0.2261 Count Acc: 0.8864
+Epoch [35] Batch [20/30] Loss: 0.0855 Count Acc: 0.9716
+
+Epoch [35] - Time: 19.52s
+Train Loss: 0.3545 | Val Loss: 0.1774
+Train Count Acc: 0.8805 | Val Count Acc: 0.9453
+Final Count Acc: 0.8711
+True Final Count Acc: 0.8711
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_35.pth
+Epoch [36] Batch [0/30] Loss: 0.5792 Count Acc: 0.7500
+Epoch [36] Batch [10/30] Loss: 0.8021 Count Acc: 0.8011
+Epoch [36] Batch [20/30] Loss: 0.5069 Count Acc: 0.8409
+
+Epoch [36] - Time: 20.13s
+Train Loss: 0.6754 | Val Loss: 0.1046
+Train Count Acc: 0.8259 | Val Count Acc: 0.9819
+Final Count Acc: 0.9688
+True Final Count Acc: 0.9453
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.9819
+Epoch [37] Batch [0/30] Loss: 0.6614 Count Acc: 0.7386
+Epoch [37] Batch [10/30] Loss: 0.8875 Count Acc: 0.7216
+Epoch [37] Batch [20/30] Loss: 0.8197 Count Acc: 0.7102
+
+Epoch [37] - Time: 19.39s
+Train Loss: 0.3910 | Val Loss: 0.1612
+Train Count Acc: 0.8672 | Val Count Acc: 0.9460
+Final Count Acc: 0.8516
+True Final Count Acc: 0.7109
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_37.pth
+Epoch [38] Batch [0/30] Loss: 0.4141 Count Acc: 0.7841
+Epoch [38] Batch [10/30] Loss: 0.7265 Count Acc: 0.7841
+Epoch [38] Batch [20/30] Loss: 0.0631 Count Acc: 0.9886
+
+Epoch [38] - Time: 19.73s
+Train Loss: 0.3823 | Val Loss: 0.1837
+Train Count Acc: 0.8653 | Val Count Acc: 0.9148
+Final Count Acc: 0.8047
+True Final Count Acc: 0.6289
+学习率: 0.000100
+Epoch [39] Batch [0/30] Loss: 0.1937 Count Acc: 0.9148
+Epoch [39] Batch [10/30] Loss: 0.8574 Count Acc: 0.7102
+Epoch [39] Batch [20/30] Loss: 0.2091 Count Acc: 0.9205
+
+Epoch [39] - Time: 20.05s
+Train Loss: 0.2516 | Val Loss: 0.1287
+Train Count Acc: 0.9066 | Val Count Acc: 0.9492
+Final Count Acc: 0.8398
+True Final Count Acc: 0.6914
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_39.pth
+Epoch [40] Batch [0/30] Loss: 0.7173 Count Acc: 0.7216
+Epoch [40] Batch [10/30] Loss: 0.0930 Count Acc: 0.9830
+Epoch [40] Batch [20/30] Loss: 0.1222 Count Acc: 0.9545
+
+Epoch [40] - Time: 20.05s
+Train Loss: 0.2726 | Val Loss: 0.5680
+Train Count Acc: 0.9129 | Val Count Acc: 0.8288
+Final Count Acc: 0.5859
+True Final Count Acc: 0.5820
+学习率: 0.000100
+Epoch [41] Batch [0/30] Loss: 0.8282 Count Acc: 0.7784
+Epoch [41] Batch [10/30] Loss: 0.5943 Count Acc: 0.8068
+Epoch [41] Batch [20/30] Loss: 1.4964 Count Acc: 0.6136
+
+Epoch [41] - Time: 19.25s
+Train Loss: 0.3117 | Val Loss: 0.0858
+Train Count Acc: 0.9097 | Val Count Acc: 0.9808
+Final Count Acc: 0.8828
+True Final Count Acc: 0.9297
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_41.pth
+Epoch [42] Batch [0/30] Loss: 0.1329 Count Acc: 0.9602
+Epoch [42] Batch [10/30] Loss: 0.1753 Count Acc: 0.8977
+Epoch [42] Batch [20/30] Loss: 0.1098 Count Acc: 0.9545
+
+Epoch [42] - Time: 19.11s
+Train Loss: 0.2615 | Val Loss: 1.3096
+Train Count Acc: 0.9114 | Val Count Acc: 0.7063
+Final Count Acc: 0.4375
+True Final Count Acc: 0.4297
+学习率: 0.000100
+Epoch [43] Batch [0/30] Loss: 1.6801 Count Acc: 0.6875
+Epoch [43] Batch [10/30] Loss: 1.8858 Count Acc: 0.5511
+Epoch [43] Batch [20/30] Loss: 0.1572 Count Acc: 0.9602
+
+Epoch [43] - Time: 19.40s
+Train Loss: 0.4374 | Val Loss: 0.2613
+Train Count Acc: 0.8759 | Val Count Acc: 0.8796
+Final Count Acc: 0.6328
+True Final Count Acc: 0.6367
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_43.pth
+Epoch [44] Batch [0/30] Loss: 0.0677 Count Acc: 0.9943
+Epoch [44] Batch [10/30] Loss: 0.0965 Count Acc: 0.9489
+Epoch [44] Batch [20/30] Loss: 0.0198 Count Acc: 1.0000
+
+Epoch [44] - Time: 19.03s
+Train Loss: 0.3865 | Val Loss: 0.1006
+Train Count Acc: 0.8837 | Val Count Acc: 0.9723
+Final Count Acc: 0.8945
+True Final Count Acc: 0.8984
+学习率: 0.000100
+Epoch [45] Batch [0/30] Loss: 0.5500 Count Acc: 0.7557
+Epoch [45] Batch [10/30] Loss: 0.1179 Count Acc: 0.9602
+Epoch [45] Batch [20/30] Loss: 0.0995 Count Acc: 0.9602
+
+Epoch [45] - Time: 18.87s
+Train Loss: 0.3997 | Val Loss: 1.1922
+Train Count Acc: 0.8705 | Val Count Acc: 0.6942
+Final Count Acc: 0.4219
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_45.pth
+Epoch [46] Batch [0/30] Loss: 0.0796 Count Acc: 0.9773
+Epoch [46] Batch [10/30] Loss: 0.0627 Count Acc: 0.9773
+Epoch [46] Batch [20/30] Loss: 1.9617 Count Acc: 0.5682
+
+Epoch [46] - Time: 19.07s
+Train Loss: 0.2160 | Val Loss: 0.0490
+Train Count Acc: 0.9263 | Val Count Acc: 0.9901
+Final Count Acc: 0.9102
+True Final Count Acc: 0.9062
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.9901
+Epoch [47] Batch [0/30] Loss: 0.1291 Count Acc: 0.9375
+Epoch [47] Batch [10/30] Loss: 0.5433 Count Acc: 0.8523
+Epoch [47] Batch [20/30] Loss: 0.1169 Count Acc: 0.9602
+
+Epoch [47] - Time: 18.94s
+Train Loss: 0.2943 | Val Loss: 0.1240
+Train Count Acc: 0.9053 | Val Count Acc: 0.9464
+Final Count Acc: 0.7539
+True Final Count Acc: 0.9102
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_47.pth
+Epoch [48] Batch [0/30] Loss: 0.0502 Count Acc: 0.9886
+Epoch [48] Batch [10/30] Loss: 1.7809 Count Acc: 0.6420
+Epoch [48] Batch [20/30] Loss: 0.6756 Count Acc: 0.8580
+
+Epoch [48] - Time: 19.65s
+Train Loss: 0.4997 | Val Loss: 0.9242
+Train Count Acc: 0.8924 | Val Count Acc: 0.7649
+Final Count Acc: 0.4844
+True Final Count Acc: 0.5117
+学习率: 0.000100
+Epoch [49] Batch [0/30] Loss: 1.2586 Count Acc: 0.7273
+Epoch [49] Batch [10/30] Loss: 0.2893 Count Acc: 0.8807
+Epoch [49] Batch [20/30] Loss: 0.0544 Count Acc: 0.9886
+
+Epoch [49] - Time: 19.09s
+Train Loss: 0.5753 | Val Loss: 1.2707
+Train Count Acc: 0.8434 | Val Count Acc: 0.7010
+Final Count Acc: 0.4453
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_49.pth
+Epoch [50] Batch [0/30] Loss: 0.0790 Count Acc: 0.9830
+Epoch [50] Batch [10/30] Loss: 0.0689 Count Acc: 0.9886
+Epoch [50] Batch [20/30] Loss: 0.0363 Count Acc: 0.9943
+
+Epoch [50] - Time: 19.84s
+Train Loss: 0.2728 | Val Loss: 0.0807
+Train Count Acc: 0.9133 | Val Count Acc: 0.9808
+Final Count Acc: 0.9375
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [51] Batch [0/30] Loss: 0.0446 Count Acc: 1.0000
+Epoch [51] Batch [10/30] Loss: 0.0468 Count Acc: 0.9830
+Epoch [51] Batch [20/30] Loss: 1.5487 Count Acc: 0.7330
+
+Epoch [51] - Time: 18.76s
+Train Loss: 0.3916 | Val Loss: 0.0651
+Train Count Acc: 0.8913 | Val Count Acc: 0.9964
+Final Count Acc: 0.9844
+True Final Count Acc: 0.9883
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.9964
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_51.pth
+Epoch [52] Batch [0/30] Loss: 0.0575 Count Acc: 1.0000
+Epoch [52] Batch [10/30] Loss: 0.1025 Count Acc: 0.9602
+Epoch [52] Batch [20/30] Loss: 0.0345 Count Acc: 0.9886
+
+Epoch [52] - Time: 19.56s
+Train Loss: 0.1885 | Val Loss: 0.0448
+Train Count Acc: 0.9341 | Val Count Acc: 0.9982
+Final Count Acc: 0.9805
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.9982
+Epoch [53] Batch [0/30] Loss: 0.9520 Count Acc: 0.7898
+Epoch [53] Batch [10/30] Loss: 0.0747 Count Acc: 0.9659
+Epoch [53] Batch [20/30] Loss: 0.1764 Count Acc: 0.9205
+
+Epoch [53] - Time: 19.10s
+Train Loss: 0.2072 | Val Loss: 0.1154
+Train Count Acc: 0.9273 | Val Count Acc: 0.9666
+Final Count Acc: 0.8828
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_53.pth
+Epoch [54] Batch [0/30] Loss: 0.1884 Count Acc: 0.9261
+Epoch [54] Batch [10/30] Loss: 0.0380 Count Acc: 0.9943
+Epoch [54] Batch [20/30] Loss: 0.8002 Count Acc: 0.8466
+
+Epoch [54] - Time: 19.32s
+Train Loss: 0.4352 | Val Loss: 1.0038
+Train Count Acc: 0.8934 | Val Count Acc: 0.7575
+Final Count Acc: 0.5000
+True Final Count Acc: 0.4727
+学习率: 0.000100
+Epoch [55] Batch [0/30] Loss: 0.1756 Count Acc: 0.9261
+Epoch [55] Batch [10/30] Loss: 0.0381 Count Acc: 0.9943
+Epoch [55] Batch [20/30] Loss: 0.8919 Count Acc: 0.7670
+
+Epoch [55] - Time: 19.40s
+Train Loss: 0.1963 | Val Loss: 0.0599
+Train Count Acc: 0.9381 | Val Count Acc: 0.9819
+Final Count Acc: 0.9375
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_55.pth
+Epoch [56] Batch [0/30] Loss: 0.1001 Count Acc: 0.9432
+Epoch [56] Batch [10/30] Loss: 0.3075 Count Acc: 0.8580
+Epoch [56] Batch [20/30] Loss: 0.0950 Count Acc: 0.9659
+
+Epoch [56] - Time: 19.21s
+Train Loss: 0.1989 | Val Loss: 0.6436
+Train Count Acc: 0.9339 | Val Count Acc: 0.8097
+Final Count Acc: 0.5977
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [57] Batch [0/30] Loss: 0.1211 Count Acc: 0.9489
+Epoch [57] Batch [10/30] Loss: 0.0494 Count Acc: 0.9830
+Epoch [57] Batch [20/30] Loss: 0.0670 Count Acc: 0.9886
+
+Epoch [57] - Time: 19.10s
+Train Loss: 0.3380 | Val Loss: 0.0471
+Train Count Acc: 0.8983 | Val Count Acc: 0.9890
+Final Count Acc: 0.9766
+True Final Count Acc: 0.9258
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_57.pth
+Epoch [58] Batch [0/30] Loss: 1.2892 Count Acc: 0.6818
+Epoch [58] Batch [10/30] Loss: 0.0381 Count Acc: 1.0000
+Epoch [58] Batch [20/30] Loss: 0.2704 Count Acc: 0.9148
+
+Epoch [58] - Time: 19.51s
+Train Loss: 0.2777 | Val Loss: 0.2827
+Train Count Acc: 0.9197 | Val Count Acc: 0.8793
+Final Count Acc: 0.7070
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [59] Batch [0/30] Loss: 0.0367 Count Acc: 1.0000
+Epoch [59] Batch [10/30] Loss: 0.1088 Count Acc: 0.9489
+Epoch [59] Batch [20/30] Loss: 0.5559 Count Acc: 0.8011
+
+Epoch [59] - Time: 19.22s
+Train Loss: 0.1732 | Val Loss: 0.0693
+Train Count Acc: 0.9420 | Val Count Acc: 0.9744
+Final Count Acc: 0.8945
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_59.pth
+Epoch [60] Batch [0/30] Loss: 0.0333 Count Acc: 1.0000
+Epoch [60] Batch [10/30] Loss: 0.0417 Count Acc: 1.0000
+Epoch [60] Batch [20/30] Loss: 0.2366 Count Acc: 0.8807
+
+Epoch [60] - Time: 19.89s
+Train Loss: 0.3582 | Val Loss: 0.1275
+Train Count Acc: 0.8970 | Val Count Acc: 0.9478
+Final Count Acc: 0.8750
+True Final Count Acc: 0.8438
+学习率: 0.000100
+Epoch [61] Batch [0/30] Loss: 1.4009 Count Acc: 0.6705
+Epoch [61] Batch [10/30] Loss: 0.6426 Count Acc: 0.8239
+Epoch [61] Batch [20/30] Loss: 0.9580 Count Acc: 0.8182
+
+Epoch [61] - Time: 19.09s
+Train Loss: 0.5279 | Val Loss: 0.0413
+Train Count Acc: 0.8494 | Val Count Acc: 0.9943
+Final Count Acc: 0.9688
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_61.pth
+Epoch [62] Batch [0/30] Loss: 0.0673 Count Acc: 0.9659
+Epoch [62] Batch [10/30] Loss: 0.1135 Count Acc: 0.9489
+Epoch [62] Batch [20/30] Loss: 0.3254 Count Acc: 0.9034
+
+Epoch [62] - Time: 19.29s
+Train Loss: 0.1827 | Val Loss: 0.0420
+Train Count Acc: 0.9373 | Val Count Acc: 0.9929
+Final Count Acc: 0.9531
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [63] Batch [0/30] Loss: 0.4661 Count Acc: 0.8125
+Epoch [63] Batch [10/30] Loss: 0.0483 Count Acc: 0.9943
+Epoch [63] Batch [20/30] Loss: 0.4391 Count Acc: 0.8693
+
+Epoch [63] - Time: 18.99s
+Train Loss: 0.2484 | Val Loss: 0.2871
+Train Count Acc: 0.9180 | Val Count Acc: 0.8750
+Final Count Acc: 0.7422
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_63.pth
+Epoch [64] Batch [0/30] Loss: 0.0467 Count Acc: 0.9886
+Epoch [64] Batch [10/30] Loss: 0.3079 Count Acc: 0.9205
+Epoch [64] Batch [20/30] Loss: 0.0960 Count Acc: 0.9716
+
+Epoch [64] - Time: 19.39s
+Train Loss: 0.2705 | Val Loss: 0.8855
+Train Count Acc: 0.9246 | Val Count Acc: 0.7678
+Final Count Acc: 0.5156
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [65] Batch [0/30] Loss: 0.6238 Count Acc: 0.8068
+Epoch [65] Batch [10/30] Loss: 0.8561 Count Acc: 0.8352
+Epoch [65] Batch [20/30] Loss: 0.0358 Count Acc: 0.9943
+
+Epoch [65] - Time: 19.41s
+Train Loss: 0.3222 | Val Loss: 0.0448
+Train Count Acc: 0.9072 | Val Count Acc: 0.9904
+Final Count Acc: 0.9492
+True Final Count Acc: 0.9688
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_65.pth
+Epoch [66] Batch [0/30] Loss: 0.1329 Count Acc: 0.9091
+Epoch [66] Batch [10/30] Loss: 0.6731 Count Acc: 0.8295
+Epoch [66] Batch [20/30] Loss: 0.0733 Count Acc: 0.9716
+
+Epoch [66] - Time: 19.51s
+Train Loss: 0.3442 | Val Loss: 0.2683
+Train Count Acc: 0.8890 | Val Count Acc: 0.8910
+Final Count Acc: 0.6562
+True Final Count Acc: 0.6953
+学习率: 0.000100
+Epoch [67] Batch [0/30] Loss: 0.1036 Count Acc: 0.9545
+Epoch [67] Batch [10/30] Loss: 0.2167 Count Acc: 0.9205
+Epoch [67] Batch [20/30] Loss: 0.0838 Count Acc: 0.9773
+
+Epoch [67] - Time: 18.95s
+Train Loss: 0.2017 | Val Loss: 0.1394
+Train Count Acc: 0.9432 | Val Count Acc: 0.9311
+Final Count Acc: 0.7773
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_67.pth
+Epoch [68] Batch [0/30] Loss: 0.1596 Count Acc: 0.9261
+Epoch [68] Batch [10/30] Loss: 0.0172 Count Acc: 1.0000
+Epoch [68] Batch [20/30] Loss: 0.0621 Count Acc: 0.9773
+
+Epoch [68] - Time: 18.93s
+Train Loss: 0.1231 | Val Loss: 0.0872
+Train Count Acc: 0.9472 | Val Count Acc: 0.9528
+Final Count Acc: 0.8047
+True Final Count Acc: 0.7891
+学习率: 0.000100
+Epoch [69] Batch [0/30] Loss: 0.0601 Count Acc: 0.9716
+Epoch [69] Batch [10/30] Loss: 0.5341 Count Acc: 0.7841
+Epoch [69] Batch [20/30] Loss: 0.2291 Count Acc: 0.8466
+
+Epoch [69] - Time: 19.12s
+Train Loss: 0.1303 | Val Loss: 0.1409
+Train Count Acc: 0.9498 | Val Count Acc: 0.9290
+Final Count Acc: 0.7734
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_69.pth
+Epoch [70] Batch [0/30] Loss: 0.0339 Count Acc: 0.9943
+Epoch [70] Batch [10/30] Loss: 0.1730 Count Acc: 0.9261
+Epoch [70] Batch [20/30] Loss: 0.0550 Count Acc: 0.9716
+
+Epoch [70] - Time: 19.49s
+Train Loss: 0.1817 | Val Loss: 1.0404
+Train Count Acc: 0.9428 | Val Count Acc: 0.7116
+Final Count Acc: 0.4297
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [71] Batch [0/30] Loss: 0.0348 Count Acc: 1.0000
+Epoch [71] Batch [10/30] Loss: 0.0519 Count Acc: 0.9886
+Epoch [71] Batch [20/30] Loss: 0.0240 Count Acc: 1.0000
+
+Epoch [71] - Time: 19.23s
+Train Loss: 0.0914 | Val Loss: 0.1007
+Train Count Acc: 0.9629 | Val Count Acc: 0.9467
+Final Count Acc: 0.8125
+True Final Count Acc: 0.8086
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_71.pth
+Epoch [72] Batch [0/30] Loss: 0.1437 Count Acc: 0.9432
+Epoch [72] Batch [10/30] Loss: 0.7140 Count Acc: 0.8011
+Epoch [72] Batch [20/30] Loss: 0.0564 Count Acc: 0.9773
+
+Epoch [72] - Time: 19.21s
+Train Loss: 0.1849 | Val Loss: 0.0782
+Train Count Acc: 0.9441 | Val Count Acc: 0.9631
+Final Count Acc: 0.8477
+True Final Count Acc: 0.9492
+学习率: 0.000100
+Epoch [73] Batch [0/30] Loss: 1.1067 Count Acc: 0.7955
+Epoch [73] Batch [10/30] Loss: 0.0929 Count Acc: 0.9602
+Epoch [73] Batch [20/30] Loss: 0.3088 Count Acc: 0.8750
+
+Epoch [73] - Time: 19.18s
+Train Loss: 0.3044 | Val Loss: 0.0400
+Train Count Acc: 0.9112 | Val Count Acc: 0.9844
+Final Count Acc: 0.9336
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_73.pth
+Epoch [74] Batch [0/30] Loss: 0.3971 Count Acc: 0.8977
+Epoch [74] Batch [10/30] Loss: 0.5432 Count Acc: 0.7841
+Epoch [74] Batch [20/30] Loss: 0.0215 Count Acc: 0.9943
+
+Epoch [74] - Time: 19.21s
+Train Loss: 0.2129 | Val Loss: 0.4508
+Train Count Acc: 0.9369 | Val Count Acc: 0.8349
+Final Count Acc: 0.5742
+True Final Count Acc: 0.5703
+学习率: 0.000100
+Epoch [75] Batch [0/30] Loss: 0.0236 Count Acc: 0.9943
+Epoch [75] Batch [10/30] Loss: 1.1446 Count Acc: 0.6875
+Epoch [75] Batch [20/30] Loss: 0.0503 Count Acc: 0.9716
+
+Epoch [75] - Time: 19.68s
+Train Loss: 0.1347 | Val Loss: 0.0290
+Train Count Acc: 0.9530 | Val Count Acc: 0.9950
+Final Count Acc: 0.9727
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_75.pth
+Epoch [76] Batch [0/30] Loss: 0.1413 Count Acc: 0.9545
+Epoch [76] Batch [10/30] Loss: 0.5921 Count Acc: 0.8409
+Epoch [76] Batch [20/30] Loss: 0.0342 Count Acc: 0.9943
+
+Epoch [76] - Time: 18.93s
+Train Loss: 0.1838 | Val Loss: 0.0451
+Train Count Acc: 0.9369 | Val Count Acc: 0.9862
+Final Count Acc: 0.9531
+True Final Count Acc: 0.8945
+学习率: 0.000100
+Epoch [77] Batch [0/30] Loss: 0.0227 Count Acc: 1.0000
+Epoch [77] Batch [10/30] Loss: 0.4128 Count Acc: 0.8636
+Epoch [77] Batch [20/30] Loss: 0.3345 Count Acc: 0.8693
+
+Epoch [77] - Time: 19.44s
+Train Loss: 0.2316 | Val Loss: 0.0802
+Train Count Acc: 0.9284 | Val Count Acc: 0.9787
+Final Count Acc: 0.8789
+True Final Count Acc: 0.9023
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_77.pth
+Epoch [78] Batch [0/30] Loss: 0.3672 Count Acc: 0.8693
+Epoch [78] Batch [10/30] Loss: 0.1153 Count Acc: 0.9489
+Epoch [78] Batch [20/30] Loss: 0.0294 Count Acc: 0.9943
+
+Epoch [78] - Time: 19.03s
+Train Loss: 0.1806 | Val Loss: 0.5892
+Train Count Acc: 0.9352 | Val Count Acc: 0.8281
+Final Count Acc: 0.5820
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [79] Batch [0/30] Loss: 0.1051 Count Acc: 0.9489
+Epoch [79] Batch [10/30] Loss: 0.0370 Count Acc: 0.9886
+Epoch [79] Batch [20/30] Loss: 0.0612 Count Acc: 0.9659
+
+Epoch [79] - Time: 19.51s
+Train Loss: 0.1667 | Val Loss: 0.4378
+Train Count Acc: 0.9432 | Val Count Acc: 0.8793
+Final Count Acc: 0.6523
+True Final Count Acc: 0.6523
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_79.pth
+Epoch [80] Batch [0/30] Loss: 0.3408 Count Acc: 0.9205
+Epoch [80] Batch [10/30] Loss: 0.0414 Count Acc: 0.9830
+Epoch [80] Batch [20/30] Loss: 0.1713 Count Acc: 0.9545
+
+Epoch [80] - Time: 19.66s
+Train Loss: 0.1743 | Val Loss: 0.1103
+Train Count Acc: 0.9453 | Val Count Acc: 0.9489
+Final Count Acc: 0.8398
+True Final Count Acc: 0.8359
+学习率: 0.000100
+Epoch [81] Batch [0/30] Loss: 0.0207 Count Acc: 1.0000
+Epoch [81] Batch [10/30] Loss: 0.2112 Count Acc: 0.8636
+Epoch [81] Batch [20/30] Loss: 0.0434 Count Acc: 0.9830
+
+Epoch [81] - Time: 19.67s
+Train Loss: 0.1245 | Val Loss: 0.2365
+Train Count Acc: 0.9534 | Val Count Acc: 0.9261
+Final Count Acc: 0.7305
+True Final Count Acc: 0.7266
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_81.pth
+Epoch [82] Batch [0/30] Loss: 0.0164 Count Acc: 1.0000
+Epoch [82] Batch [10/30] Loss: 0.1565 Count Acc: 0.9034
+Epoch [82] Batch [20/30] Loss: 0.3159 Count Acc: 0.9148
+
+Epoch [82] - Time: 19.42s
+Train Loss: 0.1741 | Val Loss: 0.0321
+Train Count Acc: 0.9447 | Val Count Acc: 0.9979
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [83] Batch [0/30] Loss: 0.0665 Count Acc: 0.9830
+Epoch [83] Batch [10/30] Loss: 0.3374 Count Acc: 0.8580
+Epoch [83] Batch [20/30] Loss: 0.1574 Count Acc: 0.9375
+
+Epoch [83] - Time: 18.95s
+Train Loss: 0.1576 | Val Loss: 0.0425
+Train Count Acc: 0.9473 | Val Count Acc: 0.9801
+Final Count Acc: 0.8945
+True Final Count Acc: 0.9219
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_83.pth
+Epoch [84] Batch [0/30] Loss: 0.6674 Count Acc: 0.8239
+Epoch [84] Batch [10/30] Loss: 0.0184 Count Acc: 0.9943
+Epoch [84] Batch [20/30] Loss: 0.1637 Count Acc: 0.9375
+
+Epoch [84] - Time: 19.76s
+Train Loss: 0.1232 | Val Loss: 0.0199
+Train Count Acc: 0.9642 | Val Count Acc: 0.9979
+Final Count Acc: 0.9922
+True Final Count Acc: 0.9883
+学习率: 0.000100
+Epoch [85] Batch [0/30] Loss: 0.0363 Count Acc: 0.9886
+Epoch [85] Batch [10/30] Loss: 0.0170 Count Acc: 1.0000
+Epoch [85] Batch [20/30] Loss: 0.3808 Count Acc: 0.8409
+
+Epoch [85] - Time: 19.11s
+Train Loss: 0.0628 | Val Loss: 0.0273
+Train Count Acc: 0.9763 | Val Count Acc: 0.9890
+Final Count Acc: 0.9414
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_85.pth
+Epoch [86] Batch [0/30] Loss: 0.0469 Count Acc: 0.9716
+Epoch [86] Batch [10/30] Loss: 0.1042 Count Acc: 0.9602
+Epoch [86] Batch [20/30] Loss: 0.7953 Count Acc: 0.8239
+
+Epoch [86] - Time: 19.43s
+Train Loss: 0.3282 | Val Loss: 0.1175
+Train Count Acc: 0.9027 | Val Count Acc: 0.9489
+Final Count Acc: 0.8750
+True Final Count Acc: 0.8398
+学习率: 0.000100
+Epoch [87] Batch [0/30] Loss: 1.0231 Count Acc: 0.7557
+Epoch [87] Batch [10/30] Loss: 0.0271 Count Acc: 0.9943
+Epoch [87] Batch [20/30] Loss: 1.7803 Count Acc: 0.6648
+
+Epoch [87] - Time: 20.18s
+Train Loss: 0.3993 | Val Loss: 0.1312
+Train Count Acc: 0.8981 | Val Count Acc: 0.9290
+Final Count Acc: 0.8398
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_87.pth
+Epoch [88] Batch [0/30] Loss: 0.1944 Count Acc: 0.8750
+Epoch [88] Batch [10/30] Loss: 1.3786 Count Acc: 0.7216
+Epoch [88] Batch [20/30] Loss: 0.5019 Count Acc: 0.8750
+
+Epoch [88] - Time: 20.00s
+Train Loss: 0.3272 | Val Loss: 0.4095
+Train Count Acc: 0.8972 | Val Count Acc: 0.8814
+Final Count Acc: 0.6758
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [89] Batch [0/30] Loss: 0.1285 Count Acc: 0.9489
+Epoch [89] Batch [10/30] Loss: 0.4445 Count Acc: 0.8750
+Epoch [89] Batch [20/30] Loss: 0.7516 Count Acc: 0.7557
+
+Epoch [89] - Time: 19.15s
+Train Loss: 0.2412 | Val Loss: 0.1924
+Train Count Acc: 0.9277 | Val Count Acc: 0.9297
+Final Count Acc: 0.7773
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_89.pth
+Epoch [90] Batch [0/30] Loss: 0.0201 Count Acc: 1.0000
+Epoch [90] Batch [10/30] Loss: 0.3493 Count Acc: 0.8864
+Epoch [90] Batch [20/30] Loss: 0.4463 Count Acc: 0.8295
+
+Epoch [90] - Time: 19.11s
+Train Loss: 0.1866 | Val Loss: 0.0201
+Train Count Acc: 0.9305 | Val Count Acc: 0.9968
+Final Count Acc: 0.9844
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Epoch [91] Batch [0/30] Loss: 0.0156 Count Acc: 1.0000
+Epoch [91] Batch [10/30] Loss: 0.0274 Count Acc: 1.0000
+Epoch [91] Batch [20/30] Loss: 0.2792 Count Acc: 0.8409
+
+Epoch [91] - Time: 19.05s
+Train Loss: 0.1272 | Val Loss: 0.0420
+Train Count Acc: 0.9583 | Val Count Acc: 0.9918
+Final Count Acc: 0.9453
+True Final Count Acc: 0.9492
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_91.pth
+Epoch [92] Batch [0/30] Loss: 0.4862 Count Acc: 0.7898
+Epoch [92] Batch [10/30] Loss: 0.2001 Count Acc: 0.9205
+Epoch [92] Batch [20/30] Loss: 0.0388 Count Acc: 0.9830
+
+Epoch [92] - Time: 19.34s
+Train Loss: 0.2451 | Val Loss: 0.0262
+Train Count Acc: 0.9263 | Val Count Acc: 0.9947
+Final Count Acc: 0.9883
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [93] Batch [0/30] Loss: 0.0059 Count Acc: 1.0000
+Epoch [93] Batch [10/30] Loss: 0.4704 Count Acc: 0.8920
+Epoch [93] Batch [20/30] Loss: 0.0479 Count Acc: 0.9830
+
+Epoch [93] - Time: 19.74s
+Train Loss: 0.2779 | Val Loss: 0.1235
+Train Count Acc: 0.9273 | Val Count Acc: 0.9560
+Final Count Acc: 0.7930
+True Final Count Acc: 0.8008
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_93.pth
+Epoch [94] Batch [0/30] Loss: 0.0477 Count Acc: 0.9716
+Epoch [94] Batch [10/30] Loss: 0.1204 Count Acc: 0.9602
+Epoch [94] Batch [20/30] Loss: 1.5030 Count Acc: 0.6875
+
+Epoch [94] - Time: 19.22s
+Train Loss: 1.0351 | Val Loss: 0.6978
+Train Count Acc: 0.8197 | Val Count Acc: 0.7940
+Final Count Acc: 0.5938
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [95] Batch [0/30] Loss: 0.0901 Count Acc: 0.9716
+Epoch [95] Batch [10/30] Loss: 2.7090 Count Acc: 0.3011
+Epoch [95] Batch [20/30] Loss: 0.0652 Count Acc: 0.9659
+
+Epoch [95] - Time: 18.93s
+Train Loss: 0.5061 | Val Loss: 0.0771
+Train Count Acc: 0.8544 | Val Count Acc: 0.9663
+Final Count Acc: 0.8125
+True Final Count Acc: 0.8203
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_95.pth
+Epoch [96] Batch [0/30] Loss: 0.0852 Count Acc: 0.9602
+Epoch [96] Batch [10/30] Loss: 0.6827 Count Acc: 0.8068
+Epoch [96] Batch [20/30] Loss: 0.4031 Count Acc: 0.8523
+
+Epoch [96] - Time: 18.62s
+Train Loss: 0.2240 | Val Loss: 1.6457
+Train Count Acc: 0.9225 | Val Count Acc: 0.6772
+Final Count Acc: 0.3828
+True Final Count Acc: 0.9570
+学习率: 0.000100
+Epoch [97] Batch [0/30] Loss: 0.0312 Count Acc: 0.9943
+Epoch [97] Batch [10/30] Loss: 0.0383 Count Acc: 0.9830
+Epoch [97] Batch [20/30] Loss: 0.1224 Count Acc: 0.9375
+
+Epoch [97] - Time: 19.33s
+Train Loss: 0.2570 | Val Loss: 0.0302
+Train Count Acc: 0.9265 | Val Count Acc: 0.9964
+Final Count Acc: 0.9648
+True Final Count Acc: 0.9688
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_97.pth
+Epoch [98] Batch [0/30] Loss: 0.0678 Count Acc: 0.9773
+Epoch [98] Batch [10/30] Loss: 0.1109 Count Acc: 0.9659
+Epoch [98] Batch [20/30] Loss: 0.0647 Count Acc: 0.9716
+
+Epoch [98] - Time: 19.07s
+Train Loss: 0.2811 | Val Loss: 0.2888
+Train Count Acc: 0.9152 | Val Count Acc: 0.8874
+Final Count Acc: 0.7734
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [99] Batch [0/30] Loss: 0.2031 Count Acc: 0.9148
+Epoch [99] Batch [10/30] Loss: 0.0285 Count Acc: 0.9830
+Epoch [99] Batch [20/30] Loss: 0.4669 Count Acc: 0.8125
+
+Epoch [99] - Time: 19.07s
+Train Loss: 0.1903 | Val Loss: 0.0204
+Train Count Acc: 0.9341 | Val Count Acc: 0.9986
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.9986
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_99.pth
+Epoch [100] Batch [0/30] Loss: 0.7585 Count Acc: 0.7273
+Epoch [100] Batch [10/30] Loss: 0.0196 Count Acc: 1.0000
+Epoch [100] Batch [20/30] Loss: 0.0126 Count Acc: 1.0000
+
+Epoch [100] - Time: 19.26s
+Train Loss: 0.1392 | Val Loss: 0.1884
+Train Count Acc: 0.9485 | Val Count Acc: 0.9173
+Final Count Acc: 0.7578
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [101] Batch [0/30] Loss: 0.3059 Count Acc: 0.8750
+Epoch [101] Batch [10/30] Loss: 0.2575 Count Acc: 0.9148
+Epoch [101] Batch [20/30] Loss: 0.0206 Count Acc: 1.0000
+
+Epoch [101] - Time: 19.89s
+Train Loss: 0.1589 | Val Loss: 0.0687
+Train Count Acc: 0.9420 | Val Count Acc: 0.9766
+Final Count Acc: 0.9375
+True Final Count Acc: 0.9531
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_101.pth
+Epoch [102] Batch [0/30] Loss: 0.5214 Count Acc: 0.8580
+Epoch [102] Batch [10/30] Loss: 0.0707 Count Acc: 0.9716
+Epoch [102] Batch [20/30] Loss: 0.0253 Count Acc: 1.0000
+
+Epoch [102] - Time: 19.74s
+Train Loss: 0.1322 | Val Loss: 0.0312
+Train Count Acc: 0.9536 | Val Count Acc: 0.9883
+Final Count Acc: 0.9258
+True Final Count Acc: 0.9336
+学习率: 0.000100
+Epoch [103] Batch [0/30] Loss: 0.0584 Count Acc: 0.9659
+Epoch [103] Batch [10/30] Loss: 0.0285 Count Acc: 0.9830
+Epoch [103] Batch [20/30] Loss: 0.0322 Count Acc: 0.9830
+
+Epoch [103] - Time: 19.45s
+Train Loss: 0.1652 | Val Loss: 1.1844
+Train Count Acc: 0.9483 | Val Count Acc: 0.7365
+Final Count Acc: 0.4727
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_103.pth
+Epoch [104] Batch [0/30] Loss: 0.1783 Count Acc: 0.9318
+Epoch [104] Batch [10/30] Loss: 0.4335 Count Acc: 0.8636
+Epoch [104] Batch [20/30] Loss: 0.4382 Count Acc: 0.8636
+
+Epoch [104] - Time: 19.21s
+Train Loss: 0.1979 | Val Loss: 0.0529
+Train Count Acc: 0.9371 | Val Count Acc: 0.9737
+Final Count Acc: 0.8633
+True Final Count Acc: 0.9062
+学习率: 0.000100
+Epoch [105] Batch [0/30] Loss: 0.0173 Count Acc: 0.9943
+Epoch [105] Batch [10/30] Loss: 0.2280 Count Acc: 0.9375
+Epoch [105] Batch [20/30] Loss: 0.0132 Count Acc: 1.0000
+
+Epoch [105] - Time: 19.34s
+Train Loss: 0.1537 | Val Loss: 0.0663
+Train Count Acc: 0.9574 | Val Count Acc: 0.9680
+Final Count Acc: 0.7969
+True Final Count Acc: 0.8516
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_105.pth
+Epoch [106] Batch [0/30] Loss: 0.0247 Count Acc: 0.9943
+Epoch [106] Batch [10/30] Loss: 0.0298 Count Acc: 0.9773
+Epoch [106] Batch [20/30] Loss: 0.0563 Count Acc: 0.9716
+
+Epoch [106] - Time: 19.34s
+Train Loss: 0.1006 | Val Loss: 0.0256
+Train Count Acc: 0.9616 | Val Count Acc: 0.9908
+Final Count Acc: 0.9336
+True Final Count Acc: 0.9375
+学习率: 0.000100
+Epoch [107] Batch [0/30] Loss: 0.0146 Count Acc: 1.0000
+Epoch [107] Batch [10/30] Loss: 0.0089 Count Acc: 1.0000
+Epoch [107] Batch [20/30] Loss: 0.0316 Count Acc: 0.9830
+
+Epoch [107] - Time: 19.63s
+Train Loss: 0.0961 | Val Loss: 0.0148
+Train Count Acc: 0.9670 | Val Count Acc: 0.9982
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_107.pth
+Epoch [108] Batch [0/30] Loss: 0.0129 Count Acc: 1.0000
+Epoch [108] Batch [10/30] Loss: 0.0099 Count Acc: 1.0000
+Epoch [108] Batch [20/30] Loss: 0.0165 Count Acc: 1.0000
+
+Epoch [108] - Time: 19.19s
+Train Loss: 0.0355 | Val Loss: 0.0146
+Train Count Acc: 0.9909 | Val Count Acc: 0.9979
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [109] Batch [0/30] Loss: 0.0045 Count Acc: 1.0000
+Epoch [109] Batch [10/30] Loss: 0.0087 Count Acc: 1.0000
+Epoch [109] Batch [20/30] Loss: 1.0018 Count Acc: 0.7500
+
+Epoch [109] - Time: 19.46s
+Train Loss: 0.0813 | Val Loss: 0.0361
+Train Count Acc: 0.9720 | Val Count Acc: 0.9858
+Final Count Acc: 0.9648
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_109.pth
+Epoch [110] Batch [0/30] Loss: 0.0093 Count Acc: 1.0000
+Epoch [110] Batch [10/30] Loss: 0.0093 Count Acc: 1.0000
+Epoch [110] Batch [20/30] Loss: 0.1956 Count Acc: 0.8977
+
+Epoch [110] - Time: 19.12s
+Train Loss: 0.0712 | Val Loss: 0.0092
+Train Count Acc: 0.9742 | Val Count Acc: 0.9996
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 0.9996
+Epoch [111] Batch [0/30] Loss: 0.0728 Count Acc: 0.9773
+Epoch [111] Batch [10/30] Loss: 0.0105 Count Acc: 1.0000
+Epoch [111] Batch [20/30] Loss: 0.0065 Count Acc: 1.0000
+
+Epoch [111] - Time: 19.57s
+Train Loss: 0.1377 | Val Loss: 0.0164
+Train Count Acc: 0.9646 | Val Count Acc: 0.9947
+Final Count Acc: 0.9570
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_111.pth
+Epoch [112] Batch [0/30] Loss: 0.0028 Count Acc: 1.0000
+Epoch [112] Batch [10/30] Loss: 0.1000 Count Acc: 0.9602
+Epoch [112] Batch [20/30] Loss: 0.0883 Count Acc: 0.9659
+
+Epoch [112] - Time: 19.30s
+Train Loss: 0.0411 | Val Loss: 0.3474
+Train Count Acc: 0.9875 | Val Count Acc: 0.9020
+Final Count Acc: 0.6758
+True Final Count Acc: 0.6836
+学习率: 0.000100
+Epoch [113] Batch [0/30] Loss: 0.0050 Count Acc: 1.0000
+Epoch [113] Batch [10/30] Loss: 0.0101 Count Acc: 1.0000
+Epoch [113] Batch [20/30] Loss: 0.0689 Count Acc: 0.9659
+
+Epoch [113] - Time: 19.31s
+Train Loss: 0.0741 | Val Loss: 0.0124
+Train Count Acc: 0.9746 | Val Count Acc: 0.9982
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_113.pth
+Epoch [114] Batch [0/30] Loss: 0.2450 Count Acc: 0.9261
+Epoch [114] Batch [10/30] Loss: 0.0153 Count Acc: 1.0000
+Epoch [114] Batch [20/30] Loss: 0.4657 Count Acc: 0.9205
+
+Epoch [114] - Time: 19.18s
+Train Loss: 0.1211 | Val Loss: 0.0263
+Train Count Acc: 0.9619 | Val Count Acc: 0.9865
+Final Count Acc: 0.8867
+True Final Count Acc: 0.8867
+学习率: 0.000100
+Epoch [115] Batch [0/30] Loss: 0.0812 Count Acc: 0.9773
+Epoch [115] Batch [10/30] Loss: 0.0177 Count Acc: 1.0000
+Epoch [115] Batch [20/30] Loss: 0.0263 Count Acc: 0.9886
+
+Epoch [115] - Time: 18.92s
+Train Loss: 0.0535 | Val Loss: 0.0065
+Train Count Acc: 0.9830 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/best_visual_only_model.pth
+新的最佳模型! 验证准确率: 1.0000
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_115.pth
+Epoch [116] Batch [0/30] Loss: 0.0177 Count Acc: 1.0000
+Epoch [116] Batch [10/30] Loss: 0.0089 Count Acc: 1.0000
+Epoch [116] Batch [20/30] Loss: 0.0703 Count Acc: 0.9716
+
+Epoch [116] - Time: 19.76s
+Train Loss: 0.0459 | Val Loss: 0.0052
+Train Count Acc: 0.9854 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [117] Batch [0/30] Loss: 0.0177 Count Acc: 0.9886
+Epoch [117] Batch [10/30] Loss: 0.0198 Count Acc: 0.9943
+Epoch [117] Batch [20/30] Loss: 0.0055 Count Acc: 1.0000
+
+Epoch [117] - Time: 19.65s
+Train Loss: 0.0291 | Val Loss: 0.0923
+Train Count Acc: 0.9867 | Val Count Acc: 0.9560
+Final Count Acc: 0.8867
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_117.pth
+Epoch [118] Batch [0/30] Loss: 0.0135 Count Acc: 1.0000
+Epoch [118] Batch [10/30] Loss: 0.0866 Count Acc: 0.9716
+Epoch [118] Batch [20/30] Loss: 0.0059 Count Acc: 1.0000
+
+Epoch [118] - Time: 19.12s
+Train Loss: 0.0640 | Val Loss: 0.0103
+Train Count Acc: 0.9818 | Val Count Acc: 0.9972
+Final Count Acc: 0.9805
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [119] Batch [0/30] Loss: 0.0223 Count Acc: 0.9886
+Epoch [119] Batch [10/30] Loss: 0.0062 Count Acc: 1.0000
+Epoch [119] Batch [20/30] Loss: 0.0113 Count Acc: 0.9886
+
+Epoch [119] - Time: 19.00s
+Train Loss: 0.0245 | Val Loss: 0.0079
+Train Count Acc: 0.9913 | Val Count Acc: 0.9986
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_119.pth
+Epoch [120] Batch [0/30] Loss: 0.0020 Count Acc: 1.0000
+Epoch [120] Batch [10/30] Loss: 0.0042 Count Acc: 1.0000
+Epoch [120] Batch [20/30] Loss: 0.0052 Count Acc: 1.0000
+
+Epoch [120] - Time: 19.59s
+Train Loss: 0.0197 | Val Loss: 0.0073
+Train Count Acc: 0.9934 | Val Count Acc: 0.9979
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [121] Batch [0/30] Loss: 0.0034 Count Acc: 1.0000
+Epoch [121] Batch [10/30] Loss: 0.1402 Count Acc: 0.9545
+Epoch [121] Batch [20/30] Loss: 0.1184 Count Acc: 0.9375
+
+Epoch [121] - Time: 19.42s
+Train Loss: 0.0405 | Val Loss: 0.0103
+Train Count Acc: 0.9831 | Val Count Acc: 0.9982
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_121.pth
+Epoch [122] Batch [0/30] Loss: 0.0070 Count Acc: 1.0000
+Epoch [122] Batch [10/30] Loss: 0.0097 Count Acc: 0.9943
+Epoch [122] Batch [20/30] Loss: 0.0009 Count Acc: 1.0000
+
+Epoch [122] - Time: 19.84s
+Train Loss: 0.0212 | Val Loss: 0.0403
+Train Count Acc: 0.9922 | Val Count Acc: 0.9865
+Final Count Acc: 0.9648
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [123] Batch [0/30] Loss: 0.0055 Count Acc: 1.0000
+Epoch [123] Batch [10/30] Loss: 0.1307 Count Acc: 0.9602
+Epoch [123] Batch [20/30] Loss: 0.0182 Count Acc: 0.9943
+
+Epoch [123] - Time: 20.10s
+Train Loss: 0.0781 | Val Loss: 0.3612
+Train Count Acc: 0.9748 | Val Count Acc: 0.8991
+Final Count Acc: 0.7383
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_123.pth
+Epoch [124] Batch [0/30] Loss: 0.0337 Count Acc: 0.9830
+Epoch [124] Batch [10/30] Loss: 0.3464 Count Acc: 0.8750
+Epoch [124] Batch [20/30] Loss: 0.0065 Count Acc: 1.0000
+
+Epoch [124] - Time: 19.37s
+Train Loss: 0.0558 | Val Loss: 0.0064
+Train Count Acc: 0.9788 | Val Count Acc: 0.9972
+Final Count Acc: 0.9688
+True Final Count Acc: 0.9688
+学习率: 0.000100
+Epoch [125] Batch [0/30] Loss: 0.0035 Count Acc: 1.0000
+Epoch [125] Batch [10/30] Loss: 0.0918 Count Acc: 0.9602
+Epoch [125] Batch [20/30] Loss: 0.0027 Count Acc: 1.0000
+
+Epoch [125] - Time: 19.24s
+Train Loss: 0.0532 | Val Loss: 0.0194
+Train Count Acc: 0.9797 | Val Count Acc: 0.9901
+Final Count Acc: 0.9648
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_125.pth
+Epoch [126] Batch [0/30] Loss: 0.0322 Count Acc: 0.9830
+Epoch [126] Batch [10/30] Loss: 0.0476 Count Acc: 0.9830
+Epoch [126] Batch [20/30] Loss: 0.0361 Count Acc: 0.9773
+
+Epoch [126] - Time: 19.07s
+Train Loss: 0.0652 | Val Loss: 0.2434
+Train Count Acc: 0.9782 | Val Count Acc: 0.9187
+Final Count Acc: 0.8203
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [127] Batch [0/30] Loss: 0.0594 Count Acc: 0.9602
+Epoch [127] Batch [10/30] Loss: 0.0749 Count Acc: 0.9659
+Epoch [127] Batch [20/30] Loss: 0.0350 Count Acc: 0.9886
+
+Epoch [127] - Time: 19.17s
+Train Loss: 0.0381 | Val Loss: 0.0059
+Train Count Acc: 0.9854 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_127.pth
+Epoch [128] Batch [0/30] Loss: 0.0044 Count Acc: 1.0000
+Epoch [128] Batch [10/30] Loss: 0.0099 Count Acc: 1.0000
+Epoch [128] Batch [20/30] Loss: 0.0083 Count Acc: 0.9943
+
+Epoch [128] - Time: 19.22s
+Train Loss: 0.0191 | Val Loss: 0.0044
+Train Count Acc: 0.9930 | Val Count Acc: 0.9996
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [129] Batch [0/30] Loss: 0.0036 Count Acc: 1.0000
+Epoch [129] Batch [10/30] Loss: 0.5102 Count Acc: 0.9034
+Epoch [129] Batch [20/30] Loss: 0.1949 Count Acc: 0.8920
+
+Epoch [129] - Time: 19.58s
+Train Loss: 0.1802 | Val Loss: 0.0094
+Train Count Acc: 0.9513 | Val Count Acc: 0.9979
+Final Count Acc: 0.9961
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_129.pth
+Epoch [130] Batch [0/30] Loss: 0.0136 Count Acc: 1.0000
+Epoch [130] Batch [10/30] Loss: 0.0113 Count Acc: 1.0000
+Epoch [130] Batch [20/30] Loss: 0.0016 Count Acc: 1.0000
+
+Epoch [130] - Time: 19.43s
+Train Loss: 0.0364 | Val Loss: 0.0040
+Train Count Acc: 0.9864 | Val Count Acc: 0.9996
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [131] Batch [0/30] Loss: 0.0139 Count Acc: 0.9943
+Epoch [131] Batch [10/30] Loss: 0.0108 Count Acc: 0.9943
+Epoch [131] Batch [20/30] Loss: 0.0033 Count Acc: 1.0000
+
+Epoch [131] - Time: 19.09s
+Train Loss: 0.0211 | Val Loss: 0.0048
+Train Count Acc: 0.9913 | Val Count Acc: 0.9996
+Final Count Acc: 1.0000
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_131.pth
+Epoch [132] Batch [0/30] Loss: 0.0060 Count Acc: 1.0000
+Epoch [132] Batch [10/30] Loss: 0.0053 Count Acc: 1.0000
+Epoch [132] Batch [20/30] Loss: 0.0013 Count Acc: 1.0000
+
+Epoch [132] - Time: 19.35s
+Train Loss: 0.0232 | Val Loss: 0.0235
+Train Count Acc: 0.9915 | Val Count Acc: 0.9901
+Final Count Acc: 0.9180
+True Final Count Acc: 0.9336
+学习率: 0.000100
+Epoch [133] Batch [0/30] Loss: 0.0032 Count Acc: 1.0000
+Epoch [133] Batch [10/30] Loss: 0.0031 Count Acc: 1.0000
+Epoch [133] Batch [20/30] Loss: 0.0029 Count Acc: 1.0000
+
+Epoch [133] - Time: 19.23s
+Train Loss: 0.0148 | Val Loss: 0.0024
+Train Count Acc: 0.9951 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_133.pth
+Epoch [134] Batch [0/30] Loss: 0.0017 Count Acc: 1.0000
+Epoch [134] Batch [10/30] Loss: 0.0156 Count Acc: 0.9943
+Epoch [134] Batch [20/30] Loss: 0.0182 Count Acc: 0.9886
+
+Epoch [134] - Time: 19.26s
+Train Loss: 0.0081 | Val Loss: 0.0101
+Train Count Acc: 0.9981 | Val Count Acc: 0.9982
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [135] Batch [0/30] Loss: 0.0034 Count Acc: 1.0000
+Epoch [135] Batch [10/30] Loss: 0.0471 Count Acc: 0.9886
+Epoch [135] Batch [20/30] Loss: 0.0057 Count Acc: 1.0000
+
+Epoch [135] - Time: 19.43s
+Train Loss: 0.0108 | Val Loss: 0.1221
+Train Count Acc: 0.9964 | Val Count Acc: 0.9627
+Final Count Acc: 0.8828
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_135.pth
+Epoch [136] Batch [0/30] Loss: 0.0022 Count Acc: 1.0000
+Epoch [136] Batch [10/30] Loss: 0.0010 Count Acc: 1.0000
+Epoch [136] Batch [20/30] Loss: 0.0426 Count Acc: 0.9886
+
+Epoch [136] - Time: 19.05s
+Train Loss: 0.0163 | Val Loss: 0.0217
+Train Count Acc: 0.9947 | Val Count Acc: 0.9908
+Final Count Acc: 0.9844
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [137] Batch [0/30] Loss: 0.0116 Count Acc: 0.9943
+Epoch [137] Batch [10/30] Loss: 0.0062 Count Acc: 1.0000
+Epoch [137] Batch [20/30] Loss: 0.0034 Count Acc: 1.0000
+
+Epoch [137] - Time: 19.44s
+Train Loss: 0.0102 | Val Loss: 0.3072
+Train Count Acc: 0.9962 | Val Count Acc: 0.9116
+Final Count Acc: 0.8242
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_137.pth
+Epoch [138] Batch [0/30] Loss: 0.0143 Count Acc: 0.9886
+Epoch [138] Batch [10/30] Loss: 0.0057 Count Acc: 1.0000
+Epoch [138] Batch [20/30] Loss: 0.0016 Count Acc: 1.0000
+
+Epoch [138] - Time: 19.98s
+Train Loss: 0.0084 | Val Loss: 0.0802
+Train Count Acc: 0.9970 | Val Count Acc: 0.9677
+Final Count Acc: 0.9219
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [139] Batch [0/30] Loss: 0.0044 Count Acc: 1.0000
+Epoch [139] Batch [10/30] Loss: 0.0005 Count Acc: 1.0000
+Epoch [139] Batch [20/30] Loss: 0.0107 Count Acc: 0.9943
+
+Epoch [139] - Time: 19.12s
+Train Loss: 0.0141 | Val Loss: 0.0021
+Train Count Acc: 0.9939 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_139.pth
+Epoch [140] Batch [0/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [140] Batch [10/30] Loss: 0.0070 Count Acc: 0.9943
+Epoch [140] Batch [20/30] Loss: 0.0056 Count Acc: 1.0000
+
+Epoch [140] - Time: 19.21s
+Train Loss: 0.0255 | Val Loss: 0.0313
+Train Count Acc: 0.9894 | Val Count Acc: 0.9844
+Final Count Acc: 0.9414
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [141] Batch [0/30] Loss: 0.0262 Count Acc: 0.9886
+Epoch [141] Batch [10/30] Loss: 0.0025 Count Acc: 1.0000
+Epoch [141] Batch [20/30] Loss: 0.0486 Count Acc: 0.9773
+
+Epoch [141] - Time: 19.51s
+Train Loss: 0.0301 | Val Loss: 0.0045
+Train Count Acc: 0.9900 | Val Count Acc: 0.9972
+Final Count Acc: 0.9688
+True Final Count Acc: 0.9688
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_141.pth
+Epoch [142] Batch [0/30] Loss: 0.0033 Count Acc: 1.0000
+Epoch [142] Batch [10/30] Loss: 0.0042 Count Acc: 1.0000
+Epoch [142] Batch [20/30] Loss: 0.0065 Count Acc: 1.0000
+
+Epoch [142] - Time: 19.24s
+Train Loss: 0.0184 | Val Loss: 0.0012
+Train Count Acc: 0.9949 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [143] Batch [0/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [143] Batch [10/30] Loss: 0.0013 Count Acc: 1.0000
+Epoch [143] Batch [20/30] Loss: 0.0014 Count Acc: 1.0000
+
+Epoch [143] - Time: 19.11s
+Train Loss: 0.0181 | Val Loss: 0.0129
+Train Count Acc: 0.9962 | Val Count Acc: 0.9979
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_143.pth
+Epoch [144] Batch [0/30] Loss: 0.0045 Count Acc: 1.0000
+Epoch [144] Batch [10/30] Loss: 0.0035 Count Acc: 1.0000
+Epoch [144] Batch [20/30] Loss: 0.0060 Count Acc: 1.0000
+
+Epoch [144] - Time: 19.10s
+Train Loss: 0.0131 | Val Loss: 0.0130
+Train Count Acc: 0.9968 | Val Count Acc: 0.9950
+Final Count Acc: 0.9531
+True Final Count Acc: 0.9492
+学习率: 0.000100
+Epoch [145] Batch [0/30] Loss: 0.0116 Count Acc: 0.9943
+Epoch [145] Batch [10/30] Loss: 0.0011 Count Acc: 1.0000
+Epoch [145] Batch [20/30] Loss: 0.0115 Count Acc: 1.0000
+
+Epoch [145] - Time: 20.25s
+Train Loss: 0.0199 | Val Loss: 0.0033
+Train Count Acc: 0.9930 | Val Count Acc: 0.9993
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_145.pth
+Epoch [146] Batch [0/30] Loss: 0.0011 Count Acc: 1.0000
+Epoch [146] Batch [10/30] Loss: 0.0013 Count Acc: 1.0000
+Epoch [146] Batch [20/30] Loss: 0.0302 Count Acc: 0.9886
+
+Epoch [146] - Time: 19.39s
+Train Loss: 0.0548 | Val Loss: 0.0435
+Train Count Acc: 0.9881 | Val Count Acc: 0.9830
+Final Count Acc: 0.9570
+True Final Count Acc: 0.9570
+学习率: 0.000100
+Epoch [147] Batch [0/30] Loss: 0.0022 Count Acc: 1.0000
+Epoch [147] Batch [10/30] Loss: 0.0028 Count Acc: 1.0000
+Epoch [147] Batch [20/30] Loss: 0.0014 Count Acc: 1.0000
+
+Epoch [147] - Time: 19.19s
+Train Loss: 0.0165 | Val Loss: 0.0079
+Train Count Acc: 0.9934 | Val Count Acc: 0.9975
+Final Count Acc: 0.9844
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_147.pth
+Epoch [148] Batch [0/30] Loss: 0.0465 Count Acc: 0.9773
+Epoch [148] Batch [10/30] Loss: 0.0010 Count Acc: 1.0000
+Epoch [148] Batch [20/30] Loss: 0.0028 Count Acc: 1.0000
+
+Epoch [148] - Time: 19.20s
+Train Loss: 0.0227 | Val Loss: 0.0365
+Train Count Acc: 0.9934 | Val Count Acc: 0.9879
+Final Count Acc: 0.8906
+True Final Count Acc: 0.8906
+学习率: 0.000100
+Epoch [149] Batch [0/30] Loss: 0.0750 Count Acc: 0.9716
+Epoch [149] Batch [10/30] Loss: 0.1259 Count Acc: 0.9659
+Epoch [149] Batch [20/30] Loss: 0.0008 Count Acc: 1.0000
+
+Epoch [149] - Time: 19.39s
+Train Loss: 0.0118 | Val Loss: 0.0009
+Train Count Acc: 0.9966 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_149.pth
+Epoch [150] Batch [0/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [150] Batch [10/30] Loss: 0.0032 Count Acc: 1.0000
+Epoch [150] Batch [20/30] Loss: 0.0021 Count Acc: 1.0000
+
+Epoch [150] - Time: 19.35s
+Train Loss: 0.0054 | Val Loss: 0.0015
+Train Count Acc: 0.9985 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [151] Batch [0/30] Loss: 0.0005 Count Acc: 1.0000
+Epoch [151] Batch [10/30] Loss: 0.0094 Count Acc: 1.0000
+Epoch [151] Batch [20/30] Loss: 0.0026 Count Acc: 1.0000
+
+Epoch [151] - Time: 19.91s
+Train Loss: 0.0034 | Val Loss: 0.0070
+Train Count Acc: 0.9987 | Val Count Acc: 0.9979
+Final Count Acc: 0.9883
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_151.pth
+Epoch [152] Batch [0/30] Loss: 0.0037 Count Acc: 1.0000
+Epoch [152] Batch [10/30] Loss: 0.0051 Count Acc: 1.0000
+Epoch [152] Batch [20/30] Loss: 0.0024 Count Acc: 1.0000
+
+Epoch [152] - Time: 19.73s
+Train Loss: 0.0161 | Val Loss: 0.0285
+Train Count Acc: 0.9943 | Val Count Acc: 0.9908
+Final Count Acc: 0.9375
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [153] Batch [0/30] Loss: 0.0179 Count Acc: 0.9943
+Epoch [153] Batch [10/30] Loss: 0.0024 Count Acc: 1.0000
+Epoch [153] Batch [20/30] Loss: 0.0014 Count Acc: 1.0000
+
+Epoch [153] - Time: 19.88s
+Train Loss: 0.0630 | Val Loss: 0.0407
+Train Count Acc: 0.9886 | Val Count Acc: 0.9908
+Final Count Acc: 0.9414
+True Final Count Acc: 0.9531
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_153.pth
+Epoch [154] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [154] Batch [10/30] Loss: 0.0131 Count Acc: 0.9943
+Epoch [154] Batch [20/30] Loss: 0.0004 Count Acc: 1.0000
+
+Epoch [154] - Time: 19.83s
+Train Loss: 0.0040 | Val Loss: 0.0710
+Train Count Acc: 0.9991 | Val Count Acc: 0.9773
+Final Count Acc: 0.9258
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [155] Batch [0/30] Loss: 0.0032 Count Acc: 1.0000
+Epoch [155] Batch [10/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [155] Batch [20/30] Loss: 0.0043 Count Acc: 1.0000
+
+Epoch [155] - Time: 18.90s
+Train Loss: 0.0146 | Val Loss: 0.0027
+Train Count Acc: 0.9945 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_155.pth
+Epoch [156] Batch [0/30] Loss: 0.0008 Count Acc: 1.0000
+Epoch [156] Batch [10/30] Loss: 0.0012 Count Acc: 1.0000
+Epoch [156] Batch [20/30] Loss: 0.0035 Count Acc: 1.0000
+
+Epoch [156] - Time: 19.44s
+Train Loss: 0.0044 | Val Loss: 0.0183
+Train Count Acc: 0.9991 | Val Count Acc: 0.9954
+Final Count Acc: 0.9805
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [157] Batch [0/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [157] Batch [10/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [157] Batch [20/30] Loss: 0.0015 Count Acc: 1.0000
+
+Epoch [157] - Time: 19.78s
+Train Loss: 0.0191 | Val Loss: 0.1687
+Train Count Acc: 0.9939 | Val Count Acc: 0.9432
+Final Count Acc: 0.7930
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_157.pth
+Epoch [158] Batch [0/30] Loss: 0.0652 Count Acc: 0.9716
+Epoch [158] Batch [10/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [158] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [158] - Time: 19.62s
+Train Loss: 0.0185 | Val Loss: 0.0014
+Train Count Acc: 0.9932 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [159] Batch [0/30] Loss: 0.0010 Count Acc: 1.0000
+Epoch [159] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [159] Batch [20/30] Loss: 0.0027 Count Acc: 1.0000
+
+Epoch [159] - Time: 19.04s
+Train Loss: 0.0018 | Val Loss: 0.0336
+Train Count Acc: 0.9998 | Val Count Acc: 0.9858
+Final Count Acc: 0.9570
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_159.pth
+Epoch [160] Batch [0/30] Loss: 0.0008 Count Acc: 1.0000
+Epoch [160] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [160] Batch [20/30] Loss: 0.0015 Count Acc: 1.0000
+
+Epoch [160] - Time: 19.90s
+Train Loss: 0.0049 | Val Loss: 0.0038
+Train Count Acc: 0.9979 | Val Count Acc: 0.9996
+Final Count Acc: 0.9961
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Epoch [161] Batch [0/30] Loss: 0.0020 Count Acc: 1.0000
+Epoch [161] Batch [10/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [161] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [161] - Time: 19.36s
+Train Loss: 0.0145 | Val Loss: 0.0343
+Train Count Acc: 0.9983 | Val Count Acc: 0.9883
+Final Count Acc: 0.9609
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_161.pth
+Epoch [162] Batch [0/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [162] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [162] Batch [20/30] Loss: 0.0004 Count Acc: 1.0000
+
+Epoch [162] - Time: 19.63s
+Train Loss: 0.0078 | Val Loss: 0.0048
+Train Count Acc: 0.9970 | Val Count Acc: 0.9975
+Final Count Acc: 0.9883
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Epoch [163] Batch [0/30] Loss: 0.0051 Count Acc: 1.0000
+Epoch [163] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [163] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [163] - Time: 19.08s
+Train Loss: 0.0119 | Val Loss: 0.0115
+Train Count Acc: 0.9975 | Val Count Acc: 0.9954
+Final Count Acc: 0.9883
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_163.pth
+Epoch [164] Batch [0/30] Loss: 0.0024 Count Acc: 1.0000
+Epoch [164] Batch [10/30] Loss: 0.0021 Count Acc: 1.0000
+Epoch [164] Batch [20/30] Loss: 0.0273 Count Acc: 1.0000
+
+Epoch [164] - Time: 19.59s
+Train Loss: 0.0103 | Val Loss: 0.0028
+Train Count Acc: 0.9973 | Val Count Acc: 0.9986
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [165] Batch [0/30] Loss: 0.0021 Count Acc: 1.0000
+Epoch [165] Batch [10/30] Loss: 0.0111 Count Acc: 0.9943
+Epoch [165] Batch [20/30] Loss: 0.0005 Count Acc: 1.0000
+
+Epoch [165] - Time: 19.30s
+Train Loss: 0.0018 | Val Loss: 0.0005
+Train Count Acc: 0.9994 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_165.pth
+Epoch [166] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [166] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [166] Batch [20/30] Loss: 0.0335 Count Acc: 0.9830
+
+Epoch [166] - Time: 19.73s
+Train Loss: 0.0019 | Val Loss: 0.0004
+Train Count Acc: 0.9994 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [167] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [167] Batch [10/30] Loss: 0.0008 Count Acc: 1.0000
+Epoch [167] Batch [20/30] Loss: 0.0005 Count Acc: 1.0000
+
+Epoch [167] - Time: 19.47s
+Train Loss: 0.0040 | Val Loss: 0.0015
+Train Count Acc: 0.9992 | Val Count Acc: 0.9996
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_167.pth
+Epoch [168] Batch [0/30] Loss: 0.0012 Count Acc: 1.0000
+Epoch [168] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [168] Batch [20/30] Loss: 0.0017 Count Acc: 1.0000
+
+Epoch [168] - Time: 19.62s
+Train Loss: 0.0013 | Val Loss: 0.0090
+Train Count Acc: 0.9998 | Val Count Acc: 0.9968
+Final Count Acc: 0.9766
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [169] Batch [0/30] Loss: 0.0023 Count Acc: 1.0000
+Epoch [169] Batch [10/30] Loss: 0.0005 Count Acc: 1.0000
+Epoch [169] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [169] - Time: 19.09s
+Train Loss: 0.0039 | Val Loss: 0.0005
+Train Count Acc: 0.9985 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_169.pth
+Epoch [170] Batch [0/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [170] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [170] Batch [20/30] Loss: 0.0042 Count Acc: 1.0000
+
+Epoch [170] - Time: 18.94s
+Train Loss: 0.0020 | Val Loss: 0.0003
+Train Count Acc: 0.9992 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [171] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [171] Batch [10/30] Loss: 0.0012 Count Acc: 1.0000
+Epoch [171] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [171] - Time: 19.07s
+Train Loss: 0.0007 | Val Loss: 0.0004
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_171.pth
+Epoch [172] Batch [0/30] Loss: 0.0005 Count Acc: 1.0000
+Epoch [172] Batch [10/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [172] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [172] - Time: 18.86s
+Train Loss: 0.0004 | Val Loss: 0.0004
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [173] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [173] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [173] Batch [20/30] Loss: 0.0007 Count Acc: 1.0000
+
+Epoch [173] - Time: 19.29s
+Train Loss: 0.0085 | Val Loss: 0.0736
+Train Count Acc: 0.9964 | Val Count Acc: 0.9783
+Final Count Acc: 0.9141
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_173.pth
+Epoch [174] Batch [0/30] Loss: 0.0089 Count Acc: 0.9943
+Epoch [174] Batch [10/30] Loss: 0.0313 Count Acc: 0.9773
+Epoch [174] Batch [20/30] Loss: 0.1071 Count Acc: 0.9659
+
+Epoch [174] - Time: 19.31s
+Train Loss: 0.0771 | Val Loss: 0.0230
+Train Count Acc: 0.9807 | Val Count Acc: 0.9911
+Final Count Acc: 0.9375
+True Final Count Acc: 0.9258
+学习率: 0.000100
+Epoch [175] Batch [0/30] Loss: 0.1479 Count Acc: 0.9602
+Epoch [175] Batch [10/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [175] Batch [20/30] Loss: 0.6872 Count Acc: 0.9205
+
+Epoch [175] - Time: 19.35s
+Train Loss: 0.0452 | Val Loss: 0.0015
+Train Count Acc: 0.9911 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_175.pth
+Epoch [176] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [176] Batch [10/30] Loss: 0.0918 Count Acc: 0.9602
+Epoch [176] Batch [20/30] Loss: 0.0004 Count Acc: 1.0000
+
+Epoch [176] - Time: 19.55s
+Train Loss: 0.0046 | Val Loss: 0.0034
+Train Count Acc: 0.9985 | Val Count Acc: 0.9993
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [177] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [177] Batch [10/30] Loss: 0.0027 Count Acc: 1.0000
+Epoch [177] Batch [20/30] Loss: 0.0026 Count Acc: 1.0000
+
+Epoch [177] - Time: 19.21s
+Train Loss: 0.0014 | Val Loss: 0.0305
+Train Count Acc: 0.9996 | Val Count Acc: 0.9858
+Final Count Acc: 0.9570
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_177.pth
+Epoch [178] Batch [0/30] Loss: 0.0020 Count Acc: 1.0000
+Epoch [178] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [178] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [178] - Time: 19.55s
+Train Loss: 0.0009 | Val Loss: 0.0004
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [179] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [179] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [179] Batch [20/30] Loss: 0.0013 Count Acc: 1.0000
+
+Epoch [179] - Time: 19.83s
+Train Loss: 0.0010 | Val Loss: 0.0014
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_179.pth
+Epoch [180] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [180] Batch [10/30] Loss: 0.0034 Count Acc: 1.0000
+Epoch [180] Batch [20/30] Loss: 0.0327 Count Acc: 0.9773
+
+Epoch [180] - Time: 19.29s
+Train Loss: 0.0264 | Val Loss: 0.0123
+Train Count Acc: 0.9919 | Val Count Acc: 0.9961
+Final Count Acc: 0.9883
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [181] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [181] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [181] Batch [20/30] Loss: 0.0082 Count Acc: 0.9943
+
+Epoch [181] - Time: 19.00s
+Train Loss: 0.0288 | Val Loss: 0.1322
+Train Count Acc: 0.9926 | Val Count Acc: 0.9631
+Final Count Acc: 0.8906
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_181.pth
+Epoch [182] Batch [0/30] Loss: 0.1032 Count Acc: 0.9659
+Epoch [182] Batch [10/30] Loss: 0.0081 Count Acc: 0.9943
+Epoch [182] Batch [20/30] Loss: 0.0035 Count Acc: 1.0000
+
+Epoch [182] - Time: 19.82s
+Train Loss: 0.0498 | Val Loss: 0.0112
+Train Count Acc: 0.9862 | Val Count Acc: 0.9943
+Final Count Acc: 0.9492
+True Final Count Acc: 0.9531
+学习率: 0.000100
+Epoch [183] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [183] Batch [10/30] Loss: 0.4308 Count Acc: 0.9489
+Epoch [183] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [183] - Time: 19.33s
+Train Loss: 0.0510 | Val Loss: 0.0004
+Train Count Acc: 0.9930 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_183.pth
+Epoch [184] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [184] Batch [10/30] Loss: 0.0040 Count Acc: 1.0000
+Epoch [184] Batch [20/30] Loss: 0.0044 Count Acc: 1.0000
+
+Epoch [184] - Time: 19.08s
+Train Loss: 0.0083 | Val Loss: 0.0019
+Train Count Acc: 0.9981 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [185] Batch [0/30] Loss: 0.0017 Count Acc: 1.0000
+Epoch [185] Batch [10/30] Loss: 0.0018 Count Acc: 1.0000
+Epoch [185] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [185] - Time: 19.47s
+Train Loss: 0.0042 | Val Loss: 0.0027
+Train Count Acc: 0.9985 | Val Count Acc: 0.9982
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_185.pth
+Epoch [186] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [186] Batch [10/30] Loss: 0.0056 Count Acc: 1.0000
+Epoch [186] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [186] - Time: 19.23s
+Train Loss: 0.0038 | Val Loss: 0.0005
+Train Count Acc: 0.9992 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [187] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [187] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [187] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [187] - Time: 19.84s
+Train Loss: 0.0007 | Val Loss: 0.0004
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_187.pth
+Epoch [188] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [188] Batch [10/30] Loss: 0.0012 Count Acc: 1.0000
+Epoch [188] Batch [20/30] Loss: 0.0013 Count Acc: 1.0000
+
+Epoch [188] - Time: 19.58s
+Train Loss: 0.0013 | Val Loss: 0.0794
+Train Count Acc: 0.9998 | Val Count Acc: 0.9822
+Final Count Acc: 0.9609
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [189] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [189] Batch [10/30] Loss: 0.0016 Count Acc: 1.0000
+Epoch [189] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [189] - Time: 19.34s
+Train Loss: 0.0043 | Val Loss: 0.0249
+Train Count Acc: 0.9981 | Val Count Acc: 0.9925
+Final Count Acc: 0.9648
+True Final Count Acc: 0.9727
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_189.pth
+Epoch [190] Batch [0/30] Loss: 0.5118 Count Acc: 0.8864
+Epoch [190] Batch [10/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [190] Batch [20/30] Loss: 0.1302 Count Acc: 0.9545
+
+Epoch [190] - Time: 19.06s
+Train Loss: 0.0461 | Val Loss: 0.0046
+Train Count Acc: 0.9871 | Val Count Acc: 0.9979
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [191] Batch [0/30] Loss: 0.0013 Count Acc: 1.0000
+Epoch [191] Batch [10/30] Loss: 0.0096 Count Acc: 1.0000
+Epoch [191] Batch [20/30] Loss: 0.0081 Count Acc: 0.9943
+
+Epoch [191] - Time: 19.85s
+Train Loss: 0.0373 | Val Loss: 0.0097
+Train Count Acc: 0.9894 | Val Count Acc: 0.9968
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_191.pth
+Epoch [192] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [192] Batch [10/30] Loss: 0.1028 Count Acc: 0.9602
+Epoch [192] Batch [20/30] Loss: 0.0026 Count Acc: 1.0000
+
+Epoch [192] - Time: 18.96s
+Train Loss: 0.0274 | Val Loss: 1.1826
+Train Count Acc: 0.9913 | Val Count Acc: 0.8086
+Final Count Acc: 0.5898
+True Final Count Acc: 0.9844
+学习率: 0.000100
+Epoch [193] Batch [0/30] Loss: 0.1628 Count Acc: 0.9318
+Epoch [193] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [193] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [193] - Time: 19.23s
+Train Loss: 0.0301 | Val Loss: 0.0007
+Train Count Acc: 0.9913 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_193.pth
+Epoch [194] Batch [0/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [194] Batch [10/30] Loss: 0.0005 Count Acc: 1.0000
+Epoch [194] Batch [20/30] Loss: 0.0041 Count Acc: 1.0000
+
+Epoch [194] - Time: 19.50s
+Train Loss: 0.0046 | Val Loss: 0.0037
+Train Count Acc: 0.9983 | Val Count Acc: 0.9996
+Final Count Acc: 0.9961
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Epoch [195] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [195] Batch [10/30] Loss: 0.6322 Count Acc: 0.9091
+Epoch [195] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [195] - Time: 19.24s
+Train Loss: 0.0582 | Val Loss: 0.0678
+Train Count Acc: 0.9871 | Val Count Acc: 0.9808
+Final Count Acc: 0.9570
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_195.pth
+Epoch [196] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [196] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [196] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [196] - Time: 20.33s
+Train Loss: 0.0093 | Val Loss: 0.0181
+Train Count Acc: 0.9981 | Val Count Acc: 0.9972
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [197] Batch [0/30] Loss: 0.0010 Count Acc: 1.0000
+Epoch [197] Batch [10/30] Loss: 0.0025 Count Acc: 1.0000
+Epoch [197] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [197] - Time: 19.47s
+Train Loss: 0.0051 | Val Loss: 0.0215
+Train Count Acc: 0.9970 | Val Count Acc: 0.9940
+Final Count Acc: 0.9844
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_197.pth
+Epoch [198] Batch [0/30] Loss: 0.0013 Count Acc: 1.0000
+Epoch [198] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [198] Batch [20/30] Loss: 0.0039 Count Acc: 1.0000
+
+Epoch [198] - Time: 19.06s
+Train Loss: 0.0095 | Val Loss: 0.0101
+Train Count Acc: 0.9968 | Val Count Acc: 0.9972
+Final Count Acc: 0.9883
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Epoch [199] Batch [0/30] Loss: 0.0228 Count Acc: 0.9886
+Epoch [199] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [199] Batch [20/30] Loss: 0.1548 Count Acc: 0.9716
+
+Epoch [199] - Time: 19.24s
+Train Loss: 0.1011 | Val Loss: 0.0605
+Train Count Acc: 0.9790 | Val Count Acc: 0.9840
+Final Count Acc: 0.8789
+True Final Count Acc: 0.8867
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_199.pth
+Epoch [200] Batch [0/30] Loss: 0.0039 Count Acc: 1.0000
+Epoch [200] Batch [10/30] Loss: 0.0049 Count Acc: 1.0000
+Epoch [200] Batch [20/30] Loss: 0.0012 Count Acc: 1.0000
+
+Epoch [200] - Time: 19.39s
+Train Loss: 0.0234 | Val Loss: 0.0320
+Train Count Acc: 0.9936 | Val Count Acc: 0.9876
+Final Count Acc: 0.9727
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [201] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [201] Batch [10/30] Loss: 0.0017 Count Acc: 1.0000
+Epoch [201] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [201] - Time: 19.40s
+Train Loss: 0.0270 | Val Loss: 0.0006
+Train Count Acc: 0.9919 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_201.pth
+Epoch [202] Batch [0/30] Loss: 0.0021 Count Acc: 1.0000
+Epoch [202] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [202] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [202] - Time: 19.20s
+Train Loss: 0.0105 | Val Loss: 0.1305
+Train Count Acc: 0.9966 | Val Count Acc: 0.9695
+Final Count Acc: 0.8984
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [203] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [203] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [203] Batch [20/30] Loss: 0.0004 Count Acc: 1.0000
+
+Epoch [203] - Time: 19.37s
+Train Loss: 0.0017 | Val Loss: 0.0069
+Train Count Acc: 0.9994 | Val Count Acc: 0.9975
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_203.pth
+Epoch [204] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [204] Batch [10/30] Loss: 0.0013 Count Acc: 1.0000
+Epoch [204] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [204] - Time: 19.77s
+Train Loss: 0.0015 | Val Loss: 0.0071
+Train Count Acc: 0.9992 | Val Count Acc: 0.9972
+Final Count Acc: 0.9844
+True Final Count Acc: 0.9883
+学习率: 0.000100
+Epoch [205] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [205] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [205] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [205] - Time: 19.50s
+Train Loss: 0.0012 | Val Loss: 0.0027
+Train Count Acc: 0.9998 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_205.pth
+Epoch [206] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [206] Batch [10/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [206] Batch [20/30] Loss: 0.0016 Count Acc: 1.0000
+
+Epoch [206] - Time: 19.30s
+Train Loss: 0.0053 | Val Loss: 0.0003
+Train Count Acc: 0.9977 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [207] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [207] Batch [10/30] Loss: 0.0042 Count Acc: 1.0000
+Epoch [207] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [207] - Time: 19.53s
+Train Loss: 0.0016 | Val Loss: 0.0939
+Train Count Acc: 0.9996 | Val Count Acc: 0.9840
+Final Count Acc: 0.9414
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_207.pth
+Epoch [208] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [208] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [208] Batch [20/30] Loss: 0.0010 Count Acc: 1.0000
+
+Epoch [208] - Time: 19.72s
+Train Loss: 0.0017 | Val Loss: 0.0035
+Train Count Acc: 0.9994 | Val Count Acc: 0.9982
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [209] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [209] Batch [10/30] Loss: 0.0005 Count Acc: 1.0000
+Epoch [209] Batch [20/30] Loss: 0.0043 Count Acc: 1.0000
+
+Epoch [209] - Time: 20.18s
+Train Loss: 0.0147 | Val Loss: 0.0005
+Train Count Acc: 0.9960 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_209.pth
+Epoch [210] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [210] Batch [10/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [210] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [210] - Time: 20.48s
+Train Loss: 0.0009 | Val Loss: 0.0100
+Train Count Acc: 1.0000 | Val Count Acc: 0.9982
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [211] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [211] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [211] Batch [20/30] Loss: 0.0073 Count Acc: 0.9943
+
+Epoch [211] - Time: 20.35s
+Train Loss: 0.0405 | Val Loss: 0.0045
+Train Count Acc: 0.9924 | Val Count Acc: 0.9982
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_211.pth
+Epoch [212] Batch [0/30] Loss: 0.0005 Count Acc: 1.0000
+Epoch [212] Batch [10/30] Loss: 0.0008 Count Acc: 1.0000
+Epoch [212] Batch [20/30] Loss: 0.0262 Count Acc: 0.9830
+
+Epoch [212] - Time: 19.53s
+Train Loss: 0.0031 | Val Loss: 0.0002
+Train Count Acc: 0.9989 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [213] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [213] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [213] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [213] - Time: 20.30s
+Train Loss: 0.0023 | Val Loss: 0.0148
+Train Count Acc: 0.9989 | Val Count Acc: 0.9947
+Final Count Acc: 0.9844
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_213.pth
+Epoch [214] Batch [0/30] Loss: 0.0011 Count Acc: 1.0000
+Epoch [214] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [214] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [214] - Time: 19.57s
+Train Loss: 0.0009 | Val Loss: 0.0030
+Train Count Acc: 0.9996 | Val Count Acc: 0.9993
+Final Count Acc: 0.9922
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Epoch [215] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [215] Batch [10/30] Loss: 0.0023 Count Acc: 1.0000
+Epoch [215] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [215] - Time: 19.80s
+Train Loss: 0.0026 | Val Loss: 0.0221
+Train Count Acc: 0.9991 | Val Count Acc: 0.9918
+Final Count Acc: 0.9570
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_215.pth
+Epoch [216] Batch [0/30] Loss: 0.0012 Count Acc: 1.0000
+Epoch [216] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [216] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [216] - Time: 20.38s
+Train Loss: 0.0135 | Val Loss: 0.0202
+Train Count Acc: 0.9966 | Val Count Acc: 0.9929
+Final Count Acc: 0.9688
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [217] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [217] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [217] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [217] - Time: 20.46s
+Train Loss: 0.0018 | Val Loss: 0.0014
+Train Count Acc: 0.9992 | Val Count Acc: 0.9993
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_217.pth
+Epoch [218] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [218] Batch [10/30] Loss: 0.0380 Count Acc: 0.9830
+Epoch [218] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [218] - Time: 20.77s
+Train Loss: 0.0020 | Val Loss: 0.0084
+Train Count Acc: 0.9994 | Val Count Acc: 0.9982
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [219] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [219] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [219] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [219] - Time: 20.06s
+Train Loss: 0.0009 | Val Loss: 0.0002
+Train Count Acc: 0.9996 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_219.pth
+Epoch [220] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [220] Batch [10/30] Loss: 0.0025 Count Acc: 1.0000
+Epoch [220] Batch [20/30] Loss: 0.0175 Count Acc: 0.9886
+
+Epoch [220] - Time: 19.63s
+Train Loss: 0.0414 | Val Loss: 0.0527
+Train Count Acc: 0.9936 | Val Count Acc: 0.9918
+Final Count Acc: 0.9102
+True Final Count Acc: 0.9141
+学习率: 0.000100
+Epoch [221] Batch [0/30] Loss: 0.0010 Count Acc: 1.0000
+Epoch [221] Batch [10/30] Loss: 0.1028 Count Acc: 0.9602
+Epoch [221] Batch [20/30] Loss: 0.0136 Count Acc: 1.0000
+
+Epoch [221] - Time: 19.71s
+Train Loss: 0.1289 | Val Loss: 0.0774
+Train Count Acc: 0.9714 | Val Count Acc: 0.9929
+Final Count Acc: 0.9805
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_221.pth
+Epoch [222] Batch [0/30] Loss: 0.0015 Count Acc: 1.0000
+Epoch [222] Batch [10/30] Loss: 0.0262 Count Acc: 0.9886
+Epoch [222] Batch [20/30] Loss: 0.0005 Count Acc: 1.0000
+
+Epoch [222] - Time: 19.91s
+Train Loss: 0.0220 | Val Loss: 0.0053
+Train Count Acc: 0.9924 | Val Count Acc: 0.9982
+Final Count Acc: 0.9844
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [223] Batch [0/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [223] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [223] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [223] - Time: 19.84s
+Train Loss: 0.0017 | Val Loss: 0.0148
+Train Count Acc: 0.9992 | Val Count Acc: 0.9947
+Final Count Acc: 0.9688
+True Final Count Acc: 0.9688
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_223.pth
+Epoch [224] Batch [0/30] Loss: 0.0019 Count Acc: 1.0000
+Epoch [224] Batch [10/30] Loss: 0.1537 Count Acc: 0.9716
+Epoch [224] Batch [20/30] Loss: 0.0004 Count Acc: 1.0000
+
+Epoch [224] - Time: 19.94s
+Train Loss: 0.0119 | Val Loss: 0.0051
+Train Count Acc: 0.9964 | Val Count Acc: 0.9986
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [225] Batch [0/30] Loss: 0.0012 Count Acc: 1.0000
+Epoch [225] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [225] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [225] - Time: 19.84s
+Train Loss: 0.0060 | Val Loss: 0.0716
+Train Count Acc: 0.9977 | Val Count Acc: 0.9876
+Final Count Acc: 0.9805
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_225.pth
+Epoch [226] Batch [0/30] Loss: 0.0017 Count Acc: 1.0000
+Epoch [226] Batch [10/30] Loss: 0.1814 Count Acc: 0.9261
+Epoch [226] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [226] - Time: 19.77s
+Train Loss: 0.0068 | Val Loss: 0.0396
+Train Count Acc: 0.9975 | Val Count Acc: 0.9893
+Final Count Acc: 0.9805
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [227] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [227] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [227] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [227] - Time: 20.14s
+Train Loss: 0.0022 | Val Loss: 0.0002
+Train Count Acc: 0.9992 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_227.pth
+Epoch [228] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [228] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [228] Batch [20/30] Loss: 0.0030 Count Acc: 1.0000
+
+Epoch [228] - Time: 19.47s
+Train Loss: 0.0020 | Val Loss: 0.0001
+Train Count Acc: 0.9996 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [229] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [229] Batch [10/30] Loss: 0.0151 Count Acc: 0.9943
+Epoch [229] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [229] - Time: 20.13s
+Train Loss: 0.0148 | Val Loss: 0.0905
+Train Count Acc: 0.9939 | Val Count Acc: 0.9798
+Final Count Acc: 0.8984
+True Final Count Acc: 0.8945
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_229.pth
+Epoch [230] Batch [0/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [230] Batch [10/30] Loss: 0.0018 Count Acc: 1.0000
+Epoch [230] Batch [20/30] Loss: 0.6445 Count Acc: 0.8864
+
+Epoch [230] - Time: 20.39s
+Train Loss: 0.1187 | Val Loss: 0.1940
+Train Count Acc: 0.9769 | Val Count Acc: 0.9624
+Final Count Acc: 0.8438
+True Final Count Acc: 0.8438
+学习率: 0.000100
+Epoch [231] Batch [0/30] Loss: 0.3569 Count Acc: 0.9375
+Epoch [231] Batch [10/30] Loss: 0.1408 Count Acc: 0.9716
+Epoch [231] Batch [20/30] Loss: 0.0011 Count Acc: 1.0000
+
+Epoch [231] - Time: 19.91s
+Train Loss: 0.0451 | Val Loss: 0.0027
+Train Count Acc: 0.9867 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_231.pth
+Epoch [232] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [232] Batch [10/30] Loss: 0.1636 Count Acc: 0.9375
+Epoch [232] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [232] - Time: 19.58s
+Train Loss: 0.0292 | Val Loss: 0.0006
+Train Count Acc: 0.9926 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [233] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [233] Batch [10/30] Loss: 0.0161 Count Acc: 0.9886
+Epoch [233] Batch [20/30] Loss: 0.0056 Count Acc: 0.9943
+
+Epoch [233] - Time: 20.16s
+Train Loss: 0.0324 | Val Loss: 0.0884
+Train Count Acc: 0.9926 | Val Count Acc: 0.9702
+Final Count Acc: 0.8906
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_233.pth
+Epoch [234] Batch [0/30] Loss: 0.0123 Count Acc: 0.9943
+Epoch [234] Batch [10/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [234] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [234] - Time: 20.11s
+Train Loss: 0.0133 | Val Loss: 0.0005
+Train Count Acc: 0.9964 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [235] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [235] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [235] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [235] - Time: 19.46s
+Train Loss: 0.0035 | Val Loss: 0.0010
+Train Count Acc: 0.9983 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_235.pth
+Epoch [236] Batch [0/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [236] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [236] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [236] - Time: 19.80s
+Train Loss: 0.0005 | Val Loss: 0.0381
+Train Count Acc: 0.9998 | Val Count Acc: 0.9972
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [237] Batch [0/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [237] Batch [10/30] Loss: 0.0017 Count Acc: 1.0000
+Epoch [237] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [237] - Time: 19.31s
+Train Loss: 0.0105 | Val Loss: 0.0010
+Train Count Acc: 0.9966 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_237.pth
+Epoch [238] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [238] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [238] Batch [20/30] Loss: 0.0005 Count Acc: 1.0000
+
+Epoch [238] - Time: 19.56s
+Train Loss: 0.0002 | Val Loss: 0.0001
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [239] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [239] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [239] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [239] - Time: 20.07s
+Train Loss: 0.0001 | Val Loss: 0.0363
+Train Count Acc: 1.0000 | Val Count Acc: 0.9858
+Final Count Acc: 0.9375
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_239.pth
+Epoch [240] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [240] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [240] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [240] - Time: 21.09s
+Train Loss: 0.0002 | Val Loss: 0.0029
+Train Count Acc: 1.0000 | Val Count Acc: 0.9989
+Final Count Acc: 0.9883
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [241] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [241] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [241] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [241] - Time: 20.19s
+Train Loss: 0.0001 | Val Loss: 0.0001
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_241.pth
+Epoch [242] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [242] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [242] Batch [20/30] Loss: 0.0018 Count Acc: 1.0000
+
+Epoch [242] - Time: 20.14s
+Train Loss: 0.0006 | Val Loss: 0.0092
+Train Count Acc: 1.0000 | Val Count Acc: 0.9982
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [243] Batch [0/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [243] Batch [10/30] Loss: 0.0110 Count Acc: 0.9886
+Epoch [243] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [243] - Time: 19.95s
+Train Loss: 0.0091 | Val Loss: 0.0161
+Train Count Acc: 0.9975 | Val Count Acc: 0.9950
+Final Count Acc: 0.9727
+True Final Count Acc: 0.9727
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_243.pth
+Epoch [244] Batch [0/30] Loss: 0.1556 Count Acc: 0.9716
+Epoch [244] Batch [10/30] Loss: 0.0030 Count Acc: 1.0000
+Epoch [244] Batch [20/30] Loss: 0.0165 Count Acc: 0.9886
+
+Epoch [244] - Time: 19.94s
+Train Loss: 0.0077 | Val Loss: 0.0032
+Train Count Acc: 0.9981 | Val Count Acc: 0.9989
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [245] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [245] Batch [10/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [245] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [245] - Time: 19.50s
+Train Loss: 0.0255 | Val Loss: 0.1110
+Train Count Acc: 0.9955 | Val Count Acc: 0.9759
+Final Count Acc: 0.9141
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_245.pth
+Epoch [246] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [246] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [246] Batch [20/30] Loss: 0.3350 Count Acc: 0.9489
+
+Epoch [246] - Time: 19.43s
+Train Loss: 0.0373 | Val Loss: 0.0003
+Train Count Acc: 0.9941 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [247] Batch [0/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [247] Batch [10/30] Loss: 0.0183 Count Acc: 0.9943
+Epoch [247] Batch [20/30] Loss: 0.2550 Count Acc: 0.9375
+
+Epoch [247] - Time: 20.21s
+Train Loss: 0.0140 | Val Loss: 0.0005
+Train Count Acc: 0.9955 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_247.pth
+Epoch [248] Batch [0/30] Loss: 0.0015 Count Acc: 1.0000
+Epoch [248] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [248] Batch [20/30] Loss: 0.0033 Count Acc: 1.0000
+
+Epoch [248] - Time: 20.18s
+Train Loss: 0.0059 | Val Loss: 0.0011
+Train Count Acc: 0.9979 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [249] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [249] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [249] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [249] - Time: 19.86s
+Train Loss: 0.0082 | Val Loss: 0.0004
+Train Count Acc: 0.9975 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_249.pth
+Epoch [250] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [250] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [250] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [250] - Time: 20.06s
+Train Loss: 0.0058 | Val Loss: 0.0001
+Train Count Acc: 0.9979 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [251] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [251] Batch [10/30] Loss: 0.0022 Count Acc: 1.0000
+Epoch [251] Batch [20/30] Loss: 0.0005 Count Acc: 1.0000
+
+Epoch [251] - Time: 20.59s
+Train Loss: 0.0037 | Val Loss: 0.0005
+Train Count Acc: 0.9979 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_251.pth
+Epoch [252] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [252] Batch [10/30] Loss: 0.0018 Count Acc: 1.0000
+Epoch [252] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [252] - Time: 19.88s
+Train Loss: 0.0143 | Val Loss: 0.0011
+Train Count Acc: 0.9949 | Val Count Acc: 0.9993
+Final Count Acc: 0.9922
+True Final Count Acc: 0.9922
+学习率: 0.000100
+Epoch [253] Batch [0/30] Loss: 0.0025 Count Acc: 1.0000
+Epoch [253] Batch [10/30] Loss: 0.0033 Count Acc: 1.0000
+Epoch [253] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [253] - Time: 20.24s
+Train Loss: 0.0295 | Val Loss: 0.0152
+Train Count Acc: 0.9915 | Val Count Acc: 0.9954
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_253.pth
+Epoch [254] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [254] Batch [10/30] Loss: 1.0842 Count Acc: 0.8750
+Epoch [254] Batch [20/30] Loss: 0.0496 Count Acc: 0.9943
+
+Epoch [254] - Time: 19.78s
+Train Loss: 0.1965 | Val Loss: 0.6639
+Train Count Acc: 0.9733 | Val Count Acc: 0.8793
+Final Count Acc: 0.6562
+True Final Count Acc: 0.9141
+学习率: 0.000100
+Epoch [255] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [255] Batch [10/30] Loss: 0.0009 Count Acc: 1.0000
+Epoch [255] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [255] - Time: 20.23s
+Train Loss: 0.0740 | Val Loss: 0.0901
+Train Count Acc: 0.9843 | Val Count Acc: 0.9773
+Final Count Acc: 0.9414
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_255.pth
+Epoch [256] Batch [0/30] Loss: 0.2150 Count Acc: 0.9602
+Epoch [256] Batch [10/30] Loss: 0.0035 Count Acc: 1.0000
+Epoch [256] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [256] - Time: 20.28s
+Train Loss: 0.0433 | Val Loss: 0.0187
+Train Count Acc: 0.9911 | Val Count Acc: 0.9940
+Final Count Acc: 0.9648
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [257] Batch [0/30] Loss: 0.0138 Count Acc: 0.9943
+Epoch [257] Batch [10/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [257] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [257] - Time: 20.34s
+Train Loss: 0.0076 | Val Loss: 0.0020
+Train Count Acc: 0.9975 | Val Count Acc: 0.9989
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_257.pth
+Epoch [258] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [258] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [258] Batch [20/30] Loss: 0.0017 Count Acc: 1.0000
+
+Epoch [258] - Time: 19.86s
+Train Loss: 0.0013 | Val Loss: 0.0002
+Train Count Acc: 0.9996 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [259] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [259] Batch [10/30] Loss: 0.0033 Count Acc: 1.0000
+Epoch [259] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [259] - Time: 19.44s
+Train Loss: 0.0159 | Val Loss: 0.0017
+Train Count Acc: 0.9945 | Val Count Acc: 0.9993
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_259.pth
+Epoch [260] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [260] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [260] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [260] - Time: 19.91s
+Train Loss: 0.0004 | Val Loss: 0.0069
+Train Count Acc: 1.0000 | Val Count Acc: 0.9982
+Final Count Acc: 0.9883
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [261] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [261] Batch [10/30] Loss: 0.0022 Count Acc: 1.0000
+Epoch [261] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [261] - Time: 19.77s
+Train Loss: 0.0014 | Val Loss: 0.0003
+Train Count Acc: 0.9994 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_261.pth
+Epoch [262] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [262] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [262] Batch [20/30] Loss: 0.0067 Count Acc: 1.0000
+
+Epoch [262] - Time: 20.13s
+Train Loss: 0.0352 | Val Loss: 0.0413
+Train Count Acc: 0.9909 | Val Count Acc: 0.9918
+Final Count Acc: 0.9492
+True Final Count Acc: 0.9570
+学习率: 0.000100
+Epoch [263] Batch [0/30] Loss: 0.0046 Count Acc: 0.9943
+Epoch [263] Batch [10/30] Loss: 0.0040 Count Acc: 1.0000
+Epoch [263] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [263] - Time: 19.85s
+Train Loss: 0.0006 | Val Loss: 0.0126
+Train Count Acc: 0.9998 | Val Count Acc: 0.9979
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_263.pth
+Epoch [264] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [264] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [264] Batch [20/30] Loss: 0.0004 Count Acc: 1.0000
+
+Epoch [264] - Time: 19.53s
+Train Loss: 0.0018 | Val Loss: 0.0014
+Train Count Acc: 0.9996 | Val Count Acc: 0.9996
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [265] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [265] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [265] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [265] - Time: 20.16s
+Train Loss: 0.0002 | Val Loss: 0.0116
+Train Count Acc: 1.0000 | Val Count Acc: 0.9940
+Final Count Acc: 0.9883
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_265.pth
+Epoch [266] Batch [0/30] Loss: 0.0024 Count Acc: 1.0000
+Epoch [266] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [266] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [266] - Time: 20.09s
+Train Loss: 0.0022 | Val Loss: 0.0109
+Train Count Acc: 0.9989 | Val Count Acc: 0.9982
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [267] Batch [0/30] Loss: 0.0274 Count Acc: 0.9830
+Epoch [267] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [267] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [267] - Time: 19.58s
+Train Loss: 0.0233 | Val Loss: 0.0266
+Train Count Acc: 0.9947 | Val Count Acc: 0.9961
+Final Count Acc: 0.9883
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_267.pth
+Epoch [268] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [268] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [268] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [268] - Time: 19.79s
+Train Loss: 0.0259 | Val Loss: 0.0118
+Train Count Acc: 0.9947 | Val Count Acc: 0.9954
+Final Count Acc: 0.9766
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [269] Batch [0/30] Loss: 0.0005 Count Acc: 1.0000
+Epoch [269] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [269] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [269] - Time: 19.35s
+Train Loss: 0.0042 | Val Loss: 0.0026
+Train Count Acc: 0.9989 | Val Count Acc: 0.9986
+Final Count Acc: 0.9883
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_269.pth
+Epoch [270] Batch [0/30] Loss: 0.0005 Count Acc: 1.0000
+Epoch [270] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [270] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [270] - Time: 19.66s
+Train Loss: 0.0128 | Val Loss: 0.0013
+Train Count Acc: 0.9953 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [271] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [271] Batch [10/30] Loss: 0.0005 Count Acc: 1.0000
+Epoch [271] Batch [20/30] Loss: 0.0029 Count Acc: 1.0000
+
+Epoch [271] - Time: 19.43s
+Train Loss: 0.0155 | Val Loss: 0.0039
+Train Count Acc: 0.9970 | Val Count Acc: 0.9986
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_271.pth
+Epoch [272] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [272] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [272] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [272] - Time: 20.02s
+Train Loss: 0.0388 | Val Loss: 0.0086
+Train Count Acc: 0.9928 | Val Count Acc: 0.9975
+Final Count Acc: 0.9844
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Epoch [273] Batch [0/30] Loss: 0.0074 Count Acc: 1.0000
+Epoch [273] Batch [10/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [273] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [273] - Time: 19.42s
+Train Loss: 0.0007 | Val Loss: 0.0162
+Train Count Acc: 1.0000 | Val Count Acc: 0.9940
+Final Count Acc: 0.9883
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_273.pth
+Epoch [274] Batch [0/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [274] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [274] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [274] - Time: 20.47s
+Train Loss: 0.0234 | Val Loss: 0.0486
+Train Count Acc: 0.9962 | Val Count Acc: 0.9862
+Final Count Acc: 0.9453
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [275] Batch [0/30] Loss: 0.0134 Count Acc: 0.9943
+Epoch [275] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [275] Batch [20/30] Loss: 0.3144 Count Acc: 0.9545
+
+Epoch [275] - Time: 19.92s
+Train Loss: 0.1077 | Val Loss: 0.0986
+Train Count Acc: 0.9778 | Val Count Acc: 0.9744
+Final Count Acc: 0.8711
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_275.pth
+Epoch [276] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [276] Batch [10/30] Loss: 0.0011 Count Acc: 1.0000
+Epoch [276] Batch [20/30] Loss: 0.0023 Count Acc: 1.0000
+
+Epoch [276] - Time: 19.83s
+Train Loss: 0.1022 | Val Loss: 0.0337
+Train Count Acc: 0.9792 | Val Count Acc: 0.9947
+Final Count Acc: 0.9922
+True Final Count Acc: 0.9922
+学习率: 0.000100
+Epoch [277] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [277] Batch [10/30] Loss: 0.0022 Count Acc: 1.0000
+Epoch [277] Batch [20/30] Loss: 0.0004 Count Acc: 1.0000
+
+Epoch [277] - Time: 20.25s
+Train Loss: 0.0388 | Val Loss: 0.0013
+Train Count Acc: 0.9890 | Val Count Acc: 0.9993
+Final Count Acc: 1.0000
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_277.pth
+Epoch [278] Batch [0/30] Loss: 0.0387 Count Acc: 0.9716
+Epoch [278] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [278] Batch [20/30] Loss: 0.0004 Count Acc: 1.0000
+
+Epoch [278] - Time: 20.03s
+Train Loss: 0.0169 | Val Loss: 0.0004
+Train Count Acc: 0.9934 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [279] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [279] Batch [10/30] Loss: 0.0122 Count Acc: 0.9943
+Epoch [279] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [279] - Time: 19.59s
+Train Loss: 0.0202 | Val Loss: 0.1036
+Train Count Acc: 0.9947 | Val Count Acc: 0.9762
+Final Count Acc: 0.8516
+True Final Count Acc: 0.8477
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_279.pth
+Epoch [280] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [280] Batch [10/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [280] Batch [20/30] Loss: 0.0006 Count Acc: 1.0000
+
+Epoch [280] - Time: 19.23s
+Train Loss: 0.0368 | Val Loss: 0.3356
+Train Count Acc: 0.9913 | Val Count Acc: 0.9233
+Final Count Acc: 0.8320
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Epoch [281] Batch [0/30] Loss: 0.0022 Count Acc: 1.0000
+Epoch [281] Batch [10/30] Loss: 0.0044 Count Acc: 1.0000
+Epoch [281] Batch [20/30] Loss: 0.0016 Count Acc: 1.0000
+
+Epoch [281] - Time: 20.29s
+Train Loss: 0.0240 | Val Loss: 0.0186
+Train Count Acc: 0.9970 | Val Count Acc: 0.9957
+Final Count Acc: 0.9844
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_281.pth
+Epoch [282] Batch [0/30] Loss: 0.0011 Count Acc: 1.0000
+Epoch [282] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [282] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [282] - Time: 19.25s
+Train Loss: 0.0026 | Val Loss: 0.0020
+Train Count Acc: 0.9987 | Val Count Acc: 0.9993
+Final Count Acc: 0.9961
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Epoch [283] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [283] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [283] Batch [20/30] Loss: 0.0181 Count Acc: 0.9830
+
+Epoch [283] - Time: 19.92s
+Train Loss: 0.0054 | Val Loss: 0.0047
+Train Count Acc: 0.9983 | Val Count Acc: 0.9975
+Final Count Acc: 0.9844
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_283.pth
+Epoch [284] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [284] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [284] Batch [20/30] Loss: 0.0105 Count Acc: 0.9943
+
+Epoch [284] - Time: 20.21s
+Train Loss: 0.0052 | Val Loss: 0.0701
+Train Count Acc: 0.9975 | Val Count Acc: 0.9762
+Final Count Acc: 0.9375
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [285] Batch [0/30] Loss: 0.0140 Count Acc: 0.9943
+Epoch [285] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [285] Batch [20/30] Loss: 0.0013 Count Acc: 1.0000
+
+Epoch [285] - Time: 20.16s
+Train Loss: 0.0014 | Val Loss: 0.0254
+Train Count Acc: 0.9996 | Val Count Acc: 0.9961
+Final Count Acc: 0.9922
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_285.pth
+Epoch [286] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [286] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [286] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [286] - Time: 19.59s
+Train Loss: 0.0312 | Val Loss: 0.0001
+Train Count Acc: 0.9953 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [287] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [287] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [287] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [287] - Time: 19.67s
+Train Loss: 0.0145 | Val Loss: 0.0046
+Train Count Acc: 0.9983 | Val Count Acc: 0.9979
+Final Count Acc: 0.9883
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_287.pth
+Epoch [288] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [288] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [288] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [288] - Time: 20.16s
+Train Loss: 0.0011 | Val Loss: 0.0001
+Train Count Acc: 0.9996 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [289] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [289] Batch [10/30] Loss: 0.0551 Count Acc: 0.9773
+Epoch [289] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [289] - Time: 19.88s
+Train Loss: 0.0269 | Val Loss: 0.0715
+Train Count Acc: 0.9928 | Val Count Acc: 0.9819
+Final Count Acc: 0.9102
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_289.pth
+Epoch [290] Batch [0/30] Loss: 0.0386 Count Acc: 0.9886
+Epoch [290] Batch [10/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [290] Batch [20/30] Loss: 0.1428 Count Acc: 0.9773
+
+Epoch [290] - Time: 20.00s
+Train Loss: 0.0227 | Val Loss: 0.0112
+Train Count Acc: 0.9922 | Val Count Acc: 0.9961
+Final Count Acc: 0.9766
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [291] Batch [0/30] Loss: 0.0023 Count Acc: 1.0000
+Epoch [291] Batch [10/30] Loss: 0.0012 Count Acc: 1.0000
+Epoch [291] Batch [20/30] Loss: 0.0004 Count Acc: 1.0000
+
+Epoch [291] - Time: 19.80s
+Train Loss: 0.0040 | Val Loss: 0.0024
+Train Count Acc: 0.9989 | Val Count Acc: 0.9993
+Final Count Acc: 0.9922
+True Final Count Acc: 0.9922
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_291.pth
+Epoch [292] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [292] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [292] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [292] - Time: 20.03s
+Train Loss: 0.0035 | Val Loss: 0.0129
+Train Count Acc: 0.9985 | Val Count Acc: 0.9954
+Final Count Acc: 0.9688
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [293] Batch [0/30] Loss: 0.0233 Count Acc: 0.9943
+Epoch [293] Batch [10/30] Loss: 0.0009 Count Acc: 1.0000
+Epoch [293] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [293] - Time: 19.88s
+Train Loss: 0.0018 | Val Loss: 0.0018
+Train Count Acc: 0.9996 | Val Count Acc: 0.9993
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_293.pth
+Epoch [294] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [294] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [294] Batch [20/30] Loss: 0.0013 Count Acc: 1.0000
+
+Epoch [294] - Time: 20.71s
+Train Loss: 0.0046 | Val Loss: 0.0061
+Train Count Acc: 0.9977 | Val Count Acc: 0.9972
+Final Count Acc: 0.9766
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [295] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [295] Batch [10/30] Loss: 0.3428 Count Acc: 0.9148
+Epoch [295] Batch [20/30] Loss: 0.0005 Count Acc: 1.0000
+
+Epoch [295] - Time: 19.60s
+Train Loss: 0.0394 | Val Loss: 0.0326
+Train Count Acc: 0.9892 | Val Count Acc: 0.9890
+Final Count Acc: 0.9727
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_295.pth
+Epoch [296] Batch [0/30] Loss: 0.0009 Count Acc: 1.0000
+Epoch [296] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [296] Batch [20/30] Loss: 0.0026 Count Acc: 1.0000
+
+Epoch [296] - Time: 19.79s
+Train Loss: 0.0156 | Val Loss: 0.0166
+Train Count Acc: 0.9960 | Val Count Acc: 0.9979
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [297] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [297] Batch [10/30] Loss: 0.2853 Count Acc: 0.9659
+Epoch [297] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [297] - Time: 20.26s
+Train Loss: 0.0511 | Val Loss: 0.1536
+Train Count Acc: 0.9898 | Val Count Acc: 0.9535
+Final Count Acc: 0.8984
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_297.pth
+Epoch [298] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [298] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [298] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [298] - Time: 20.09s
+Train Loss: 0.0067 | Val Loss: 0.0004
+Train Count Acc: 0.9981 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [299] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [299] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [299] Batch [20/30] Loss: 0.0015 Count Acc: 1.0000
+
+Epoch [299] - Time: 19.77s
+Train Loss: 0.0045 | Val Loss: 0.0003
+Train Count Acc: 0.9981 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_299.pth
+Epoch [300] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [300] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [300] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [300] - Time: 19.71s
+Train Loss: 0.0009 | Val Loss: 0.0093
+Train Count Acc: 0.9998 | Val Count Acc: 0.9954
+Final Count Acc: 0.9727
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [301] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [301] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [301] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [301] - Time: 19.63s
+Train Loss: 0.0020 | Val Loss: 0.0409
+Train Count Acc: 0.9992 | Val Count Acc: 0.9851
+Final Count Acc: 0.9531
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_301.pth
+Epoch [302] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [302] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [302] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [302] - Time: 19.93s
+Train Loss: 0.0039 | Val Loss: 0.0637
+Train Count Acc: 0.9983 | Val Count Acc: 0.9904
+Final Count Acc: 0.9609
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [303] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [303] Batch [10/30] Loss: 0.0132 Count Acc: 0.9886
+Epoch [303] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [303] - Time: 19.57s
+Train Loss: 0.0073 | Val Loss: 0.0002
+Train Count Acc: 0.9985 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_303.pth
+Epoch [304] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [304] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [304] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [304] - Time: 20.08s
+Train Loss: 0.0039 | Val Loss: 0.0576
+Train Count Acc: 0.9977 | Val Count Acc: 0.9901
+Final Count Acc: 0.9805
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [305] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [305] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [305] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [305] - Time: 19.83s
+Train Loss: 0.0064 | Val Loss: 0.0053
+Train Count Acc: 0.9983 | Val Count Acc: 0.9982
+Final Count Acc: 0.9844
+True Final Count Acc: 0.9883
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_305.pth
+Epoch [306] Batch [0/30] Loss: 0.0017 Count Acc: 1.0000
+Epoch [306] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [306] Batch [20/30] Loss: 0.0045 Count Acc: 1.0000
+
+Epoch [306] - Time: 20.26s
+Train Loss: 0.0530 | Val Loss: 0.0615
+Train Count Acc: 0.9902 | Val Count Acc: 0.9897
+Final Count Acc: 0.9688
+True Final Count Acc: 0.9844
+学习率: 0.000100
+Epoch [307] Batch [0/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [307] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [307] Batch [20/30] Loss: 0.0026 Count Acc: 1.0000
+
+Epoch [307] - Time: 19.97s
+Train Loss: 0.0045 | Val Loss: 0.0007
+Train Count Acc: 0.9985 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_307.pth
+Epoch [308] Batch [0/30] Loss: 0.0007 Count Acc: 1.0000
+Epoch [308] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [308] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [308] - Time: 20.26s
+Train Loss: 0.0009 | Val Loss: 0.0045
+Train Count Acc: 0.9996 | Val Count Acc: 0.9982
+Final Count Acc: 0.9883
+True Final Count Acc: 0.9844
+学习率: 0.000100
+Epoch [309] Batch [0/30] Loss: 0.1742 Count Acc: 0.9545
+Epoch [309] Batch [10/30] Loss: 0.0012 Count Acc: 1.0000
+Epoch [309] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [309] - Time: 19.83s
+Train Loss: 0.0278 | Val Loss: 0.0002
+Train Count Acc: 0.9945 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_309.pth
+Epoch [310] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [310] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [310] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [310] - Time: 20.43s
+Train Loss: 0.0147 | Val Loss: 0.0006
+Train Count Acc: 0.9955 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [311] Batch [0/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [311] Batch [10/30] Loss: 0.0013 Count Acc: 1.0000
+Epoch [311] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [311] - Time: 20.51s
+Train Loss: 0.0138 | Val Loss: 0.0028
+Train Count Acc: 0.9973 | Val Count Acc: 0.9989
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_311.pth
+Epoch [312] Batch [0/30] Loss: 0.0539 Count Acc: 0.9716
+Epoch [312] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [312] Batch [20/30] Loss: 0.0005 Count Acc: 1.0000
+
+Epoch [312] - Time: 19.77s
+Train Loss: 0.0326 | Val Loss: 0.0174
+Train Count Acc: 0.9924 | Val Count Acc: 0.9954
+Final Count Acc: 0.9688
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [313] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [313] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [313] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [313] - Time: 19.54s
+Train Loss: 0.0300 | Val Loss: 0.0038
+Train Count Acc: 0.9926 | Val Count Acc: 0.9979
+Final Count Acc: 0.9844
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_313.pth
+Epoch [314] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [314] Batch [10/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [314] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [314] - Time: 20.01s
+Train Loss: 0.0723 | Val Loss: 0.0299
+Train Count Acc: 0.9909 | Val Count Acc: 0.9925
+Final Count Acc: 0.9766
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [315] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [315] Batch [10/30] Loss: 0.0003 Count Acc: 1.0000
+Epoch [315] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [315] - Time: 19.68s
+Train Loss: 0.0075 | Val Loss: 0.0481
+Train Count Acc: 0.9991 | Val Count Acc: 0.9883
+Final Count Acc: 0.9609
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_315.pth
+Epoch [316] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [316] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [316] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [316] - Time: 19.90s
+Train Loss: 0.0062 | Val Loss: 0.0001
+Train Count Acc: 0.9985 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [317] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [317] Batch [10/30] Loss: 0.5405 Count Acc: 0.9489
+Epoch [317] Batch [20/30] Loss: 0.0013 Count Acc: 1.0000
+
+Epoch [317] - Time: 19.47s
+Train Loss: 0.0273 | Val Loss: 0.0018
+Train Count Acc: 0.9943 | Val Count Acc: 0.9993
+Final Count Acc: 1.0000
+True Final Count Acc: 0.9922
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_317.pth
+Epoch [318] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [318] Batch [10/30] Loss: 0.0010 Count Acc: 1.0000
+Epoch [318] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [318] - Time: 19.46s
+Train Loss: 0.0066 | Val Loss: 0.1866
+Train Count Acc: 0.9987 | Val Count Acc: 0.9602
+Final Count Acc: 0.8359
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [319] Batch [0/30] Loss: 0.0159 Count Acc: 0.9943
+Epoch [319] Batch [10/30] Loss: 0.0004 Count Acc: 1.0000
+Epoch [319] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [319] - Time: 19.76s
+Train Loss: 0.0154 | Val Loss: 0.0166
+Train Count Acc: 0.9964 | Val Count Acc: 0.9947
+Final Count Acc: 0.9688
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_319.pth
+Epoch [320] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [320] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [320] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [320] - Time: 19.61s
+Train Loss: 0.0009 | Val Loss: 0.0112
+Train Count Acc: 1.0000 | Val Count Acc: 0.9975
+Final Count Acc: 0.9766
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [321] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [321] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [321] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [321] - Time: 20.58s
+Train Loss: 0.0002 | Val Loss: 0.0005
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_321.pth
+Epoch [322] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [322] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [322] Batch [20/30] Loss: 0.0002 Count Acc: 1.0000
+
+Epoch [322] - Time: 19.50s
+Train Loss: 0.0012 | Val Loss: 0.0154
+Train Count Acc: 0.9994 | Val Count Acc: 0.9936
+Final Count Acc: 0.9414
+True Final Count Acc: 0.9453
+学习率: 0.000100
+Epoch [323] Batch [0/30] Loss: 0.0706 Count Acc: 0.9886
+Epoch [323] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [323] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [323] - Time: 20.18s
+Train Loss: 0.0026 | Val Loss: 0.0185
+Train Count Acc: 0.9996 | Val Count Acc: 0.9957
+Final Count Acc: 0.9688
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_323.pth
+Epoch [324] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [324] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [324] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [324] - Time: 19.96s
+Train Loss: 0.0001 | Val Loss: 0.0005
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [325] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [325] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [325] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [325] - Time: 20.37s
+Train Loss: 0.0002 | Val Loss: 0.0001
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_325.pth
+Epoch [326] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [326] Batch [10/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [326] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [326] - Time: 19.84s
+Train Loss: 0.0001 | Val Loss: 0.0010
+Train Count Acc: 1.0000 | Val Count Acc: 0.9993
+Final Count Acc: 0.9961
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [327] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [327] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [327] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [327] - Time: 19.52s
+Train Loss: 0.0000 | Val Loss: 0.0003
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_327.pth
+Epoch [328] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [328] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [328] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [328] - Time: 21.18s
+Train Loss: 0.0000 | Val Loss: 0.0005
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [329] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [329] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [329] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [329] - Time: 19.62s
+Train Loss: 0.0000 | Val Loss: 0.0004
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_329.pth
+Epoch [330] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [330] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [330] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [330] - Time: 19.60s
+Train Loss: 0.0000 | Val Loss: 0.0001
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [331] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [331] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [331] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [331] - Time: 19.55s
+Train Loss: 0.0000 | Val Loss: 0.0001
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_331.pth
+Epoch [332] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [332] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [332] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [332] - Time: 19.68s
+Train Loss: 0.0000 | Val Loss: 0.0001
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [333] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [333] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [333] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [333] - Time: 19.38s
+Train Loss: 0.0788 | Val Loss: 0.3319
+Train Count Acc: 0.9932 | Val Count Acc: 0.9350
+Final Count Acc: 0.7773
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_333.pth
+Epoch [334] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [334] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [334] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [334] - Time: 19.34s
+Train Loss: 0.0004 | Val Loss: 0.0348
+Train Count Acc: 0.9998 | Val Count Acc: 0.9922
+Final Count Acc: 0.9883
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [335] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [335] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [335] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [335] - Time: 19.66s
+Train Loss: 0.0011 | Val Loss: 0.2512
+Train Count Acc: 0.9996 | Val Count Acc: 0.9577
+Final Count Acc: 0.9219
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_335.pth
+Epoch [336] Batch [0/30] Loss: 0.0465 Count Acc: 0.9716
+Epoch [336] Batch [10/30] Loss: 0.4581 Count Acc: 0.9432
+Epoch [336] Batch [20/30] Loss: 0.1408 Count Acc: 0.9716
+
+Epoch [336] - Time: 19.24s
+Train Loss: 0.1354 | Val Loss: 0.0686
+Train Count Acc: 0.9775 | Val Count Acc: 0.9869
+Final Count Acc: 0.9648
+True Final Count Acc: 0.9648
+学习率: 0.000100
+Epoch [337] Batch [0/30] Loss: 2.2501 Count Acc: 0.7159
+Epoch [337] Batch [10/30] Loss: 0.0020 Count Acc: 1.0000
+Epoch [337] Batch [20/30] Loss: 0.0004 Count Acc: 1.0000
+
+Epoch [337] - Time: 19.58s
+Train Loss: 0.1022 | Val Loss: 0.0109
+Train Count Acc: 0.9847 | Val Count Acc: 0.9979
+Final Count Acc: 0.9922
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_337.pth
+Epoch [338] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [338] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [338] Batch [20/30] Loss: 0.0275 Count Acc: 0.9886
+
+Epoch [338] - Time: 19.07s
+Train Loss: 0.0274 | Val Loss: 0.0009
+Train Count Acc: 0.9934 | Val Count Acc: 0.9996
+Final Count Acc: 1.0000
+True Final Count Acc: 0.9961
+学习率: 0.000100
+Epoch [339] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [339] Batch [10/30] Loss: 0.0009 Count Acc: 1.0000
+Epoch [339] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [339] - Time: 19.34s
+Train Loss: 0.0002 | Val Loss: 0.0081
+Train Count Acc: 1.0000 | Val Count Acc: 0.9975
+Final Count Acc: 0.9805
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_339.pth
+Epoch [340] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [340] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [340] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [340] - Time: 19.30s
+Train Loss: 0.0001 | Val Loss: 0.0001
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [341] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [341] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [341] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [341] - Time: 20.05s
+Train Loss: 0.0001 | Val Loss: 0.0004
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_341.pth
+Epoch [342] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [342] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [342] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [342] - Time: 19.72s
+Train Loss: 0.0001 | Val Loss: 0.0001
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [343] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [343] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [343] Batch [20/30] Loss: 0.0000 Count Acc: 1.0000
+
+Epoch [343] - Time: 19.26s
+Train Loss: 0.0000 | Val Loss: 0.0001
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_343.pth
+Epoch [344] Batch [0/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [344] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [344] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [344] - Time: 18.90s
+Train Loss: 0.0005 | Val Loss: 0.0003
+Train Count Acc: 0.9998 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [345] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [345] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [345] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [345] - Time: 19.42s
+Train Loss: 0.0002 | Val Loss: 0.0001
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_345.pth
+Epoch [346] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [346] Batch [10/30] Loss: 0.0991 Count Acc: 0.9830
+Epoch [346] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [346] - Time: 19.36s
+Train Loss: 0.0092 | Val Loss: 0.0470
+Train Count Acc: 0.9977 | Val Count Acc: 0.9925
+Final Count Acc: 0.9570
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [347] Batch [0/30] Loss: 0.0006 Count Acc: 1.0000
+Epoch [347] Batch [10/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [347] Batch [20/30] Loss: 0.0031 Count Acc: 1.0000
+
+Epoch [347] - Time: 19.35s
+Train Loss: 0.0039 | Val Loss: 0.0705
+Train Count Acc: 0.9989 | Val Count Acc: 0.9815
+Final Count Acc: 0.9453
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_347.pth
+Epoch [348] Batch [0/30] Loss: 0.0002 Count Acc: 1.0000
+Epoch [348] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [348] Batch [20/30] Loss: 0.0001 Count Acc: 1.0000
+
+Epoch [348] - Time: 19.45s
+Train Loss: 0.0241 | Val Loss: 0.0005
+Train Count Acc: 0.9943 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Epoch [349] Batch [0/30] Loss: 0.0001 Count Acc: 1.0000
+Epoch [349] Batch [10/30] Loss: 0.0000 Count Acc: 1.0000
+Epoch [349] Batch [20/30] Loss: 0.0003 Count Acc: 1.0000
+
+Epoch [349] - Time: 19.49s
+Train Loss: 0.0006 | Val Loss: 0.0003
+Train Count Acc: 1.0000 | Val Count Acc: 1.0000
+Final Count Acc: 1.0000
+True Final Count Acc: 1.0000
+学习率: 0.000100
+Checkpoint saved: ./scratch/Ball_counting_CNN/Final_result/Embodiment_Visual_only/50data/check_points/visual_only_checkpoint_epoch_349.pth
+
+训练完成!
+模型类型: visual_only
+最佳验证准确率: 1.0000
+最佳验证损失: 0.0065
+
+训练成功完成！
+
+=== 实验结果总结 ===
+模型类型: visual_only
+最佳验证准确率: 1.0000
+最佳验证损失: 0.0065
+结论: 请与完整具身模型对比，分析具身信息的价值
+程序结束。
+=== 完成 ===
+结束时间: Mon 21 Jul 19:35:16 BST 2025
