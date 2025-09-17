@@ -1,1 +1,3 @@
 python scratch/Ball_counting_CNN/embodied_analysis_V2.py --checkpoint scratch/Ball_counting_CNN/Final_result/Embodiment_Count_only/20data/check_points/counting_only_checkpoint_epoch_239.pth --save_dir scratch/Ball_counting_CNN/PCA/Embodiment_Count_only/20data/239/
+python scratch/Ball_counting_CNN/LSTM_Attention_Viz_V3.py --checkpoint scratch/Ball_counting_CNN/Final_result/Embodiment_Full/20data/check_points/initial_model.pth --save_dir scratch/Ball_counting_CNN/dynamic_vis/Embodiment_Full/20dat
+a/0_3d/
