@@ -1011,7 +1011,7 @@ def main():
                        default=['baseline', 'alexnet_no_pretrain', 'alexnet_pretrain'],
                        help='要测试的模型类型')
     parser.add_argument('--seeds', nargs='+', type=int,
-                       default=[42, 123, 456, 789, 1024, 2048, 3071, 4096, 5555, 9999],
+                       default=[2048, 3071, 4096, 5555, 9999],
                        help='随机种子列表')
     
     # 结果保存
