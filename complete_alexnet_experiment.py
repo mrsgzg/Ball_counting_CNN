@@ -613,7 +613,7 @@ def create_config(model_type, seed=None):
         'attention_loss_weight': 0.1,
         
         # 学习率调度
-        'scheduler_type': 'none',
+        'scheduler_type': 'cosine',
         'scheduler_patience': 5,
         
         # 其他
@@ -1011,7 +1011,7 @@ def main():
                        default=['baseline', 'alexnet_no_pretrain', 'alexnet_pretrain'],
                        help='要测试的模型类型')
     parser.add_argument('--seeds', nargs='+', type=int,
-                       default=[2048, 3071, 4096, 5555, 9999],
+                       default=[2048, 4096, 9999],
                        help='随机种子列表')
     
     # 结果保存
